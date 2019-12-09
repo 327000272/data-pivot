@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<title>素质育人大数据</title>
 		<style>
 		   html,body{
@@ -18,3 +17,21 @@
 	</body>
 
 </html>
+<script>
+	var deviceWidth
+	setHtmlFontSize()
+
+	if (window.addEventListener) {
+	window.addEventListener('resize', function () {
+		setHtmlFontSize()
+	}, false)
+	}
+	function setHtmlFontSize () {
+	// 1366是设计稿的宽度，当大于1366时采用1600宽度，比例也是除以16
+		deviceWidth = document.documentElement.clientWidth > 1600 ? 1600 : document.documentElement.clientWidth
+		document.getElementsByTagName('html')[0].style.cssText = 'font-size:' + deviceWidth / 16 + 'px !important'
+	}
+</script>
+<style>
+	html {font-size: 100px;}
+</style>
