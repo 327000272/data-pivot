@@ -7,7 +7,6 @@
             <img :src="logo.photo" class="icon-logo" />
             <span>
               <p>{{logo.name}}</p>
-              <!-- <p>素质育人大数据</p> -->
             </span>
           </li>
         </ul>
@@ -70,6 +69,7 @@ export default {
           // window.location.href=" http://class-admin.univteam.com/"+url22+"/account/login?back=statistics";
           // }
           _this.logo = response.data.data;
+
         })
         .catch(function(error) {
           console.log(error);
@@ -83,7 +83,6 @@ export default {
       var routeId = this.$route.params.id;
       this.$router.push(pages);
       // this.index=index;
-      
     },
     openHref() {
       var Pageurl = window.location.href;
@@ -93,7 +92,6 @@ export default {
       if (url == "Develop") {
         this.index = "1";
       } else if (url == "Results") {
-        alert(4444)
         this.index = "2";
       } else if (url == "launch") {
         this.index = "3";
