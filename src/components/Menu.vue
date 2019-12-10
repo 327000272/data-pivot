@@ -70,7 +70,6 @@ export default {
           // window.location.href=" http://class-admin.univteam.com/"+url22+"/account/login?back=statistics";
           // }
           _this.logo = response.data.data;
-          console.log(response.data.data);
         })
         .catch(function(error) {
           console.log(error);
@@ -84,16 +83,17 @@ export default {
       var routeId = this.$route.params.id;
       this.$router.push(pages);
       // this.index=index;
+      
     },
     openHref() {
       var Pageurl = window.location.href;
       var hash = window.location.hash;
       var list = hash.split("/");
       var url = list[2];
-      console.log(url);
       if (url == "Develop") {
         this.index = "1";
       } else if (url == "Results") {
+        alert(4444)
         this.index = "2";
       } else if (url == "launch") {
         this.index = "3";
@@ -103,14 +103,6 @@ export default {
         this.index = "5";
       }
     },
-    // getToken(){
-    //   var dataUrl= window.location.href;
-    //   console.log(this.dataToken)
-    // 	if(dataUrl.split("?")[1]){
-    //      this.dataToken=dataUrl.split("?")[1].substr(2);
-    //       console.log(this.dataToken)
-    // 	}
-    // },
     getToken() {
       var _this = this;
       var url22 = this.$route.params.id;
