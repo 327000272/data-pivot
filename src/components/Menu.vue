@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sidebar">
     <el-row class="tac">
       <el-col :span="12">
         <ul>

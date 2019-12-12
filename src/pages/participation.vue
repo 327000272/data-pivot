@@ -1,31 +1,81 @@
 <template>
-  <div class="fx-box" style="overflow:hidden">
+  <div>
     <div class="fx-con">
-      <div class="fx-title">第二课堂育人成效分析</div>
-      <div class="fx-content">
-        <!-- 日期插件 -->
-        <div class="block">
-          <span class="demonstration">统计日期</span>
-          <el-date-picker
-            id="datacolor"
-            type="daterange"
-            range-separator="~"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            class="data-picker"
-          ></el-date-picker>
+      <div class="fx-title">第二课堂参与情况分析</div>
+    </div>
+    <!-- 四块主内容 -->
+    <div class="box-content">
+      <div class="box-content-top">
+        <div class="box-item">
+          <div class="box-item-title">
+            <div class="box-item-title-left">
+              <div class="title-bar"></div>
+              <p>各类课程参与人次</p>
+            </div>
+          </div>
         </div>
-        <div class="fx-btn">运算</div>
+        <div class="box-item" id="classSituation">
+          <div class="box-item-title">
+            <div class="box-item-title-left">
+              <div class="title-bar"></div>
+              <p>第二课堂整体参与度于信息系统活跃</p>
+            </div>
+            <div class="box-item-title-right">
+              <span>学院范围</span>
+              <select>
+                <option value="全部开课学院">全部开课学院</option>
+              </select>
+            </div>
+          </div>
+          <div class="liveness">
+              <div class="liveness-top">
+                  <div></div>
+                  <div>
+                      <p>学生用户激活总数</p>
+                      <div>56432名学生</div>
+                  </div>
+                  <div>
+                      <p>教师用户激活总数</p>
+                      <div>632名教职工</div>
+                  </div>
+                  <div>
+                    <p>单位参与数量</p>
+                    <div>32个</div>
+                  </div>
+                  <div>
+                    <p>教职工参与人数</p>
+                    <div>642人</div>
+                  </div>
+              </div>
+              <div class="liveness-middle"></div>
+              <div class="liveness-bottom"></div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="fx-hr"></div>
-    <div class="diamonds_top">
-      <div class="diamonds_item" id="one"></div>
-      <div class="diamonds_item" id="two"></div>
-    </div>
-    <div class="diamonds_bottom">
-      <div class="diamonds_item" id="three"></div>
-      <div class="diamonds_item" id="four"></div>
+      <div class="box-content-bottom">
+        <div class="box-item">
+          <div class="box-item-title">
+            <div class="box-item-title-left">
+              <div class="title-bar"></div>
+              <p>各学院学生参与人次统计</p>
+            </div>
+          </div>
+        </div>
+        <div class="box-item" id="timeSituation">
+          <div class="box-item-title">
+            <div class="box-item-title-left">
+              <div class="title-bar"></div>
+              <p>课程参与积极性指标</p>
+            </div>
+            <div class="box-item-title-right">
+              <span>学院范围</span>
+              <select>
+                <option value="全部开课学院">全部开课学院</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -38,58 +88,8 @@ export default {
     return {};
   },
   created() {},
-  mounted() {
-    this.getEcharts();
-    this.getEcharts2();
-  },
-  methods: {
-    getEcharts() {
-      var _this = this;
-      let myChart = echarts.init(document.getElementById("one"));
-      let option = {
-        xAxis: {
-          type: "category",
-          boundaryGap: false,
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-        },
-        yAxis: {
-          type: "value"
-        },
-        series: [
-          {
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: "line",
-            areaStyle: {}
-          }
-        ]
-      };
-      myChart.setOption(option);
-      window.onresize = myChart.resize;
-    },
-    getEcharts2() {
-      var _this = this;
-      let myChart = echarts.init(document.getElementById("two"));
-      let option = {
-        xAxis: {
-          type: "category",
-          boundaryGap: false,
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-        },
-        yAxis: {
-          type: "value"
-        },
-        series: [
-          {
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: "line",
-            areaStyle: {}
-          }
-        ]
-      };
-      myChart.setOption(option);
-      window.onresize = myChart.resize;
-    }
-  }
+  mounted() {},
+  methods: {}
 };
 </script>
 <style>
@@ -112,88 +112,84 @@ export default {
 }
 </style>
 <style scoped>
-.fx-box {
-  height: 100%;
-  box-sizing: border-box;
-  padding: 0 2%;
-  padding-top: 20px;
+.fx-title {
+  font-size: 0.24rem;
+  color: #fff;
+  margin-left: 0.4rem;
 }
 .fx-con {
   display: flex;
-  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.42rem;
+  margin-bottom: 0.24rem;
+}
+.box-content {
+  margin-left: 0.4rem;
+}
+.box-content-top {
+  display: flex;
+}
+.box-content-bottom {
+  display: flex;
+}
+.box-item {
+  width: 7.76rem;
+  height: 3.28rem;
+  background: rgba(255, 255, 255, 5%);
+  margin-right: 0.2rem;
+  margin-bottom: 0.2rem;
   justify-content: space-between;
 }
-.fx-title {
-  font-size: 0.22rem;
-  color: white;
-  width: 28%;
-  min-width: 223px;
+#classSituation {
+  position: relative;
 }
-.fx-content {
+#timeSituation {
+  position: relative;
+}
+.box-item-title {
+  font-size: 0.18rem;
+  color: #fff;
+  height: 0.5rem;
+  line-height: 0.5rem;
+  border-bottom: 0.02rem #08263c solid;
   display: flex;
-  align-items: center;
+  justify-content: space-between;
 }
-.demonstration {
-  color: #5b6f7e;
-  background: #213c50;
-  line-height: 40px;
-  text-align: center;
-  margin-right: 2px;
+.title-bar {
+  width: 0.04rem;
+  height: 0.13rem;
+  background-color: #fff;
+  margin-left: 0.1rem;
+  margin-top: 0.19rem;
+  margin-right: 0.1rem;
+}
+.box-item-title-left {
+  display: flex;
+}
+.box-item-title-right span {
+  opacity: 0.5;
   font-size: 0.12rem;
 }
-.block {
-  height: 40px;
-  display: flex;
-  width: 80%;
-  margin-right: 25px;
-}
-.data-picker {
-  border-radius: 0;
-  background: #213c50;
-  border: none;
+select {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none; /*兼容苹果手机*/
+  -ms-appearance: none;
+  outline: none;
+  -webkit-tap-highlight-color: #fff;
+  border: rem(1) solid #ebebeb;
+  width: rem(100);
+  height: rem(50);
+  line-height: rem(50);
+  /*防止紧紧靠在边上*/
+  text-indent: rem(4);
+  background-color: transparent;
   color: #fff;
+  border: none;
+  margin-right: 0.2rem;
 }
-.fx-btn {
-  color: white;
-  border: 1px white solid;
-  height: 40px;
-  min-width: 70px;
-  box-sizing: border-box;
-  line-height: 36px;
-  text-align: center;
-  font-size: 0.14rem;
-}
-.fx-hr {
-  height: 1px;
-  width: 100%;
-  background: #415869;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-.diamonds_top {
-  overflow: hidden;
-}
-.diamonds_item {
-  width: 50%;
-  height: 500px;
-  float: left;
-}
-.diamonds_item2 {
-  width: 50%;
-  height: 200;
-  float: left;
-  background-color: red;
-}
-.circle {
-  width: 20%;
-  height: 20%;
-  border-radius: 50%;
-  background-color: yellow;
-}
-.diamonds_item3 {
-  width: 50%;
-  height: 20%;
-  float: left;
-  background-color: green;
+
+.liveness{
+  font-size: 0.12rem;
 }
 </style>
