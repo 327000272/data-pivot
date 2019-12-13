@@ -227,7 +227,7 @@ export default {
     fetchData(){
           console.log('路由发送变化doing...');
     },
-    //满意度echarts图
+    //仪表盘
     satisfaction() {
       let myChart = echarts.init(document.getElementById("satisfaction"));
       let option = {
@@ -287,7 +287,7 @@ export default {
       window.onresize = myChart.resize();
       myChart.setOption(option);
     },
-    //各类课程开设数量饼状图
+    //饼状图
     classNumber() {
       let myChart = echarts.init(document.getElementById("classNumCircle"));
       let option = {
@@ -356,7 +356,7 @@ export default {
       window.onresize = myChart.resize; 
       myChart.setOption(option);
     },
-    //各类课程开设情况尖尖图
+    //异性图
     classNum() {
       let myChart = echarts.init(document.getElementById("classNum"));
       let option = {
@@ -386,8 +386,7 @@ export default {
           axisLine: { show: false },
           axisLabel: {
             textStyle: {
-              color: "#e54035",
-              fontSize: "24px"
+              color: "#fff",
             }
           }
         },
@@ -483,7 +482,7 @@ export default {
       myChart.setOption(option);
      
     },
-    //课程开展分时情况
+    //表格
     date_condition() {
       let myChart = echarts.init(document.getElementById("date_condition"));
       let option = {
