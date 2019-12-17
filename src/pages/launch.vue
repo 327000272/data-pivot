@@ -28,41 +28,23 @@
             </div>
           </div>
           <div class="box-item-content">
-            <div class="pandect">
-              <div class="circle-top">
-                <div class="launch-box1-contant">
-                  <div class="launch-circle">
-                    <div class="class-circle">1744</div>
-                    <div>个</div>
-                  </div>
-                  <div class="launch-oblong">开课数量</div>
+            <div class="pandect" v-for="item in Condition" :key="item.id">
+              <div class="launch-box1-contant">
+                <div class="launch-circle">
+                  <div class="class-circle">{{item.data}}</div>
+                  <div>{{item.unit}}</div>
                 </div>
-                <div class="launch-box1-contant">
-                  <div class="launch-circle">
-                    <div class="declare-circle">2324</div>
-                    <div>个</div>
-                  </div>
-                  <div class="launch-oblong">课程申报</div>
-                </div>
-              </div>
-              <div class="circle-bottom">
-                <div class="launch-box1-contant">
-                  <div class="launch-circle">
-                    <div class="approval-circle">76.5</div>
-                    <div>%</div>
-                  </div>
-                  <div class="launch-oblong">审批通过率</div>
-                </div>
-                <div class="launch-box1-contant">
-                  <div class="launch-circle">
-                    <div class="time-circle">72</div>
-                    <div>小时</div>
-                  </div>
-                  <div class="launch-oblong">平均审批时效</div>
-                </div>
+                <div class="launch-oblong">{{item.title}}</div>
               </div>
             </div>
-            <div class="satisfaction" id="satisfaction"></div>
+            <div>
+              <div class="satisfaction" id="satisfaction"></div>
+              <div class="evaluatePart-box">
+                <p
+                  class="evaluatePart"
+                >{{evaluateNum.data}}{{evaluateNum.unit}}{{evaluateNum.title}},{{participationRate.title}}{{participationRate.data}}{{participationRate.unit}}</p>
+              </div>
+            </div>
           </div>
         </div>
         <!-- 各类课程开课情况 -->
@@ -85,29 +67,9 @@
           </div>
           <div class="echarts-legend">
             <div class="echarts-legend-box">
-              <div class="echarts-legend-item">
+              <div class="echarts-legend-item" v-for="item in openClassName" :key="item.id">
                 <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">思想成长类</div>
-              </div>
-              <div class="echarts-legend-item">
-                <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">实践实习类</div>
-              </div>
-              <div class="echarts-legend-item">
-                <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">志愿服务类</div>
-              </div>
-              <div class="echarts-legend-item">
-                <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">学术科技类</div>
-              </div>
-              <div class="echarts-legend-item">
-                <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">文体活动类</div>
-              </div>
-              <div class="echarts-legend-item">
-                <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">工作履历类</div>
+                <div class="echarts-legend-item-txt">{{item}}</div>
               </div>
             </div>
           </div>
@@ -115,7 +77,7 @@
       </div>
       <div class="box-content-bottom">
         <!-- 各单位课程供给排行 -->
-        <div class="box-item">
+        <div class="box-item fx-box4">
           <div class="box-item-title">
             <div class="box-item-title-left">
               <div class="title-bar"></div>
@@ -123,29 +85,15 @@
             </div>
           </div>
           <div class="fxbox4-contant">
-            <div class="fxbox4-li">
-              <div class="fxbox4-litit fxbox1-new-span">经济学院</div>
+            <div class="fxbox4-li" v-for="item in courseSupply" :key="item.id">
+              <div class="fxbox4-litit fxbox1-new-span">{{item.title}}</div>
               <div class="fxbox4-lidiv">
                 <div class="fxbox4-div1">
                   &nbsp;&nbsp;
                   <span class="iconfont icon-ketang"></span>&nbsp;
-                  <span>434</span>次&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span>{{item.supp_count}}</span>次&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <span class="iconfont icon-rengong-copy"></span>&nbsp;
-                  <span>296</span>人次
-                </div>
-                <div class="fxbox4-div2" style="width: 50%;"></div>
-                <div class="fxbox4-div3" style="width: 80%;"></div>
-              </div>
-            </div>
-            <div class="fxbox4-li">
-              <div class="fxbox4-litit fxbox1-new-span">经济学院1212</div>
-              <div class="fxbox4-lidiv">
-                <div class="fxbox4-div1">
-                  &nbsp;&nbsp;
-                  <span class="iconfont icon-ketang"></span>&nbsp;
-                  <span>434</span>次&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <span class="iconfont icon-rengong-copy"></span>&nbsp;
-                  <span>296</span>人次
+                  <span>{{item.supp_capacity}}</span>人次
                 </div>
                 <div class="fxbox4-div2" style="width: 50%;"></div>
                 <div class="fxbox4-div3" style="width: 80%;"></div>
@@ -170,29 +118,13 @@
           <div id="date_condition" style="height: 100%;width:70%;"></div>
           <div class="echarts-legend">
             <div class="echarts-legend-box">
-              <div class="echarts-legend-item">
+              <!-- <div class="echarts-legend-item">
                 <div class="echarts-legend-item-bar"></div>
                 <div class="echarts-legend-item-txt">思想成长类</div>
-              </div>
-              <div class="echarts-legend-item">
+              </div>-->
+              <div class="echarts-legend-item" v-for="item in openClassName" :key="item.id">
                 <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">实践实习类</div>
-              </div>
-              <div class="echarts-legend-item">
-                <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">志愿服务类</div>
-              </div>
-              <div class="echarts-legend-item">
-                <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">学术科技类</div>
-              </div>
-              <div class="echarts-legend-item">
-                <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">文体活动类</div>
-              </div>
-              <div class="echarts-legend-item">
-                <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">工作履历类</div>
+                <div class="echarts-legend-item-txt">{{item}}</div>
               </div>
             </div>
           </div>
@@ -208,29 +140,138 @@ export default {
   data() {
     return {
       //  linetitle:[],
+      token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzY0ODQxMzAsImV4cCI6MTU3NjQ4NzczMCwiaWF0IjoxNTc2NDg0MTMwfQ.WPLyzB2GEOI8A1PinsnRoR8YuS6RZPjtLrY6KiwjbNA",
+      url: "https://class-ms-test.univteam.com/",
+      Condition: [],
+      Comment: [],
+      evaluateNum: "",
+      participationRate: "",
+      openClassNum: [],
+      openClassName: [],
+      courseSupply: []
     };
   },
   created() {
     var self = this;
     self.fetchData();
   },
-  watch:{
-    '$route':'fetchData'
+  watch: {
+    $route: "fetchData"
   },
   mounted() {
     this.satisfaction();
     this.classNumber();
-    this.classNum();
+    // this.classNum();
     this.date_condition();
+    this.getCondition();
+    this.getComment();
+    this.getClassEstablishNum();
+    this.getCourseSupply();
   },
   methods: {
-    fetchData(){
-          console.log('路由发送变化doing...');
+    fetchData() {
+      console.log("路由发送变化doing...");
+    },
+    //课程开展总览
+    getCondition() {
+      var _this = this;
+      axios
+        .get(
+          _this.url + "/api/Plat/course/condition?access_token=" + _this.token
+        )
+        .then(function(response) {
+          _this.Condition = response.data.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    //评价与参评率
+    getComment() {
+      var _this = this;
+      axios
+        .get(_this.url + "/api/Plat/course/comment?access_token=" + _this.token)
+        .then(function(response) {
+          _this.Comment = response.data.data;
+          //评价数
+          _this.evaluateNum = response.data.data[0];
+          //参与率
+          _this.participationRate = response.data.data[1];
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    //各类课程开课情况
+    getClassEstablishNum() {
+      var _this = this;
+      var data = [
+        {
+          id: 1,
+          name: "思想成长类",
+          datas: [
+            { start: "2019-03-05", end: "2019-03-08", count: 0 },
+            { start: "2019-03-05", end: "2019-03-08", count: 0 },
+            { start: "2019-03-05", end: "2019-03-08", count: 0 }
+          ]
+        },
+        {
+          id: 2,
+          name: "实践实习类",
+          datas: [{ start: "2019-03-05", end: "2019-03-08", count: 0 }]
+        },
+        {
+          id: 3,
+          name: "志愿服务类",
+          datas: [{ start: "2019-03-05", end: "2019-03-08", count: 0 }]
+        },
+        {
+          id: 4,
+          name: "学术科技类",
+          datas: [{ start: "2019-03-05", end: "2019-03-08", count: 0 }]
+        },
+        {
+          id: 5,
+          name: "文体活动类",
+          datas: [{ start: "2019-03-05", end: "2019-03-08", count: 0 }]
+        },
+        {
+          id: 6,
+          name: "工作履历类",
+          datas: [{ start: "2019-03-05", end: "2019-03-08", count: 0 }]
+        }
+      ];
+      for (var i = 0; i < data.length; i++) {
+        _this.openClassName.push(data[i].name);
+        _this.openClassNum.push(data[i].datas[0].count);
+      }
+      _this.classNum(_this.openClassNum);
+    },
+    //各单位课程供给排行
+    getCourseSupply() {
+      var _this = this;
+      var _this = this;
+      axios
+        .get(
+          _this.url + "/api/Plat/course/rank?unit=0&access_token=" + _this.token
+        )
+        .then(function(response) {
+          _this.courseSupply = response.data.data;
+          console.log(_this.courseSupply);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     //仪表盘
     satisfaction() {
       let myChart = echarts.init(document.getElementById("satisfaction"));
       let option = {
+        title:{
+          show:true,
+          color: "#fff",
+        },
         tooltip: {
           formatter: "{a} <br/>{b} : {c}%"
         },
@@ -242,44 +283,61 @@ export default {
             name: "",
             type: "gauge",
             center: ["40%", "50%"],
-            detail: { formatter: "{value}%" },
+            detail: { formatter: "{value}%" ,color:'#fff'},
             axisTick: {
               default: false
             },
             radius: "70%",
             data: [{ value: 76, name: "满意度" }],
             axisLine: {
-              show:true,
-              lineStyle:{
-                color:[
-                  [1,new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                    {
-                      offset:0,
-                      color:'#D72FA7'
-                    },
-                    {
-                      offset:0.2,
-                      color:'#A243DA'
-                    },
-                    {
-                      offset:0.4,
-                      color:'#478CEF'
-                    },
-                    {
-                      offset:0.6,
-                      color:'#00C5FF'
-                    },
-                    {
-                      offset:0.8,
-                      color:'#00E3E7'
-                    },
-                    {
-                      offset:1,
-                      color:'#52F397'
-                    }
-                  ])]
+              show: true,
+              lineStyle: {
+                color: [
+                  [
+                    1,
+                    new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                      {
+                        offset: 0,
+                        color: "#D72FA7"
+                      },
+                      {
+                        offset: 0.2,
+                        color: "#A243DA"
+                      },
+                      {
+                        offset: 0.4,
+                        color: "#478CEF"
+                      },
+                      {
+                        offset: 0.6,
+                        color: "#00C5FF"
+                      },
+                      {
+                        offset: 0.8,
+                        color: "#00E3E7"
+                      },
+                      {
+                        offset: 1,
+                        color: "#52F397"
+                      }
+                    ])
+                  ]
                 ]
               }
+            },
+            axisLabel: {
+              // 刻度标签。
+              show: false
+            },
+            pointer: {
+              // 仪表盘指针。
+              show: true, // 是否显示指针,默认 true。
+              length: "80%", // 指针长度，可以是绝对数值，也可以是相对于半径的百分比,默认 80%。
+              width: 8 // 指针宽度,默认 8。
+            },
+            itemStyle: {
+              color: "#fff",
+
             }
           }
         ]
@@ -352,12 +410,11 @@ export default {
         ]
       };
 
-     
-      window.onresize = myChart.resize; 
+      window.onresize = myChart.resize;
       myChart.setOption(option);
     },
     //异性图
-    classNum() {
+    classNum(openClassNum) {
       let myChart = echarts.init(document.getElementById("classNum"));
       let option = {
         title: {
@@ -375,18 +432,16 @@ export default {
             type: "none"
           },
           formatter: function(params) {
-            // var classNumb=['思想成长类','实践实习类','志愿服务类','学术科技类','文体活动类','工作履历类'];
             return params[0].name + ": " + params[0].value;
-            // return classNumb
           }
         },
         xAxis: {
-          data: ["200", "150", "120", "110", "100", "80"],
+          data: openClassNum,
           axisTick: { show: false },
           axisLine: { show: false },
           axisLabel: {
             textStyle: {
-              color: "#fff",
+              color: "#fff"
             }
           }
         },
@@ -423,66 +478,16 @@ export default {
                 opacity: 1
               }
             },
-            data: [200, 150, 120, 110, 100, 80],
+            data: [0.5, 0.1, 1, 2, 10, 8],
+            // data:openClassNum,
             z: 10
-          },
-          {
-            name: "glyph",
-            type: "pictorialBar",
-            barGap: "-100%",
-            symbolPosition: "end",
-            symbolSize: 50,
-            symbolOffset: [0, "-120%"],
-            data: [
-              {
-                // value: 123,
-                // symbol: pathSymbols.reindeer,
-                symbolSize: [60, 60]
-              },
-              {
-                // value: 60,
-                // symbol: pathSymbols.rocket,
-                symbolSize: [50, 60]
-              },
-              {
-                // value: 25,
-                // symbol: pathSymbols.plane,
-                symbolSize: [65, 35]
-              },
-              {
-                // value: 18,
-                // symbol: pathSymbols.train,
-                symbolSize: [50, 30]
-              },
-              {
-                // value: 12,
-                // symbol: pathSymbols.ship,
-                symbolSize: [50, 35]
-              },
-              {
-                // value: 9,
-                // symbol: pathSymbols.car,
-                symbolSize: [40, 30]
-              },
-              {
-                // value: 2,
-                // symbol: pathSymbols.run,
-                symbolSize: [40, 50]
-              },
-              {
-                // value: 1,
-                // symbol: pathSymbols.walk,
-                symbolSize: [40, 50]
-              }
-            ]
           }
         ]
       };
-       window.onresize = myChart.resize;
+      window.onresize = myChart.resize;
       myChart.setOption(option);
-     
     },
-    //表格
+    //课程开展分时情况表格
     date_condition() {
       let myChart = echarts.init(document.getElementById("date_condition"));
       let option = {
@@ -493,17 +498,6 @@ export default {
           bottom: "10%",
           containLabel: true
         },
-        // dataZoom: [
-        //   {
-        //     id: "dataZoomX",
-        //     type: "slider",
-        //     xAxisIndex: [0],
-        //     filterMode: "filter",
-        //     handleSize: 8,
-        //     start: 0,
-        //     end: 80
-        //   }
-        // ],
         dataZoom: [
           {
             type: "inside",
@@ -827,16 +821,15 @@ export default {
           // _this.zuoShow=false
         }
       });
-      window.onresize = myChart.resize; 
+      window.onresize = myChart.resize;
       myChart.setOption(option);
-      
     }
   }
 };
 </script>
 <style scoped>
 .iconfont {
-  font-size: 0.10rem;
+  font-size: 0.1rem;
 }
 .el-date-editor {
   background: rgba(255, 255, 255, 5%);
@@ -963,12 +956,6 @@ export default {
   color: #fff;
 }
 
-.circle-top {
-  display: flex;
-}
-.circle-bottom {
-  display: flex;
-}
 .box-item-content {
   display: flex;
   justify-content: space-between;
@@ -978,18 +965,62 @@ export default {
   height: 2.5rem;
 }
 
+.fxbox1-li {
+  width: 100%;
+  margin: 0 auto;
+  height: 9%;
+  background: #274155;
+  display: flex;
+  /* justify-content: space-between; */
+  padding: 0 5px;
+  align-items: center;
+  margin-bottom: 15px;
+  color: #fff;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+/* .fxbox4-litit {
+  font-size: 16px;
+  color: #707070;
+  width: 30%;
+  text-align: right;
+  margin-right: 2%;
+} */
 .fxbox1-new-span {
   width: 1.6rem;
   text-align: right;
   color: #fff;
   margin-right: 0.19rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .fxbox4-lidiv {
   border-left: 1px #fff solid;
+  width: 100%;
+  height: 100%;
 }
 .fxbox4-div1 {
   color: #fff;
   font-size: 0.1rem;
+  margin-bottom: 1%;
+  display: flex;
+  align-items: center;
+}
+.fx-box4 {
+  /* width: 20%; */
+  min-width: 300px;
+  /* min-height: 400px; */
+  background: #153146;
+  margin-left: 1%;
+  overflow: auto;
+  padding-bottom: 5px;
+}
+.fx-box4::-webkit-scrollbar {
+  display: none; /*隐藏滚动条*/
 }
 .fxbox4-contant {
   height: 80%;
@@ -1097,38 +1128,38 @@ export default {
 .class-circle {
   color: #d72fa7;
 }
-.declare-circle {
-  color: #478cef;
-}
-.approval-circle {
-  color: #00c5ff;
-}
-.time-circle {
-  color: #00e3e7;
-}
 .box-item-title-left {
   display: flex;
 }
-.box-item-title-right span{
+.box-item-title-right span {
   opacity: 0.5;
   font-size: 0.12rem;
 }
-select{
-    appearance:none;   
-    -moz-appearance:none;   
-    -webkit-appearance:none; /*兼容苹果手机*/
-    -ms-appearance:none; 
-    outline:none;      
-    -webkit-tap-highlight-color: #fff;
-    border: rem(1) solid #EBEBEB;
-    width:rem(100);
-    height: rem(50);
-    line-height: rem(50);
-    /*防止紧紧靠在边上*/
-    text-indent:rem(4);
-    background-color: transparent;
-    color: #fff;
-    border: none;
-    margin-right: 0.20rem;
+select {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none; /*兼容苹果手机*/
+  -ms-appearance: none;
+  outline: none;
+  -webkit-tap-highlight-color: #fff;
+  border: rem(1) solid #ebebeb;
+  width: rem(100);
+  height: rem(50);
+  line-height: rem(50);
+  /*防止紧紧靠在边上*/
+  text-indent: rem(4);
+  background-color: transparent;
+  color: #fff;
+  border: none;
+  margin-right: 0.2rem;
+}
+.evaluatePart-box {
+  width: 1.96rem;
+  height: 0.23rem;
+  background: rgba(255, 255, 255, 8%);
+}
+.evaluatePart {
+  font-size: 0.12rem;
+  color: #fff;
 }
 </style>
