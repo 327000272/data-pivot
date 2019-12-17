@@ -15,30 +15,37 @@ export default new Router({
     path: '/',
     name: 'Main',
     component: Main,
-    children: [{
-      path: ':id/Develop',
-      name: 'Develop',
-      component: Develop,
-    }, {
-      path: '/',
-      name: 'Develop',
-      component: Develop,
-    }, {
-      path: ':id/Results',
-      name: 'Results',
-      component: Results,
-    }, {
-      path: ':id/launch',
-      name: 'launch',
-      component: launch,
-    }, {
-      path: ':id/practice',
-      name: 'practice',
-      component: practice,
-    },{
-		path: ':id/participation',
-		name: 'participation',
-		component: participation,
-	}]
+    children: [
+      // {
+      //   path: ':id/Develop',
+      //   name: 'Develop',
+      //   component: Develop,
+      // },
+      {
+        path: '/',
+        name: 'launch',
+        component: launch,
+      }, 
+      // {
+      //   path: ':id/Results',
+      //   name: 'Results',
+      //   component: Results,
+      // }, 
+      {
+        path: ':id/launch',
+        name: 'launch',
+        component: launch,
+      }, 
+      // {
+      //   path: ':id/practice',
+      //   name: 'practice',
+      //   component: practice,
+      // }, 
+      {
+        path: ':id/participation',
+        name: 'participation',
+        component: participation,
+      }
+    ]
   }, ]
 })

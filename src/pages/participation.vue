@@ -218,7 +218,7 @@ export default {
           y: "bottom",
           textStyle: {
             color: "#fff",
-            fontSize: "0.12rem"
+            fontSize: "0.14rem"
           }
         },
         dataset: {
@@ -229,8 +229,9 @@ export default {
             [74.4, 41032, "志愿服务类"],
             [50.1, 12755, "学术科技类"],
             [89.7, 20145, "文体活动类"],
-            [68.1, 79146, "工作履历类"]
-          ]
+            [68.1, 79146, "工作履历类"],
+
+          ],
         },
 
         grid: { containLabel: true },
@@ -238,7 +239,7 @@ export default {
           show: false,
           name: "amount",
           axisLabel: {
-            textStyle: { fontSize: 10, color: "#fff" }
+            textStyle: { fontSize: '0.10rem', color: "#fff" }
           }
         },
         yAxis: {
@@ -627,16 +628,19 @@ select {
   justify-content: space-between;
 }
 .classPersonCake {
-  width: 2.5rem;
+  /* width: 2.5rem; */
+  width: 50%;
   height: 2.5rem;
 }
 .switchSlide {
-  width: 4.5rem;
+  /* width: 4.5rem; */
+  width: 50%;
   height: 2.5rem;
 }
 
 .funnel {
-  width: 2.5rem;
+  /* width: 2.5rem; */
+  width:50%;
   height: 2.5rem;
 }
 .circlePic {
@@ -761,7 +765,8 @@ select {
   color: #fff;
 }
 #collegePerson {
-  width: 5rem;
+  /* width: 5rem; */
+  width:100%;
   height: 2.5rem;
 }
 .funnel-annotation {

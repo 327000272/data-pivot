@@ -16,18 +16,18 @@
           @close="handleClose"
           ref="dataNum"
         >
-          <el-menu-item index="1" @click="openPage('Develop')">
+          <!-- <el-menu-item index="1" @click="openPage('Develop')">
             <span slot="title">首页</span>
-          </el-menu-item>
-          <el-menu-item index="2" @click="openPage('Results')">
+          </el-menu-item> -->
+          <!-- <el-menu-item index="2" @click="openPage('Results')">
             <span slot="title">育人成效</span>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="3" @click="openPage('launch')">
             <span slot="title">课程开展</span>
           </el-menu-item>
-          <el-menu-item index="4" @click="openPage('practice')">
+          <!-- <el-menu-item index="4" @click="openPage('practice')">
             <span slot="title">社会实践</span>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="5" @click="openPage('participation')">
             <span slot="title">参与情况</span>
           </el-menu-item>

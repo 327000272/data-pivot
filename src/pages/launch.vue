@@ -37,7 +37,7 @@
                 <div class="launch-oblong">{{item.title}}</div>
               </div>
             </div>
-            <div>
+            <div class="SatisfactionDegree">
               <div class="satisfaction" id="satisfaction"></div>
               <div class="evaluatePart-box">
                 <p
@@ -141,7 +141,7 @@ export default {
     return {
       //  linetitle:[],
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzY0ODQxMzAsImV4cCI6MTU3NjQ4NzczMCwiaWF0IjoxNTc2NDg0MTMwfQ.WPLyzB2GEOI8A1PinsnRoR8YuS6RZPjtLrY6KiwjbNA",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzY1ODU5NjUsImV4cCI6MTU3NjU4OTU2NSwiaWF0IjoxNTc2NTg1OTY1fQ.HQxxzk1P9YB17trkgY9mPYwPdLlZkfK_Qb5s8sUuqos",
       url: "https://class-ms-test.univteam.com/",
       Condition: [],
       Comment: [],
@@ -149,7 +149,8 @@ export default {
       participationRate: "",
       openClassNum: [],
       openClassName: [],
-      courseSupply: []
+      courseSupply: [],
+      
     };
   },
   created() {
@@ -268,9 +269,9 @@ export default {
     satisfaction() {
       let myChart = echarts.init(document.getElementById("satisfaction"));
       let option = {
-        title:{
-          show:true,
-          color: "#fff",
+        title: {
+          show: true,
+          color: "#fff"
         },
         tooltip: {
           formatter: "{a} <br/>{b} : {c}%"
@@ -283,7 +284,7 @@ export default {
             name: "",
             type: "gauge",
             center: ["40%", "50%"],
-            detail: { formatter: "{value}%" ,color:'#fff'},
+            detail: { formatter: "{value}%", color: "#fff" },
             axisTick: {
               default: false
             },
@@ -336,8 +337,7 @@ export default {
               width: 8 // 指针宽度,默认 8。
             },
             itemStyle: {
-              color: "#fff",
-
+              color: "#fff"
             }
           }
         ]
@@ -959,6 +959,8 @@ export default {
 .box-item-content {
   display: flex;
   justify-content: space-between;
+  width: 50%;
+  flex-wrap:wrap;
 }
 .satisfaction {
   width: 2.5rem;
@@ -1006,7 +1008,6 @@ export default {
 .fxbox4-div1 {
   color: #fff;
   font-size: 0.1rem;
-  margin-bottom: 1%;
   display: flex;
   align-items: center;
 }
@@ -1046,7 +1047,6 @@ export default {
   width: 17%;
   height: 0.1rem;
   background: #8942bf;
-  margin-top: 0.5%;
 }
 .scope_label {
   font-size: 0.12rem;
@@ -1060,11 +1060,13 @@ export default {
   justify-content: space-between;
 }
 .classNumCircle {
-  width: 2.59rem;
+  /* width: 2.59rem; */
+  width: 50%;
   height: 2.29rem;
 }
 .classNum {
-  width: 4.1rem;
+  /* width: 4.1rem; */
+  width: 50%;
   height: 2.29rem;
 }
 #date_condition {
@@ -1128,6 +1130,7 @@ export default {
 .class-circle {
   color: #d72fa7;
 }
+
 .box-item-title-left {
   display: flex;
 }
@@ -1161,5 +1164,11 @@ select {
 .evaluatePart {
   font-size: 0.12rem;
   color: #fff;
+}
+.pandect{
+  width: 50%;
+}
+.SatisfactionDegree{
+  width: 50%;
 }
 </style>
