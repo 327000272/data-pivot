@@ -9,11 +9,13 @@ import echarts from 'echarts'
 import  axios from 'axios'
 import './assets/iconfont/iconfont.css'
 import $ from 'jquery'
+import Hliquid from 'h-liquid'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.prototype.$echarts = echarts 
 Vue.config.productionTip = false
+Vue.use(Hliquid)
 
 /* eslint-disable no-new */
 let app = new Vue({

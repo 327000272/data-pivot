@@ -27,16 +27,20 @@
               <p>课程开展总览</p>
             </div>
           </div>
-          <div class="box-item-content">
-            <div class="pandect" v-for="item in Condition" :key="item.id">
-              <div class="launch-box1-contant">
-                <div class="launch-circle">
-                  <div class="class-circle">{{item.data}}</div>
-                  <div>{{item.unit}}</div>
+          <div class="courseOverview">
+            <div class="box-item-content">
+              <!-- 4个圈 -->
+              <div class="pandect" v-for="item in Condition" :key="item.id">
+                <div class="launch-box1-contant">
+                  <div class="launch-circle">
+                    <div class="class-circle">{{item.data}}</div>
+                    <div>{{item.unit}}</div>
+                  </div>
+                  <div class="launch-oblong">{{item.title}}</div>
                 </div>
-                <div class="launch-oblong">{{item.title}}</div>
               </div>
             </div>
+            <!-- 仪表盘 -->
             <div class="SatisfactionDegree">
               <div class="satisfaction" id="satisfaction"></div>
               <div class="evaluatePart-box">
@@ -90,9 +94,9 @@
               <div class="fxbox4-lidiv">
                 <div class="fxbox4-div1">
                   &nbsp;&nbsp;
-                  <span class="iconfont icon-ketang"></span>&nbsp;
+                  <span class="iconfont iconketang"></span>&nbsp;
                   <span>{{item.supp_count}}</span>次&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <span class="iconfont icon-rengong-copy"></span>&nbsp;
+                  <span class="iconfont iconrengong"></span>&nbsp;
                   <span>{{item.supp_capacity}}</span>人次
                 </div>
                 <div class="fxbox4-div2" style="width: 50%;"></div>
@@ -141,7 +145,7 @@ export default {
     return {
       //  linetitle:[],
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzY1ODU5NjUsImV4cCI6MTU3NjU4OTU2NSwiaWF0IjoxNTc2NTg1OTY1fQ.HQxxzk1P9YB17trkgY9mPYwPdLlZkfK_Qb5s8sUuqos",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzY2NjM2ODcsImV4cCI6MTU3NjY2NzI4NywiaWF0IjoxNTc2NjYzNjg3fQ.Ho2jFQzKatYVQMnbWHgj3kntgV6uZQRcMxDhPlsJ1W0",
       url: "https://class-ms-test.univteam.com/",
       Condition: [],
       Comment: [],
@@ -149,8 +153,7 @@ export default {
       participationRate: "",
       openClassNum: [],
       openClassName: [],
-      courseSupply: [],
-      
+      courseSupply: []
     };
   },
   created() {
@@ -169,6 +172,7 @@ export default {
     this.getComment();
     this.getClassEstablishNum();
     this.getCourseSupply();
+    
   },
   methods: {
     fetchData() {
@@ -270,8 +274,10 @@ export default {
       let myChart = echarts.init(document.getElementById("satisfaction"));
       let option = {
         title: {
-          show: true,
-          color: "#fff"
+          textStyle:{
+            color:"#fff",
+
+          }
         },
         tooltip: {
           formatter: "{a} <br/>{b} : {c}%"
@@ -283,12 +289,12 @@ export default {
           {
             name: "",
             type: "gauge",
-            center: ["40%", "50%"],
+            center: ["40%", "60%"],
             detail: { formatter: "{value}%", color: "#fff" },
             axisTick: {
               default: false
             },
-            radius: "70%",
+            radius: "90%",
             data: [{ value: 76, name: "满意度" }],
             axisLine: {
               show: true,
@@ -338,7 +344,8 @@ export default {
             },
             itemStyle: {
               color: "#fff"
-            }
+            },
+            
           }
         ]
       };
@@ -354,7 +361,7 @@ export default {
           x: "center",
           y: "bottom",
           textStyle: {
-            color: "#fff",
+            color: "rgba(255,255,255,0.5)",
             fontSize: "0.14rem"
           }
         },
@@ -366,7 +373,7 @@ export default {
           {
             name: "",
             type: "pie",
-            radius: ["20%", "70%"],
+            radius: ["30%", "70%"],
             center: ["50%", "45%"],
             data: [
               { value: 90, name: "9.0%" },
@@ -393,7 +400,8 @@ export default {
                     "#D72FA7"
                   ];
                   return colorList[params.dataIndex];
-                }
+                },
+
               }
             },
             labelLine: {
@@ -422,7 +430,7 @@ export default {
           x: "center",
           y: "bottom",
           textStyle: {
-            color: "#ffffff",
+            color: "rgba(255,255,255,0.5)",
             fontSize: "0.14rem"
           }
         },
@@ -863,7 +871,7 @@ export default {
 .block {
   display: flex;
   justify-content: space-between;
-  margin-right: 0.4rem;
+  /* margin-right: 0.4rem; */
 }
 .fx-btn {
   border: 1px #fff solid;
@@ -960,11 +968,12 @@ export default {
   display: flex;
   justify-content: space-between;
   width: 50%;
-  flex-wrap:wrap;
+  flex-wrap: wrap;
 }
 .satisfaction {
   width: 2.5rem;
-  height: 2.5rem;
+  height: 2.2rem;
+  float: right;
 }
 
 .fxbox1-li {
@@ -991,7 +1000,7 @@ export default {
 .fxbox1-new-span {
   width: 1.6rem;
   text-align: right;
-  color: #fff;
+  color: rgba(255,255,255,0.5);
   margin-right: 0.19rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1157,18 +1166,26 @@ select {
   margin-right: 0.2rem;
 }
 .evaluatePart-box {
-  width: 1.96rem;
+  width: 1.5rem;
   height: 0.23rem;
+  line-height: 0.23rem;
   background: rgba(255, 255, 255, 8%);
+  float: right;
+  margin-right: 0.75rem;
 }
 .evaluatePart {
   font-size: 0.12rem;
   color: #fff;
+  text-align: center;
 }
-.pandect{
+.pandect {
   width: 50%;
 }
-.SatisfactionDegree{
+.SatisfactionDegree {
   width: 50%;
+  overflow: hidden;
+}
+.courseOverview{
+  display: flex;
 }
 </style>

@@ -113,8 +113,21 @@
           </div>
           <div class="box-item-pic">
             <!-- 水球图-->
-            <div class="circlePic" id="circlePic" style="width=100%; height = 400px"></div>
-            <!-- <div id="echarts" :style="{width: '340px', height: '220px',}"></div> -->
+            <div class="circlePic" id="circlePic">
+              <Hliquid
+                class="home-liquid"
+                ref="liquid"
+                :value="80"
+                :background="'#e2e2e2'"
+                :color="'#D72FA7'"
+                :textSize="36"
+                :speed="1"
+                :waveHeight="5"
+                :waveWidth="9"
+                :borderWidth="2"
+                :borderOffset="10"
+              ></Hliquid>
+            </div>
             <!-- 漏斗图 -->
             <div class="funnel" id="funnel"></div>
           </div>
@@ -127,6 +140,7 @@
 <script>
 import echarts from "echarts";
 import axios from "axios";
+import Hliquid from "../assets/h-liquid.js";
 export default {
   name: "participation",
   data() {
@@ -137,7 +151,6 @@ export default {
     this.classPersonCake();
     this.switchSlide();
     this.funnel();
-    this.circlePic();
   },
   methods: {
     //饼状图
@@ -229,24 +242,30 @@ export default {
             [74.4, 41032, "志愿服务类"],
             [50.1, 12755, "学术科技类"],
             [89.7, 20145, "文体活动类"],
-            [68.1, 79146, "工作履历类"],
-
-          ],
+            [68.1, 79146, "工作履历类"]
+          ]
         },
 
-        grid: { containLabel: true },
+        grid: {
+          containLabel: true,
+          x: 30,
+          y: 20,
+          x2: 30,
+          y2: 20
+        },
         xAxis: {
           show: false,
           name: "amount",
           axisLabel: {
-            textStyle: { fontSize: '0.10rem', color: "#fff" }
+            textStyle: { fontSize: "0.10rem", color: "#fff" }
           }
         },
         yAxis: {
           type: "category",
           axisLabel: {
             textStyle: {
-              color: "#fff"
+              color: "#fff",
+              fontSize: "0.10rem"
             }
           }
         },
@@ -453,10 +472,11 @@ export default {
           {
             name: "漏斗图",
             type: "funnel",
-            left: "10%",
-            top: 60,
+            left: "0%",
+            top: 30,
             bottom: 60,
-            width: "80%",
+            width: "100%",
+            height: "60%",
             min: 0,
             max: 100,
             minSize: "0%",
@@ -468,11 +488,15 @@ export default {
               position: "inside"
             },
             labelLine: {
-              length: 10,
-              lineStyle: {
-                width: 1,
-                type: "solid"
+              normal: {
+                show: true,
+                length: 30
               }
+              // length: 10,
+              // lineStyle: {
+              //   width: 1,
+              //   type: "solid"
+              // }
             },
             itemStyle: {
               borderColor: "#fff",
@@ -501,11 +525,6 @@ export default {
 
       window.onresize = myChart.resize();
       myChart.setOption(option);
-    },
-    // 水球图
-    circlePic() {
-
-
     }
   }
 };
@@ -545,7 +564,7 @@ export default {
 .iconhuo::before {
   position: absolute;
   top: 0.17rem;
-  left: 0.2rem;
+  left: 28%;
 }
 .fx-title {
   font-size: 0.24rem;
@@ -640,11 +659,12 @@ select {
 
 .funnel {
   /* width: 2.5rem; */
-  width:50%;
+  width: 50%;
   height: 2.5rem;
 }
 .circlePic {
   width: 2.5rem;
+  /* width: 50%; */
   height: 2.5rem;
 }
 .liveness {
@@ -766,7 +786,7 @@ select {
 }
 #collegePerson {
   /* width: 5rem; */
-  width:100%;
+  width: 100%;
   height: 2.5rem;
 }
 .funnel-annotation {
