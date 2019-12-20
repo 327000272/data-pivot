@@ -2,6 +2,20 @@
   <div>
     <div class="fx-con">
       <div class="fx-title">第二课堂参与情况分析</div>
+      <div class="fx-content">
+        <!-- 日期插件 -->
+        <div class="block">
+          <span class="demonstration">统计日期</span>
+          <el-date-picker
+            type="daterange"
+            range-separator="~"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            class="data-picker"
+          ></el-date-picker>
+        </div>
+        <div class="fx-btn">运算</div>
+      </div>
     </div>
     <!-- 四块主内容 -->
     <div class="box-content">
@@ -29,6 +43,7 @@
               <select>
                 <option value="全部开课学院">全部开课学院</option>
               </select>
+              <span class="iconfont iconduobianxing"></span>
             </div>
           </div>
           <div class="liveness">
@@ -89,7 +104,7 @@
         </div>
       </div>
       <div class="box-content-bottom">
-        <div class="box-item">
+        <div class="box-item" id="personStatistics">
           <div class="box-item-title">
             <div class="box-item-title-left">
               <div class="title-bar"></div>
@@ -97,6 +112,9 @@
             </div>
           </div>
           <div class="collegePerson" id="collegePerson"></div>
+          <!-- 左右箭头 -->
+          <div class="youjiantou iconfont iconlujing1" v-if="youShow"></div>
+          <div class="zuojiantou iconfont iconlujing" v-if="zuoShow"></div>
         </div>
         <div class="box-item" id="timeSituation">
           <div class="box-item-title">
@@ -109,6 +127,7 @@
               <select>
                 <option value="全部开课学院">全部开课学院</option>
               </select>
+              <span class="iconfont iconduobianxing"></span>
             </div>
           </div>
           <div class="box-item-pic">
@@ -125,8 +144,10 @@
                 :waveHeight="5"
                 :waveWidth="9"
                 :borderWidth="2"
-                :borderOffset="10"
+                :borderOffset="1"
+
               ></Hliquid>
+              <p class="classReferenceRatio">到场与课程供给比例</p>
             </div>
             <!-- 漏斗图 -->
             <div class="funnel" id="funnel"></div>
@@ -144,7 +165,13 @@ import Hliquid from "../assets/h-liquid.js";
 export default {
   name: "participation",
   data() {
-    return {};
+    return {
+      token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzY3MjIwMzYsImV4cCI6MTU3NjcyNTYzNiwiaWF0IjoxNTc2NzIyMDM2fQ.snFr5abJPZVar3g0hE5_f09UEZ3UFp-rjTdw4k-Q0GA",
+      url: "https://class-ms-test.univteam.com/",
+      youShow:true,
+      zuoShow:false,
+    };
   },
   mounted() {
     this.collegePerson();
@@ -162,33 +189,48 @@ export default {
           x: "center",
           y: "bottom",
           textStyle: {
-            color: "#fff",
+            color: "rgba(255,255,255,0.5)",
             fontSize: "0.14rem"
           }
         },
         tooltip: {
           trigger: "item",
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
+          formatter: function(params) {
+            return params.data.hintText + " : " + params.data.name;
+          }
+        },
+        graphic:{
+          type:'text',
+          left:'center',
+          top:'center',
+          style:{
+            text:"各类占比",
+            fill:"#fff",
+            textAlign:'middle',
+            textVerticalAlign:'middle',
+            fontSize:'0.14rem',
+
+          }
         },
         series: [
           {
             name: "",
             type: "pie",
-            radius: ["20%", "70%"],
+            radius: ["30%", "70%"],
             center: ["50%", "45%"],
             data: [
-              { value: 90, name: "9.0%" },
-              { value: 126, name: "12.6%" },
-              { value: 170, name: "17.0%" },
-              { value: 183, name: "18.3%" },
-              { value: 206, name: "20.6%" },
-              { value: 225, name: "22.5%" }
+              { value: 90, name: "9.0%", hintText: "思想成长类" },
+              { value: 126, name: "12.6%", hintText: "实践实习类" },
+              { value: 170, name: "17.0%", hintText: "志愿服务类" },
+              { value: 183, name: "18.3%", hintText: "学术科技类" },
+              { value: 206, name: "20.6%", hintText: "文体活动类" },
+              { value: 225, name: "22.5%", hintText: "工作履历类" }
             ],
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,
                 shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)"
+                shadowColor: "rgba(0, 0, 0, 0.5)",
               },
               normal: {
                 color: function(params) {
@@ -201,8 +243,11 @@ export default {
                     "#D72FA7"
                   ];
                   return colorList[params.dataIndex];
-                }
-              }
+                },
+                borderWidth:1,
+                borderColor: '#08263c',
+              },
+               
             },
             labelLine: {
               normal: {
@@ -230,19 +275,31 @@ export default {
           x: "center",
           y: "bottom",
           textStyle: {
-            color: "#fff",
+            color: "rgba(255,255,255,0.5)",
             fontSize: "0.14rem"
+          }
+        },
+        tooltip: {
+          trigger: "item",
+          formatter: function(params) {
+            return params.data.hintText + " : " + params.data.value;
           }
         },
         dataset: {
           source: [
-            ["score", "amount", "product"],
-            [89.3, 58212, "思想成长类"],
-            [57.1, 78254, "实践实习类"],
-            [74.4, 41032, "志愿服务类"],
-            [50.1, 12755, "学术科技类"],
-            [89.7, 20145, "文体活动类"],
-            [68.1, 79146, "工作履历类"]
+            // [ "amount", "product"],
+            // [ 1805, "思想成长类"],
+            // [ 1406, "实践实习类"],
+            // [ 1021, "志愿服务类"],
+            // [ 1987, "学术科技类"],
+            // [ 542, "文体活动类"],
+            // [ 870, "工作履历类"]
+              { value: 1805,  hintText: "思想成长类" },
+              { value: 1406,  hintText: "实践实习类" },
+              { value: 1021, hintText: "志愿服务类" },
+              { value: 1987, hintText: "学术科技类" },
+              { value: 542, hintText: "文体活动类" },
+              { value: 870,  hintText: "工作履历类" }
           ]
         },
 
@@ -255,16 +312,16 @@ export default {
         },
         xAxis: {
           show: false,
-          name: "amount",
+          // name: "amount",
           axisLabel: {
-            textStyle: { fontSize: "0.10rem", color: "#fff" }
+            textStyle: { fontSize: "0.10rem", color: "#fff"}
           }
         },
         yAxis: {
           type: "category",
           axisLabel: {
             textStyle: {
-              color: "#fff",
+              color: "rgba(255,255,255,0.5)",
               fontSize: "0.10rem"
             }
           }
@@ -275,10 +332,13 @@ export default {
             type: "bar",
             encode: {
               x: "amount",
-              y: "product"
+              // y: "product"
             },
             itemStyle: {
               normal: {
+                label:{
+                  show:true
+                },
                 color: function(params) {
                   var colorList = [
                     "#52F397",
@@ -301,6 +361,7 @@ export default {
     },
     //柱状图
     collegePerson() {
+      var _this=this;
       let myChart = echarts.init(document.getElementById("collegePerson"));
       var dataAxis = [
         "土木建筑工程学院",
@@ -339,7 +400,6 @@ export default {
             color: "#fff"
           }
         },
-
         dataZoom: [
           {
             type: "inside",
@@ -360,7 +420,7 @@ export default {
               type: "shadow"
             },
             axisLabel: {
-              textStyle: { fontSize: 10, color: "#fff" },
+              textStyle: { fontSize: 10, color: "rgba(255,255,255,0.5)" },
               interval: 0,
               formatter: function(params) {
                 var newParamsName = "";
@@ -447,6 +507,18 @@ export default {
           }
         ]
       };
+      myChart.on("datazoom", function(params) {
+        if (params.batch[0].end > 99.9) {
+          _this.youShow=false
+        } else {
+          _this.youShow=true
+        }
+        if (params.batch[0].start > 0) {
+          _this.zuoShow=true
+        } else {
+          _this.zuoShow=false
+        }
+      });
       window.onresize = myChart.resize();
       myChart.setOption(option);
     },
@@ -459,7 +531,7 @@ export default {
           x: "center",
           y: "bottom",
           textStyle: {
-            color: "#fff",
+            color: "rgba(255,255,255,0.5)",
             fontSize: "0.12rem"
           }
         },
@@ -554,6 +626,12 @@ export default {
   font-size: 0.3rem;
   opacity: 0.5;
 }
+.iconduobianxing::before{
+  color: #fff;
+  opacity: 1;
+  font-size: 0.10rem;
+  margin-right: 0.20rem;
+}
 .iconjihuo,
 .iconrenshu,
 .iconhuo {
@@ -576,6 +654,43 @@ export default {
   justify-content: space-between;
   margin-top: 0.42rem;
   margin-bottom: 0.24rem;
+}
+/* 运算 */
+.fx-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.12rem;
+}
+.block {
+  height: 40px;
+  display: flex;
+  margin-right: 25px;
+  width: 80%;
+}
+.demonstration {
+  color: #5b6f7e;
+  background: #213c50;
+  line-height: 40px;
+  text-align: center;
+  margin-right: 2px;
+  min-width: 100px;
+}
+.data-picker {
+  border-radius: 0;
+  background: #213c50;
+  border: none;
+  color: #fff;
+}
+.fx-btn {
+  border: 1px #fff solid;
+  color: #fff;
+  font-size: 0.12rem;
+  width: 0.6rem;
+  height: 0.3rem;
+  text-align: center;
+  line-height: 0.3rem;
+  margin-left: 0.1rem;
 }
 .box-content {
   margin-left: 0.4rem;
@@ -663,8 +778,8 @@ select {
   height: 2.5rem;
 }
 .circlePic {
-  width: 2.5rem;
-  /* width: 50%; */
+  /* width: 2.5rem; */
+  width: 50%;
   height: 2.5rem;
 }
 .liveness {
@@ -795,4 +910,31 @@ select {
   color: #fff;
   opacity: 0.5;
 }
+.classReferenceRatio{
+  font-size: 0.14rem;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+}
+.youjiantou{
+    position: absolute;
+    top: 1.5rem;
+    right: 0.05rem;
+    font-size: 0.22rem;
+}
+.zuojiantou{
+    position: absolute;
+    top: 1.5rem;
+    left: 0.10rem;
+    font-size: 0.22rem;
+}
+.iconlujing,.iconlujing1{
+    opacity: 0.2;
+    font-size: 0.26rem;
+}
+#personStatistics{
+  position: relative;
+}
+/* .home-liquid{
+  margin-left: 1rem;
+} */
 </style>

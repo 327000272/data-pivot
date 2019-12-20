@@ -3,8 +3,9 @@
     <div class="fx-con">
       <div class="fx-title">第二课堂课程开展分析</div>
       <div class="fx-content">
+        <!-- 日期插件 -->
         <div class="block">
-          <div class="demonstration">统计日期</div>
+          <span class="demonstration">统计日期</span>
           <el-date-picker
             type="daterange"
             range-separator="~"
@@ -12,8 +13,8 @@
             end-placeholder="结束日期"
             class="data-picker"
           ></el-date-picker>
-          <div class="fx-btn">运算</div>
         </div>
+        <div class="fx-btn">运算</div>
       </div>
     </div>
     <!-- 四块主内容 -->
@@ -63,6 +64,7 @@
               <select>
                 <option value="全部开课学院">全部开课学院</option>
               </select>
+              <span class="iconfont iconduobianxing"></span>
             </div>
           </div>
           <div class="box-item-pic">
@@ -117,15 +119,15 @@
               <select>
                 <option value="全部开课学院">全部开课学院</option>
               </select>
+              <span class="iconfont iconduobianxing"></span>
             </div>
           </div>
           <div id="date_condition" style="height: 100%;width:70%;"></div>
+          <!-- 左右箭头 -->
+          <div class="youjiantou iconfont iconlujing1" v-if="youShow"></div>
+          <div class="zuojiantou iconfont iconlujing" v-if="zuoShow"></div>
           <div class="echarts-legend">
             <div class="echarts-legend-box">
-              <!-- <div class="echarts-legend-item">
-                <div class="echarts-legend-item-bar"></div>
-                <div class="echarts-legend-item-txt">思想成长类</div>
-              </div>-->
               <div class="echarts-legend-item" v-for="item in openClassName" :key="item.id">
                 <div class="echarts-legend-item-bar"></div>
                 <div class="echarts-legend-item-txt">{{item}}</div>
@@ -145,7 +147,7 @@ export default {
     return {
       //  linetitle:[],
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzY2NjM2ODcsImV4cCI6MTU3NjY2NzI4NywiaWF0IjoxNTc2NjYzNjg3fQ.Ho2jFQzKatYVQMnbWHgj3kntgV6uZQRcMxDhPlsJ1W0",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzY3NTIxMDcsImV4cCI6MTU3Njc1NTcwNywiaWF0IjoxNTc2NzUyMTA3fQ.fj_fZ0AFWEYUXbdHWWpUvU_ZD8ssZRKqkHK9jVQlvtM",
       url: "https://class-ms-test.univteam.com/",
       Condition: [],
       Comment: [],
@@ -153,7 +155,9 @@ export default {
       participationRate: "",
       openClassNum: [],
       openClassName: [],
-      courseSupply: []
+      courseSupply: [],
+      youShow: true,
+      zuoShow: false
     };
   },
   created() {
@@ -172,7 +176,6 @@ export default {
     this.getComment();
     this.getClassEstablishNum();
     this.getCourseSupply();
-    
   },
   methods: {
     fetchData() {
@@ -263,7 +266,6 @@ export default {
         )
         .then(function(response) {
           _this.courseSupply = response.data.data;
-          console.log(_this.courseSupply);
         })
         .catch(function(error) {
           console.log(error);
@@ -274,13 +276,12 @@ export default {
       let myChart = echarts.init(document.getElementById("satisfaction"));
       let option = {
         title: {
-          textStyle:{
-            color:"#fff",
-
+          textStyle: {
+            color: "#fff"
           }
         },
         tooltip: {
-          formatter: "{a} <br/>{b} : {c}%"
+          formatter: "{b} : {c}%"
         },
         toolbox: {
           feature: {}
@@ -336,16 +337,44 @@ export default {
               // 刻度标签。
               show: false
             },
+            splitLine: {
+              // 分隔线样式。
+              show: true, // 是否显示分隔线,默认 true。
+              length: 30, // 分隔线线长。支持相对半径的百分比,默认 30。
+              lineStyle: {
+                // 分隔线样式。
+                color: "#eee", //线的颜色,默认 #eee。
+                opacity: 1, //图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形。
+                width: 0, //线度,默认 2。
+                type: "solid", //线的类型,默认 solid。 此外还有 dashed,dotted
+                shadowBlur: 10, //(发光效果)图形阴影的模糊大小。该属性配合 shadowColor,shadowOffsetX, shadowOffsetY 一起设置图形的阴影效果。
+                shadowColor: "#fff" //阴影颜色。支持的格式同color。
+              }
+            },
+            axisTick: {
+              // 刻度(线)样式。
+              show: true, // 是否显示刻度(线),默认 true。
+              splitNumber: 5, // 分隔线之间分割的刻度数,默认 5。
+              length: 8, // 刻度线长。支持相对半径的百分比,默认 8。
+              lineStyle: {
+                // 刻度线样式。
+                color: "#153146", //线的颜色,默认 #eee。
+                opacity: 1, //图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形。
+                width: 0.3, //线度,默认 1。
+                type: "solid", //线的类型,默认 solid。 此外还有 dashed,dotted
+                shadowBlur: 10, //(发光效果)图形阴影的模糊大小。该属性配合 shadowColor,shadowOffsetX, shadowOffsetY 一起设置图形的阴影效果。
+                shadowColor: "#fff" //阴影颜色。支持的格式同color。
+              }
+            },
             pointer: {
               // 仪表盘指针。
               show: true, // 是否显示指针,默认 true。
-              length: "80%", // 指针长度，可以是绝对数值，也可以是相对于半径的百分比,默认 80%。
-              width: 8 // 指针宽度,默认 8。
+              length: "90%", // 指针长度，可以是绝对数值，也可以是相对于半径的百分比,默认 80%。
+              width: 5 // 指针宽度,默认 8。
             },
             itemStyle: {
               color: "#fff"
-            },
-            
+            }
           }
         ]
       };
@@ -367,7 +396,20 @@ export default {
         },
         tooltip: {
           trigger: "item",
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
+          formatter: function(params) {
+            return params.data.hintText + " : " + params.data.name;
+          }
+        },
+        graphic: {
+          type: "image",
+          left: "center",
+          top: "center",
+          style: {
+            image:
+              "http://file02.16sucai.com/d/file/2015/0408/779334da99e40adb587d0ba715eca102.jpg",
+            width: 50,
+            height: 50
+          }
         },
         series: [
           {
@@ -376,12 +418,12 @@ export default {
             radius: ["30%", "70%"],
             center: ["50%", "45%"],
             data: [
-              { value: 90, name: "9.0%" },
-              { value: 126, name: "12.6%" },
-              { value: 170, name: "17.0%" },
-              { value: 183, name: "18.3%" },
-              { value: 206, name: "20.6%" },
-              { value: 225, name: "22.5%" }
+              { value: 90, name: "9.0%", hintText: "思想成长类" },
+              { value: 126, name: "12.6%", hintText: "实践实习类" },
+              { value: 170, name: "17.0%", hintText: "志愿服务类" },
+              { value: 183, name: "18.3%", hintText: "学术科技类" },
+              { value: 206, name: "20.6%", hintText: "文体活动类" },
+              { value: 225, name: "22.5%", hintText: "工作履历类" }
             ],
             itemStyle: {
               emphasis: {
@@ -401,7 +443,9 @@ export default {
                   ];
                   return colorList[params.dataIndex];
                 },
-
+                // borderColor: '#ffffff',
+                shadowColor: "#fff",
+                shadowBlur: "5"
               }
             },
             labelLine: {
@@ -440,11 +484,11 @@ export default {
             type: "none"
           },
           formatter: function(params) {
-            return params[0].name + ": " + params[0].value;
+            return params[0].data.hintText + " : " + params[0].data.value;
           }
         },
         xAxis: {
-          data: openClassNum,
+          data: [303, 265, 213, 210, 203, 199],
           axisTick: { show: false },
           axisLine: { show: false },
           axisLabel: {
@@ -486,9 +530,14 @@ export default {
                 opacity: 1
               }
             },
-            data: [0.5, 0.1, 1, 2, 10, 8],
-            // data:openClassNum,
-            z: 10
+            data: [
+              { value: 303, hintText: "思想成长类" },
+              { value: 265, hintText: "实践实习类" },
+              { value: 213, hintText: "志愿服务类" },
+              { value: 210, hintText: "学术科技类" },
+              { value: 203, hintText: "文体活动类" },
+              { value: 199, hintText: "工作履历类" }
+            ]
           }
         ]
       };
@@ -497,6 +546,7 @@ export default {
     },
     //课程开展分时情况表格
     date_condition() {
+      var _this = this;
       let myChart = echarts.init(document.getElementById("date_condition"));
       let option = {
         grid: {
@@ -818,15 +868,16 @@ export default {
         ]
       };
       myChart.on("datazoom", function(params) {
+        console.log(params);
         if (params.batch[0].end > 99.9) {
-          // _this.youShow=false
+          _this.youShow = false;
         } else {
-          // _this.youShow=true
+          _this.youShow = true;
         }
         if (params.batch[0].start > 0) {
-          // _this.zuoShow=true
+          _this.zuoShow = true;
         } else {
-          // _this.zuoShow=false
+          _this.zuoShow = false;
         }
       });
       window.onresize = myChart.resize;
@@ -838,6 +889,12 @@ export default {
 <style scoped>
 .iconfont {
   font-size: 0.1rem;
+}
+.iconduobianxing::before {
+  color: #fff;
+  opacity: 1;
+  font-size: 0.1rem;
+  margin-right: 0.2rem;
 }
 .el-date-editor {
   background: rgba(255, 255, 255, 5%);
@@ -855,23 +912,32 @@ export default {
   color: #fff;
   margin-left: 0.4rem;
 }
+/* 运算 */
 .fx-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 0.12rem;
-}
-.demonstration {
-  width: 0.66rem;
-  height: 0.32rem;
-  line-height: 0.32rem;
-  color: #fff;
-  background: rgba(255, 255, 255, 5%);
-  text-align: center;
-  font-size: 0.12rem;
-  margin-right: 0.05rem;
 }
 .block {
+  height: 40px;
   display: flex;
-  justify-content: space-between;
-  /* margin-right: 0.4rem; */
+  margin-right: 25px;
+  width: 80%;
+}
+.demonstration {
+  color: #5b6f7e;
+  background: #213c50;
+  line-height: 40px;
+  text-align: center;
+  margin-right: 2px;
+  min-width: 100px;
+}
+.data-picker {
+  border-radius: 0;
+  background: #213c50;
+  border: none;
+  color: #fff;
 }
 .fx-btn {
   border: 1px #fff solid;
@@ -887,6 +953,7 @@ export default {
 .box-content {
   margin-left: 0.4rem;
 }
+
 .box-content-top {
   display: flex;
 }
@@ -970,6 +1037,18 @@ export default {
   width: 50%;
   flex-wrap: wrap;
 }
+.box-item-content :nth-child(1).pandect .class-circle {
+  color: #d72fa7;
+}
+.box-item-content :nth-child(2).pandect .class-circle {
+  color: #478cef;
+}
+.box-item-content :nth-child(3).pandect .class-circle {
+  color: #00c5ff;
+}
+.box-item-content :nth-child(4).pandect .class-circle {
+  color: #00e3e7;
+}
 .satisfaction {
   width: 2.5rem;
   height: 2.2rem;
@@ -1000,7 +1079,7 @@ export default {
 .fxbox1-new-span {
   width: 1.6rem;
   text-align: right;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
   margin-right: 0.19rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1136,9 +1215,6 @@ export default {
 #timeSituation {
   position: relative;
 }
-.class-circle {
-  color: #d72fa7;
-}
 
 .box-item-title-left {
   display: flex;
@@ -1185,7 +1261,24 @@ select {
   width: 50%;
   overflow: hidden;
 }
-.courseOverview{
+.courseOverview {
   display: flex;
+}
+.youjiantou {
+  position: absolute;
+  top: 1.3rem;
+  right: 0.05rem;
+  font-size: 0.22rem;
+}
+.zuojiantou {
+  position: absolute;
+  top: 1.3rem;
+  left: 0.1rem;
+  font-size: 0.22rem;
+}
+.iconlujing,
+.iconlujing1 {
+  opacity: 0.2;
+  font-size: 0.26rem;
 }
 </style>
