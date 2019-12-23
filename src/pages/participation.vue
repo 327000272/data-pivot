@@ -269,9 +269,10 @@ export default {
     //横向柱状图
     switchSlide() {
       let myChart = echarts.init(document.getElementById("switchSlide"));
-      var option = {
+      let myColor = [ '#00c0e9', '#0096f3', '#33CCFF', '#33FFCC','#A243DA'],
+      option = {
         title: {
-          text: "各类课程参与学生人次",
+          text: "各类课程参与学生数比例",
           x: "center",
           y: "bottom",
           textStyle: {
@@ -279,83 +280,128 @@ export default {
             fontSize: "0.14rem"
           }
         },
-        tooltip: {
-          trigger: "item",
-          formatter: function(params) {
-            return params.data.hintText + " : " + params.data.value;
-          }
-        },
-        dataset: {
-          source: [
-            // [ "amount", "product"],
-            // [ 1805, "思想成长类"],
-            // [ 1406, "实践实习类"],
-            // [ 1021, "志愿服务类"],
-            // [ 1987, "学术科技类"],
-            // [ 542, "文体活动类"],
-            // [ 870, "工作履历类"]
-              { value: 1805,  hintText: "思想成长类" },
-              { value: 1406,  hintText: "实践实习类" },
-              { value: 1021, hintText: "志愿服务类" },
-              { value: 1987, hintText: "学术科技类" },
-              { value: 542, hintText: "文体活动类" },
-              { value: 870,  hintText: "工作履历类" }
-          ]
-        },
-
-        grid: {
-          containLabel: true,
-          x: 30,
-          y: 20,
-          x2: 30,
-          y2: 20
-        },
-        xAxis: {
-          show: false,
-          // name: "amount",
-          axisLabel: {
-            textStyle: { fontSize: "0.10rem", color: "#fff"}
-          }
-        },
-        yAxis: {
-          type: "category",
-          axisLabel: {
+    grid: {
+        left: '11%',
+        top: '12%',
+        right: '10%',
+        bottom: '8%',
+        containLabel: true
+    },
+    xAxis: [{
+        show: false,
+    }],
+    yAxis: [{
+        axisTick: 'none',
+        axisLine: 'none',
+        offset: '27',
+        axisLabel: {
             textStyle: {
-              color: "rgba(255,255,255,0.5)",
-              fontSize: "0.10rem"
+                color: '#ffffff',
+                fontSize: '16',
             }
-          }
         },
-
-        series: [
-          {
-            type: "bar",
-            encode: {
-              x: "amount",
-              // y: "product"
-            },
-            itemStyle: {
-              normal: {
-                label:{
-                  show:true
-                },
-                color: function(params) {
-                  var colorList = [
-                    "#52F397",
-                    "#00E3E7",
-                    "#00C5FF",
-                    "#00C5FF",
-                    "#A243DA",
-                    "#D72FA7"
-                  ];
-                  return colorList[params.dataIndex];
-                }
-              }
+        data: [ '思想成长类', '实践实习类', '志愿服务类', '学术科技类','文体活动类','工作履历类']
+    }, {
+        axisTick: 'none',
+        axisLine: 'none',
+        axisLabel: {
+            textStyle: {
+                color: '#ffffff',
+                fontSize: '16',
             }
-          }
-        ]
-      };
-
+        },
+        data: []
+    }, {
+        name: '分拨延误TOP 10',
+        nameGap: '50',
+        nameTextStyle: {
+            color: '#ffffff',
+            fontSize: '16',
+        },
+        axisLine: {
+            lineStyle: {
+                color: 'rgba(0,0,0,0)'
+            }
+        },
+        data: [],
+    }],
+    series: [{
+            name: '条',
+            type: 'bar',
+            yAxisIndex: 0,
+            data: [ 50, 52, 60, 72, 42, 62],
+            label: {
+                normal: {
+                    show: true,
+                    position: 'right',
+                    textStyle: {
+                        color: '#ffffff',
+                        fontSize: '16',
+                    }
+                }
+            },
+            barWidth: 12,
+            itemStyle: {
+                normal: {
+                    color: function(params) {
+                        var num = myColor.length;
+                        return myColor[params.dataIndex % num]
+                    },
+                }
+            },
+            z: 2
+        }, {
+            name: '白框',
+            type: 'bar',
+            yAxisIndex: 1,
+            barGap: '-100%',
+            data: [ 99.5, 99.5, 99.5, 99.5,99.5,99.5],
+            barWidth: 20,
+            itemStyle: {
+                normal: {
+                    color: '#0e2147',
+                    barBorderRadius: 5,
+                }
+            },
+            z: 1
+        }, {
+            name: '外框',
+            type: 'bar',
+            yAxisIndex: 2,
+            barGap: '-100%',
+            data: [ 100, 100, 100, 100,100,100],
+            barWidth: 24,
+            itemStyle: {
+                normal: {
+                    color: function(params) {
+                        var num = myColor.length;
+                        return myColor[params.dataIndex % num]
+                    },
+                    barBorderRadius: 5,
+                }
+            },
+            z: 0
+        },
+        {
+            name: '外圆',
+            type: 'scatter',
+            hoverAnimation: false,
+            data: [ 0, 0, 0, 0,0,0],
+            yAxisIndex: 2,
+            symbolSize: 35,
+            itemStyle: {
+                normal: {
+                    color: function(params) {
+                        var num = myColor.length;
+                        return myColor[params.dataIndex % num]
+                    },
+                    opacity: 1,
+                }
+            },
+            z: 2
+        }
+    ]
+};
       window.onresize = myChart.resize;
       myChart.setOption(option);
     },

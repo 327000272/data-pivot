@@ -147,7 +147,7 @@ export default {
     return {
       //  linetitle:[],
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzY3NTIxMDcsImV4cCI6MTU3Njc1NTcwNywiaWF0IjoxNTc2NzUyMTA3fQ.fj_fZ0AFWEYUXbdHWWpUvU_ZD8ssZRKqkHK9jVQlvtM",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcwNzk1NDgsImV4cCI6MTU3NzA4MzE0OCwiaWF0IjoxNTc3MDc5NTQ4fQ.HKKBFVFuiRd5lN1WhWTDK17_Eqrbe-n1yzukKGhR_Sg",
       url: "https://class-ms-test.univteam.com/",
       Condition: [],
       Comment: [],
@@ -275,106 +275,215 @@ export default {
     satisfaction() {
       let myChart = echarts.init(document.getElementById("satisfaction"));
       let option = {
-        title: {
-          textStyle: {
-            color: "#fff"
-          }
-        },
         tooltip: {
-          formatter: "{b} : {c}%"
-        },
-        toolbox: {
-          feature: {}
+          formatter: "{a} <br/>{b} : {c}%"
         },
         series: [
           {
-            name: "",
+            name: "外围刻度",
             type: "gauge",
-            center: ["40%", "60%"],
-            detail: { formatter: "{value}%", color: "#fff" },
-            axisTick: {
-              default: false
-            },
             radius: "90%",
-            data: [{ value: 76, name: "满意度" }],
+            center: ["50%", "55%"],
             axisLine: {
-              show: true,
               lineStyle: {
-                color: [
-                  [
-                    1,
-                    new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                      {
-                        offset: 0,
-                        color: "#D72FA7"
-                      },
-                      {
-                        offset: 0.2,
-                        color: "#A243DA"
-                      },
-                      {
-                        offset: 0.4,
-                        color: "#478CEF"
-                      },
-                      {
-                        offset: 0.6,
-                        color: "#00C5FF"
-                      },
-                      {
-                        offset: 0.8,
-                        color: "#00E3E7"
-                      },
-                      {
-                        offset: 1,
-                        color: "#52F397"
-                      }
-                    ])
-                  ]
-                ]
+                width: 4,
+                color: [[1, "#00b3ff"]],
+                shadowColor: "#fff",
+                shadowBlur: 10
               }
             },
             axisLabel: {
-              // 刻度标签。
               show: false
             },
-            splitLine: {
-              // 分隔线样式。
-              show: true, // 是否显示分隔线,默认 true。
-              length: 30, // 分隔线线长。支持相对半径的百分比,默认 30。
+            axisTick: {
+              show: false
+            },
+            detail: {
+              show: false
+            },
+            pointer: {
+              show: false
+            }
+          },
+          {
+            name: "内层数据刻度",
+            type: "gauge",
+            radius: "89%",
+            center: ["50%", "55%"],
+            axisLine: {
               lineStyle: {
-                // 分隔线样式。
-                color: "#eee", //线的颜色,默认 #eee。
-                opacity: 1, //图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形。
-                width: 0, //线度,默认 2。
-                type: "solid", //线的类型,默认 solid。 此外还有 dashed,dotted
-                shadowBlur: 10, //(发光效果)图形阴影的模糊大小。该属性配合 shadowColor,shadowOffsetX, shadowOffsetY 一起设置图形的阴影效果。
-                shadowColor: "#fff" //阴影颜色。支持的格式同color。
+                // 属性lineStyle控制线条样式
+                color: [
+                  [
+                    1,
+                    new echarts.graphic.LinearGradient(
+                      0,
+                      0,
+                      1,
+                      0,
+                      [
+                        {
+                          offset:1,
+                          color:'#52F397'
+                        },
+                        {
+                          offset: 0.8,
+                          color: "#00E3E7" // 50% 处的颜色
+                        },
+                        {
+                          offset:0.6,
+                          color:"#00C5FF"
+                        },
+                        {
+                          offset: 0.4,
+                          color: "#478CEF" // 40% 处的颜色
+                        },
+                        {
+                          offset:0.2,
+                          color:'#A243DA'
+                        },
+                        {
+                          offset:0,
+                          color:'#D72FA7'
+                        }
+                      ],
+                      false
+                    )
+                  ], 
+
+                ],
+                width: 30
+              }
+            },
+            splitLine: {
+              length: 15,
+              lineStyle: {
+                width: 0,
+                color: "#00baff"
               }
             },
             axisTick: {
-              // 刻度(线)样式。
-              show: true, // 是否显示刻度(线),默认 true。
-              splitNumber: 5, // 分隔线之间分割的刻度数,默认 5。
-              length: 8, // 刻度线长。支持相对半径的百分比,默认 8。
               lineStyle: {
-                // 刻度线样式。
-                color: "#153146", //线的颜色,默认 #eee。
-                opacity: 1, //图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形。
-                width: 0.3, //线度,默认 1。
-                type: "solid", //线的类型,默认 solid。 此外还有 dashed,dotted
-                shadowBlur: 10, //(发光效果)图形阴影的模糊大小。该属性配合 shadowColor,shadowOffsetX, shadowOffsetY 一起设置图形的阴影效果。
-                shadowColor: "#fff" //阴影颜色。支持的格式同color。
+                color: "#153146"
+              }
+            },
+            axisLabel: {
+              show: false,
+              color: "#cbfff6",
+              fontSize: 11
+            },
+            detail: {
+              show: false
+            },
+            itemStyle: {
+              normal: {
+                color: "cyan"
               }
             },
             pointer: {
-              // 仪表盘指针。
-              show: true, // 是否显示指针,默认 true。
-              length: "90%", // 指针长度，可以是绝对数值，也可以是相对于半径的百分比,默认 80%。
-              width: 5 // 指针宽度,默认 8。
+              width: 10,
+              length: "90%",
+
             },
-            itemStyle: {
-              color: "#fff"
+            data: [{ value: 76 }]
+          },
+          {
+            name: "最内层线",
+            type: "gauge",
+            radius: "35%",
+            center: ["50%", "55%"],
+            startAngle: 359.9999999999999,
+            endAngle: 0,
+            axisLine: {
+              lineStyle: {
+                opacity: 0,
+                color:'red'
+              }
+            },
+            splitLine: {
+              show: false,
+              lineStyle: {
+                opacity: 0
+              }
+            },
+            axisLabel: {
+              show: false
+            },
+            axisTick: {
+              length: 2,
+              lineStyle: {
+                color: "#fff",
+                width: 3,
+                type: "solid"
+              }
+            },
+            detail: {
+              show: false
+            },
+            pointer: {
+              show: false
             }
+          },
+          {
+            name: "饼图",
+            tooltip: {
+              show: false
+            },
+            type: "pie",
+            radius: ["0%", "40%"],
+            center: ["50%", "55%"],
+            hoverAnimation: false,
+            itemStyle: {
+              normal: {
+                color: "#08263C"
+              },
+              emphasis: {
+                color: "#08263C"
+              }
+            },
+            label: {
+              normal: {
+                show: true,
+                position: "center",
+                formatter: function(params) {
+                  return (
+                    "{value|" +
+                    params.value +
+                    "}{unit|%}\n{name|" +
+                    params.name +
+                    "}"
+                  );
+                },
+                rich: {
+                  value: {
+                    fontFamily: "SFUDINEngschrift",
+                    fontSize: 34,
+                    color: "#fff",
+                    verticalAlign: "bottom"
+                  },
+                  unit: {
+                    fontFamily: "SFUDINEngschrift",
+                    fontSize: 20,
+                    color: "#fff",
+                    lineHeight: 34,
+                    verticalAlign: "bottom"
+                  },
+                  name: {
+                    fontFamily: "Microsoft YaHei",
+                    fontSize: 16,
+                    color: "#fff",
+                    lineHeight: 23
+                  }
+                }
+              }
+            },
+            labelLine: {
+              normal: {
+                show: false
+              }
+            },
+            animation: false,
+            data: [{ value: 76, name: "满意度" }]
           }
         ]
       };
@@ -1104,7 +1213,7 @@ export default {
   min-width: 300px;
   /* min-height: 400px; */
   background: #153146;
-  margin-left: 1%;
+  /* margin-left: 1%; */
   overflow: auto;
   padding-bottom: 5px;
 }
