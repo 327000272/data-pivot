@@ -146,7 +146,7 @@ export default {
   data() {
     return {
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyMzY4MzIsImV4cCI6MTU3NzI0MDQzMiwiaWF0IjoxNTc3MjM2ODMyfQ.prjQnb25R6PUT0O9rmVwfjhN4TDzG8w_TMr2CTM_6L8",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyNTY3MDEsImV4cCI6MTU3NzI2MDMwMSwiaWF0IjoxNTc3MjU2NzAxfQ.5ZDZAAv69_jRPUWHsklrJRK7AzChSxXZtN6zvaQWcN4",
       url: "https://class-ms-test.univteam.com/",
       Condition: [],
       Comment: [],
@@ -189,7 +189,6 @@ export default {
     this.getsupply();
     this.schoolscope();
     this.getline();
-
   },
   methods: {
     fetchData() {
@@ -282,7 +281,7 @@ export default {
       axios
         .get(_this.url + "/api/Plat/course/line?access_token=" + _this.token)
         .then(function(response) {
-            console.log(response.data.data);
+            // console.log(response.data.data);
         })
         .catch(function(error) {
           console.log(error);

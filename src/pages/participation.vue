@@ -41,7 +41,7 @@
             <div class="box-item-title-right">
               <span>学院范围</span>
               <select>
-                <option value="全部开课学院">全部开课学院</option>
+                <option v-for="item in UnitsName" :key='item.id' :value="item">{{item}}</option>
               </select>
               <span class="iconfont iconduobianxing"></span>
             </div>
@@ -51,53 +51,53 @@
               <div class="iconfont iconjihuo"></div>
               <div>
                 <p>学生用户激活总数</p>
-                <div>56432名学生</div>
+                <div>{{studentCount}}名学生</div>
               </div>
               <div>
                 <p>教师用户激活总数</p>
-                <div>632名教职工</div>
+                <div>{{teacherCount}}名教职工</div>
               </div>
               <div>
-                <p>单位参与数量</p>
-                <div>32个</div>
+                <p>{{unitJoinTitle}}</p>
+                <div>{{unitJoinCountData}}{{unitJoinCountUnit}}</div>
               </div>
               <div>
                 <p>教职工参与人数</p>
-                <div>642人</div>
+                <div>-人</div>
               </div>
             </div>
             <div class="liveness-middle">
               <div class="iconfont iconrenshu"></div>
               <div>
-                <p>学生参与总人次</p>
-                <div>9.12万人次</div>
+                <p>{{stuPersonTimeTitle}}</p>
+                <div>{{stuPersonTimeData}}{{stuPersonTimeUnit}}</div>
               </div>
               <div>
-                <p>学生参与总人数</p>
-                <div>3.4万人</div>
+                <p>{{stuPersonNumTitle}}</p>
+                <div>{{stuPersonNumData}}{{stuPersonNumUnit}}</div>
               </div>
               <div>
-                <p>人均参与次数</p>
-                <div>2.3次/人</div>
+                <p>{{peopleJoinTitle}}</p>
+                <div>{{peopleJoinCountData}}{{peopleJoinCountUnit}}</div>
               </div>
             </div>
             <div class="liveness-bottom">
               <div class="iconfont iconhuo"></div>
               <div>
-                <p>学生用户激活总数</p>
-                <div>56432名学生</div>
+                <p>{{dayActiveCountTitle}}</p>
+                <div>{{dayActiveCountData}}{{dayActiveCountUnit}}</div>
               </div>
               <div>
-                <p>教师用户激活总数</p>
-                <div>632名教职工</div>
+                <p>{{monthActiveCountTitle}}</p>
+                <div>{{monthActiveCountData}}{{monthActiveCountUnit}}</div>
               </div>
               <div>
-                <p>单位参与数量</p>
-                <div>32个</div>
+                <p>{{loginCountTitle}}</p>
+                <div>{{loginCountData}}{{loginCountUnit}}</div>
               </div>
               <div>
-                <p>教职工参与人数</p>
-                <div>642人</div>
+                <p>{{onLineTitle}}</p>
+                <div>{{onLineCountData}}{{onLineCountUnit}}</div>
               </div>
             </div>
           </div>
@@ -125,7 +125,7 @@
             <div class="box-item-title-right">
               <span>学院范围</span>
               <select>
-                <option value="全部开课学院">全部开课学院</option>
+                <option v-for="item in UnitsName" :key='item.id' :value="item">{{item}}</option>
               </select>
               <span class="iconfont iconduobianxing"></span>
             </div>
@@ -166,7 +166,7 @@ export default {
   data() {
     return {
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyMzY4MzIsImV4cCI6MTU3NzI0MDQzMiwiaWF0IjoxNTc3MjM2ODMyfQ.prjQnb25R6PUT0O9rmVwfjhN4TDzG8w_TMr2CTM_6L8",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyNTY3MDEsImV4cCI6MTU3NzI2MDMwMSwiaWF0IjoxNTc3MjU2NzAxfQ.5ZDZAAv69_jRPUWHsklrJRK7AzChSxXZtN6zvaQWcN4",
       url: "https://class-ms-test.univteam.com/",
       youShow: true,
       zuoShow: false,
@@ -174,18 +174,69 @@ export default {
       openRatio: [],
       openPeopleTxt:[],
       openPeopleDate:[],
+      perpleStatisticsTitle:[],
+      perpleStatisticsNumber:[],
+      UnitsName:[],
+      UnitPersonCount:[],
+      UnitPersonCount:[],
+      //第二课堂整体参与度于信息系统活跃
+      loginCountTitle:'',
+      loginCountData:'',
+      loginCountUnit:'',
+      dayActiveCountTitle:'',
+      dayActiveCountData:'',
+      dayActiveCountUnit:'',
+      monthActiveCountTitle:'',
+      monthActiveCountData:'',
+      monthActiveCountUnit:'',
+      onLineTitle:'',
+      onLineCountData:'',
+      onLineCountUnit:'',
+      peopleJoinTitle:'',
+      peopleJoinCountData:'',
+      peopleJoinCountUnit:'',
+      unitJoinTitle:'',
+      unitJoinCountData:'',
+      unitJoinCountUnit:'',
+      stuPersonTimeTitle:'',
+      stuPersonTimeData:'',
+      stuPersonTimeUnit:'',
+      stuPersonNumTitle:'',
+      stuPersonNumData:'',
+      stuPersonNumUnit:'',
+      teacherCount:'',
+      studentCount:'',
 
     };
   },
   mounted() {
-    this.collegePerson();
+    // this.collegePerson();
     // this.classPersonCake();
     // this.switchSlide();
     this.funnel();
-    this.getsupply();
+    this.getCulumPersonCount();
     this.getactivation();
+    this.GetUnitPersonCount();
+    this.schoolscope();
   },
   methods: {
+    //学院范围
+    schoolscope() {
+      var _this = this;
+      axios
+        .get(
+          _this.url + "api/Plat/options/?access_token=" + _this.token
+        )
+        .then(function(response) {
+          _this.schoolUnits=response.data.data.units;
+          for(var i=0;i<_this.schoolUnits.length;i++){
+            _this.UnitsName.push(_this.schoolUnits[i].name);
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     //第二课堂整体参与度于信息系统活跃
     getactivation(){
       var _this = this;
@@ -194,48 +245,90 @@ export default {
           _this.url + "/api/Plat/activation?access_token=" + _this.token
         )
         .then(function(response) {
-        //  console.log(response.data);
+          _this.teacherCount=response.data.data.activation.teacher_count;
+          _this.studentCount=response.data.data.activation.student_count;
+          for(var i=0;i<response.data.data.summary.length;i++){
+            //登录次数
+              if(response.data.data.summary[i].type==1){
+                _this.loginCountTitle=response.data.data.summary[i].title;
+                _this.loginCountData=response.data.data.summary[i].data;
+                _this.loginCountUnit=response.data.data.summary[i].unit;
+              }
+              
+            //平均日活
+              if(response.data.data.summary[i].type==3){
+                _this.dayActiveCountTitle=response.data.data.summary[i].title;
+                _this.dayActiveCountData=response.data.data.summary[i].data;
+                _this.dayActiveCountUnit=response.data.data.summary[i].unit;
+              }
+            //月活跃度
+              if(response.data.data.summary[i].type==4){
+                _this.monthActiveCountTitle=response.data.data.summary[i].title;
+                _this.monthActiveCountData=response.data.data.summary[i].data;
+                _this.monthActiveCountUnit=response.data.data.summary[i].unit;
+              }
+            //人均在线
+              if(response.data.data.summary[i].type==2){
+                _this.onLineTitle=response.data.data.summary[i].title;
+                _this.onLineCountData=response.data.data.summary[i].data;
+                _this.onLineCountUnit=response.data.data.summary[i].unit;
+              }
+            //人均参与次数
+              if(response.data.data.summary[i].type==11){
+                _this.peopleJoinTitle=response.data.data.summary[i].title;
+                _this.peopleJoinCountData=response.data.data.summary[i].data;
+                _this.peopleJoinCountUnit=response.data.data.summary[i].unit;
+              }
+            //单位参与数量
+              if(response.data.data.summary[i].type==14){
+                _this.unitJoinTitle=response.data.data.summary[i].title;
+                _this.unitJoinCountData=response.data.data.summary[i].data;
+                _this.unitJoinCountUnit=response.data.data.summary[i].unit;
+              }
+            //学生参与总人次
+              if(response.data.data.summary[i].type==33){
+                _this.stuPersonTimeTitle=response.data.data.summary[i].title;
+                _this.stuPersonTimeData=response.data.data.summary[i].data;
+                _this.stuPersonTimeUnit=response.data.data.summary[i].unit;
+              }
+            //学生参与总人数
+              if(response.data.data.summary[i].type==33){
+                _this.stuPersonNumTitle=response.data.data.summary[i].title;
+                _this.stuPersonNumData=response.data.data.summary[i].data;
+                _this.stuPersonNumUnit=response.data.data.summary[i].unit;
+              }
+          }
+
         })
         .catch(function(error) {
           console.log(error);
         });
     },
-    //请求各类课程
-    getsupply() {
+    //请求各类课程参与人次
+    getCulumPersonCount() {
       var _this = this;
       axios
-        .get(_this.url + "/api/Plat/course/supply?access_token=" + _this.token)
+        .get(_this.url + "/api/Plat/culumCount?access_token=" + _this.token)
         .then(function(response) {
-          //真实数据
           _this.supplyComprehensive = response.data.data;
-          //假数据
-          var GetCulumPersonCount = {
-            data: [
-              {
-                id: 1578,
-                name: "经济学院1212",
-                count: 33653,
-                percent: "90.9%",
-              },
-              {
-                id: 1579,
-                name: "外语学院",
-                count: 2878,
-                percent: "7.8%",
-              },
-              {
-                id: 1581,
-                name: "经济学院保险系1212",
-                count: 504,
-                percent: "1.4%",
-              }
-            ],
-            code: 0,
-            msg: "ok"
-          };
-          // _this.classPersonCake(_this.supplyComprehensive);
-          _this.classPersonCake(GetCulumPersonCount.data);
-          _this.switchSlide(GetCulumPersonCount.data);
+          _this.classPersonCake(_this.supplyComprehensive);
+          _this.switchSlide(_this.supplyComprehensive);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    //请求各学院学生参与人次统计
+    GetUnitPersonCount(){
+              var _this = this;
+      axios
+        .get(
+          _this.url + "/api/Plat/unitCount/?access_token=" + _this.token
+        )
+        .then(function(response) {
+            console.log(response)
+            _this.UnitPersonCount=response.data;
+            _this.collegePerson(_this.UnitPersonCount);
         })
         .catch(function(error) {
           console.log(error);
@@ -447,7 +540,7 @@ export default {
               type: "bar",
               yAxisIndex: 1,
               barGap: "-100%",
-              data: [99999.5, 99999.5, 99999.5],
+              data: [100, 100, 100, 100, 100, 100, 100, 100, 100],
               barWidth: 20,
               itemStyle: {
                 normal: {
@@ -462,7 +555,7 @@ export default {
               type: "bar",
               yAxisIndex: 2,
               barGap: "-100%",
-              data: [10000, 10000, 10000],
+              data: [10000, 10000, 10000,10000, 10000, 10000,10000, 10000, 10000,],
               barWidth: 24,
               itemStyle: {
                 normal: {
@@ -479,7 +572,7 @@ export default {
               name: "外圆",
               type: "scatter",
               hoverAnimation: false,
-              data: [0, 0, 0],
+              data: [0, 0, 0,0, 0, 0,0, 0, 0],
               yAxisIndex: 2,
               symbolSize: 30,
               itemStyle: {
@@ -499,23 +592,31 @@ export default {
       myChart.setOption(option);
     },
     //柱状图
-    collegePerson() {
-      var _this = this;
+    collegePerson(num) {
+       var _this = this;
+      for(var i=0;i<num.data.length;i++){
+          _this.perpleStatisticsTitle.push(num.data[i].name); 
+          _this.perpleStatisticsNumber.push(num.data[i].count);
+      }
+      
+     
       let myChart = echarts.init(document.getElementById("collegePerson"));
-      var dataAxis = [
-        "土木建筑工程学院",
-        "马克思主义学院",
-        "经济与管理学院",
-        "信息管理学院",
-        "11",
-        "11",
-        "11",
-        "11",
-        "12",
-        "13",
-        "14"
-      ];
-      var data = [2200, 1820, 1600, 1600, 1000, 2000, 1200, 800, 500, 600, 700];
+      // var dataAxis = [
+      //   "土木建筑工程学院",
+      //   "马克思主义学院",
+      //   "经济与管理学院",
+      //   "信息管理学院",
+      //   "11",
+      //   "11",
+      //   "11",
+      //   "11",
+      //   "12",
+      //   "13",
+      //   "14"
+      // ];
+      var dataAxis = _this.perpleStatisticsTitle;
+      // var data = [2200, 1820, 1600, 1600, 1000, 2000, 1200, 800, 500, 600, 700];
+      var data=_this.perpleStatisticsNumber;
       let option = {
         tooltip: {
           trigger: "axis",
@@ -771,6 +872,9 @@ export default {
   position: absolute;
   top: 0.17rem;
   left: 28%;
+}
+option{
+  color: #000;
 }
 .fx-title {
   font-size: 0.24rem;

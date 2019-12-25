@@ -2,18 +2,29 @@
   <div class="sidebar">
     <el-row class="tac">
       <el-col :span="12">
-        <ul>
+        <ul class="school-content">
           <li class="school-sublogo">
-            <img :src="logo.photo" class="icon-logo" />
+            <img :src="PlatDetail.logo" class="icon-logo" />
             <span>
-              <p>{{logo.name}}</p>
+              <p>{{PlatDetail.platName}}</p>
+              <p>{{PlatDetail.schoolName}}</p>
             </span>
+            
           </li>
+          <li class="websiteTitle">素质育人大数据</li>
         </ul>
+        <!-- <div class="school-logo">
+          <div>
+              <img src="https://img1-static.univteam.com/ClassAdmin/cspt1119/Images/2019/04/04/20190404174505.jpeg?x-oss-process=image/crop,x_44,y_25,w_408,h_408" width="40" height="40">
+          </div>
+          <div class="logo-right">
+              <p>沈师修改</p>
+              <p>1119修改</p>
+          </div>
+        </div> -->
         <el-menu
           :default-active="index==''?'1':index"
           class="el-menu-vertical-demo"
-          @close="handleClose"
           ref="dataNum"
         >
           <!-- <el-menu-item index="1" @click="openPage('Develop')">
@@ -41,43 +52,30 @@ import axios from "axios";
 export default {
   data() {
     return {
+      token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyNTY3MDEsImV4cCI6MTU3NzI2MDMwMSwiaWF0IjoxNTc3MjU2NzAxfQ.5ZDZAAv69_jRPUWHsklrJRK7AzChSxXZtN6zvaQWcN4",
+      url: "https://class-ms-test.univteam.com/",
       logo: [],
       index: "",
-      dataToken: ""
+      dataToken: "",
+      PlatDetail:[],
+
     };
   },
   methods: {
-    //获取平台基础信息
-    getLogo(token, Start, End, Unit, Grade) {
+    //获取学校logo,名称
+    GetPlatDetail(){
       var _this = this;
       axios
         .get(
-          "https://class-ms-test.univteam.com/api/Plat/info/?access_token=" +
-            token +
-            "&Start=" +
-            Start +
-            "&End=" +
-            End +
-            "&Unit=" +
-            Unit +
-            "&Grade=" +
-            Grade
+          _this.url + "/api/Plat/plat/detail?access_token=" + _this.token
         )
         .then(function(response) {
-          // if(response.data.code!==0){
-          // localStorage.removeItem("token");//清除失效的token
-          // window.location.href=" http://class-admin.univteam.com/"+url22+"/account/login?back=statistics";
-          // }
-          _this.logo = response.data.data;
-
+          _this.PlatDetail=response.data.data
         })
         .catch(function(error) {
           console.log(error);
         });
-    },
-    handleOpen(defaultactive) {},
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
     },
     openPage(pages, index) {
       var routeId = this.$route.params.id;
@@ -118,7 +116,6 @@ export default {
         var End = "";
         var Unit = 0;
         var Grade = 0;
-        _this.getLogo(token, Start, End, Unit, Grade);
         return false;
       }
       if (dataToken == "") {
@@ -141,7 +138,6 @@ export default {
             var End = "";
             var Unit = 0;
             var Grade = 0;
-            _this.getLogo(token, Start, End, Unit, Grade);
           })
           .catch(function(error) {
             // window.location.href=" http://class-admin.univteam.com/"+url22+"/account/login?back=statistics";
@@ -153,6 +149,7 @@ export default {
   mounted() {
     this.openHref();
     this.getToken();
+    this.GetPlatDetail();
   }
 };
 </script>
@@ -228,16 +225,19 @@ div {
   transform: scaleY(0.2);
 }
 .school-sublogo {
-  position: relative;
   display: flex;
   justify-content: space-between;
-  margin: 16px 10px;
-  color: #5b6f7e;
+  margin: 0px 10px;
+  margin-top: 10px;
   padding-left: 4px;
-  padding-bottom: 20px;
   font-size: 14px;
+  color: #fff;
 }
-.school-sublogo:after {
+.school-content{
+  position: relative;
+  margin-bottom: 0.1rem;
+}
+.websiteTitle::after {
   position: absolute;
   left: 0;
   bottom: 0;
@@ -258,5 +258,11 @@ div {
 }
 .school-sublogo span {
   margin-top: 5px;
+}
+.websiteTitle{
+  font-size: 0.13rem;
+  color: #fff;
+  opacity: 0.5;
+  text-align: center;
 }
 </style>
