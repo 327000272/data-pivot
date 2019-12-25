@@ -101,8 +101,8 @@
                   <span class="iconfont iconrengong"></span>&nbsp;
                   <span>{{item.supp_capacity}}</span>人次
                 </div>
-                <div class="fxbox4-div2" style="width: 50%;"></div>
-                <div class="fxbox4-div3" style="width: 80%;"></div>
+                <div class="fxbox4-div2" :style="{width:(item.percent_count+'%')}"></div>
+                <div class="fxbox4-div3" :style="{width:(item.percent_capacity+'%')}"></div>
               </div>
             </div>
           </div>
@@ -213,6 +213,7 @@ export default {
           console.log(error);
         });
     },
+
     //课程开展总览
     getCondition() {
       var _this = this;
@@ -306,6 +307,7 @@ export default {
         )
         .then(function(response) {
           _this.courseSupply = response.data.data;
+          console.log(_this.courseSupply)
         })
         .catch(function(error) {
           console.log(error);
@@ -1282,12 +1284,12 @@ option{
   font-size: 0.12rem;
 }
 .fxbox4-div2 {
-  width: 50%;
+  width: 100%;
   height: 0.1rem;
   background: #00c5ff;
 }
 .fxbox4-div3 {
-  width: 17%;
+  width: 100%;
   height: 0.1rem;
   background: #8942bf;
 }
