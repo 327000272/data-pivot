@@ -62,7 +62,7 @@
             <div class="box-item-title-right">
               <span>学院范围</span>
               <select>
-                <option value="全部开课学院">全部开课学院</option>
+                <option v-for="item in UnitsName" :key='item.id' :value="item">{{item}}</option>
               </select>
               <span class="iconfont iconduobianxing"></span>
             </div>
@@ -117,7 +117,7 @@
             <div class="box-item-title-right">
               <span>学院范围</span>
               <select>
-                <option value="全部开课学院">全部开课学院</option>
+                <option v-for="item in UnitsName" :key='item.id' :value="item">{{item}}</option>
               </select>
               <span class="iconfont iconduobianxing"></span>
             </div>
@@ -145,9 +145,8 @@ import axios from "axios";
 export default {
   data() {
     return {
-      //  linetitle:[],
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcwNzk1NDgsImV4cCI6MTU3NzA4MzE0OCwiaWF0IjoxNTc3MDc5NTQ4fQ.HKKBFVFuiRd5lN1WhWTDK17_Eqrbe-n1yzukKGhR_Sg",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyMzY4MzIsImV4cCI6MTU3NzI0MDQzMiwiaWF0IjoxNTc3MjM2ODMyfQ.prjQnb25R6PUT0O9rmVwfjhN4TDzG8w_TMr2CTM_6L8",
       url: "https://class-ms-test.univteam.com/",
       Condition: [],
       Comment: [],
@@ -157,7 +156,18 @@ export default {
       openClassName: [],
       courseSupply: [],
       youShow: true,
-      zuoShow: false
+      zuoShow: false,
+      supplyComprehensive: [],
+      openNum: [],
+      heteExtent: [],
+      openRatio: [],
+      schoolUnits:[],
+      UnitsName:[],
+      good:"",
+      middle:"",
+      bad:"",
+      satisfactionDegree:'',
+
     };
   },
   created() {
@@ -168,18 +178,39 @@ export default {
     $route: "fetchData"
   },
   mounted() {
-    this.satisfaction();
-    this.classNumber();
+    // this.satisfaction();
+    // this.classNumber();
     // this.classNum();
     this.date_condition();
     this.getCondition();
     this.getComment();
-    this.getClassEstablishNum();
+    // this.getClassEstablishNum();
     this.getCourseSupply();
+    this.getsupply();
+    this.schoolscope();
+    this.getline();
+
   },
   methods: {
     fetchData() {
       console.log("路由发送变化doing...");
+    },
+    //学院范围
+    schoolscope() {
+      var _this = this;
+      axios
+        .get(
+          _this.url + "api/Plat/options/?access_token=" + _this.token
+        )
+        .then(function(response) {
+          _this.schoolUnits=response.data.data.units;
+          for(var i=0;i<_this.schoolUnits.length;i++){
+            _this.UnitsName.push(_this.schoolUnits[i].name);
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     //课程开展总览
     getCondition() {
@@ -202,10 +233,56 @@ export default {
         .get(_this.url + "/api/Plat/course/comment?access_token=" + _this.token)
         .then(function(response) {
           _this.Comment = response.data.data;
-          //评价数
-          _this.evaluateNum = response.data.data[0];
-          //参与率
-          _this.participationRate = response.data.data[1];
+          for(var i=0;i<_this.Comment.length;i++){
+            //保存评价数
+            if(_this.Comment[i].type==15){
+                 _this.evaluateNum=_this.Comment[i];
+            }
+            //保存参与率
+            if(_this.Comment[i].type==16){
+                _this.participationRate=_this.Comment[i];
+            }
+            //保存好评率
+            if(_this.Comment[i].type==6){
+                _this.good=_this.Comment[i]
+            }
+            //保存中评率
+            if(_this.Comment[i].type==17){
+                _this.middle=_this.Comment[i]
+            }
+            //保存差评率
+            if(_this.Comment[i].type==6){
+                _this.bad=_this.Comment[i]
+            }
+          }
+          _this.satisfactionDegree=Number((_this.good.data+_this.middle.data+_this.bad.data)/3);
+          _this.satisfaction(_this.satisfactionDegree);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    //请求各类课程开课情况数据
+    getsupply() {
+      var _this = this;
+      axios
+        .get(_this.url + "/api/Plat/course/supply?access_token=" + _this.token)
+        .then(function(response) {
+          _this.supplyComprehensive = response.data.data;
+          _this.classNum(_this.supplyComprehensive);
+          _this.classNumber(_this.supplyComprehensive);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    //请求课程开展分时情况
+    getline(){
+      var _this = this;
+      axios
+        .get(_this.url + "/api/Plat/course/line?access_token=" + _this.token)
+        .then(function(response) {
+            console.log(response.data.data);
         })
         .catch(function(error) {
           console.log(error);
@@ -252,13 +329,10 @@ export default {
       ];
       for (var i = 0; i < data.length; i++) {
         _this.openClassName.push(data[i].name);
-        _this.openClassNum.push(data[i].datas[0].count);
       }
-      _this.classNum(_this.openClassNum);
     },
     //各单位课程供给排行
     getCourseSupply() {
-      var _this = this;
       var _this = this;
       axios
         .get(
@@ -272,7 +346,7 @@ export default {
         });
     },
     //仪表盘
-    satisfaction() {
+    satisfaction(num) {
       let myChart = echarts.init(document.getElementById("satisfaction"));
       let option = {
         tooltip: {
@@ -283,7 +357,7 @@ export default {
             name: "外围刻度",
             type: "gauge",
             radius: "90%",
-            center: ["50%", "55%"],
+            center: ["45%", "55%"],
             axisLine: {
               lineStyle: {
                 width: 4,
@@ -309,7 +383,7 @@ export default {
             name: "内层数据刻度",
             type: "gauge",
             radius: "89%",
-            center: ["50%", "55%"],
+            center: ["45%", "55%"],
             axisLine: {
               lineStyle: {
                 // 属性lineStyle控制线条样式
@@ -323,34 +397,33 @@ export default {
                       0,
                       [
                         {
-                          offset:1,
-                          color:'#52F397'
+                          offset: 1,
+                          color: "#52F397"
                         },
                         {
                           offset: 0.8,
                           color: "#00E3E7" // 50% 处的颜色
                         },
                         {
-                          offset:0.6,
-                          color:"#00C5FF"
+                          offset: 0.6,
+                          color: "#00C5FF"
                         },
                         {
                           offset: 0.4,
                           color: "#478CEF" // 40% 处的颜色
                         },
                         {
-                          offset:0.2,
-                          color:'#A243DA'
+                          offset: 0.2,
+                          color: "#A243DA"
                         },
                         {
-                          offset:0,
-                          color:'#D72FA7'
+                          offset: 0,
+                          color: "#D72FA7"
                         }
                       ],
                       false
                     )
-                  ], 
-
+                  ]
                 ],
                 width: 30
               }
@@ -382,8 +455,7 @@ export default {
             },
             pointer: {
               width: 10,
-              length: "90%",
-
+              length: "90%"
             },
             data: [{ value: 76 }]
           },
@@ -391,13 +463,13 @@ export default {
             name: "最内层线",
             type: "gauge",
             radius: "35%",
-            center: ["50%", "55%"],
+            center: ["45%", "55%"],
             startAngle: 359.9999999999999,
             endAngle: 0,
             axisLine: {
               lineStyle: {
                 opacity: 0,
-                color:'red'
+                color: "red"
               }
             },
             splitLine: {
@@ -431,7 +503,7 @@ export default {
             },
             type: "pie",
             radius: ["0%", "40%"],
-            center: ["50%", "55%"],
+            center: ["45%", "55%"],
             hoverAnimation: false,
             itemStyle: {
               normal: {
@@ -491,7 +563,16 @@ export default {
       myChart.setOption(option);
     },
     //饼状图
-    classNumber() {
+    classNumber(num) {
+      var _this = this;
+      for (var i = 0; i < num.length; i++) {
+        _this.openRatio.push({
+          value: num[i].percent,
+          name: num[i].percent + "%",
+          title: num[i].title
+        });
+        _this.openClassName.push(num[i].title);
+      }
       let myChart = echarts.init(document.getElementById("classNumCircle"));
       let option = {
         title: {
@@ -506,7 +587,7 @@ export default {
         tooltip: {
           trigger: "item",
           formatter: function(params) {
-            return params.data.hintText + " : " + params.data.name;
+            return params.data.title + " : " + params.data.name;
           }
         },
         graphic: {
@@ -526,14 +607,15 @@ export default {
             type: "pie",
             radius: ["30%", "70%"],
             center: ["50%", "45%"],
-            data: [
-              { value: 90, name: "9.0%", hintText: "思想成长类" },
-              { value: 126, name: "12.6%", hintText: "实践实习类" },
-              { value: 170, name: "17.0%", hintText: "志愿服务类" },
-              { value: 183, name: "18.3%", hintText: "学术科技类" },
-              { value: 206, name: "20.6%", hintText: "文体活动类" },
-              { value: 225, name: "22.5%", hintText: "工作履历类" }
-            ],
+            // data: [
+            //   { value: 90, name: "9.0%", hintText: "思想成长类" },
+            //   { value: 126, name: "12.6%", hintText: "实践实习类" },
+            //   { value: 170, name: "17.0%", hintText: "志愿服务类" },
+            //   { value: 183, name: "18.3%", hintText: "学术科技类" },
+            //   { value: 206, name: "20.6%", hintText: "文体活动类" },
+            //   { value: 225, name: "22.5%", hintText: "工作履历类" }
+            // ],
+            data: _this.openRatio,
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,
@@ -552,7 +634,6 @@ export default {
                   ];
                   return colorList[params.dataIndex];
                 },
-                // borderColor: '#ffffff',
                 shadowColor: "#fff",
                 shadowBlur: "5"
               }
@@ -575,7 +656,14 @@ export default {
       myChart.setOption(option);
     },
     //异性图
-    classNum(openClassNum) {
+    classNum(num) {
+      var _this = this;
+      for (var i = 0; i < num.length; i++) {
+        //各类课程开设数量
+        _this.openNum.push(num[i].count);
+        _this.heteExtent.push({ value: num[i].count, title: num[i].title });
+        _this.openClassName.push(num[i].title);
+      }
       let myChart = echarts.init(document.getElementById("classNum"));
       let option = {
         title: {
@@ -593,11 +681,11 @@ export default {
             type: "none"
           },
           formatter: function(params) {
-            return params[0].data.hintText + " : " + params[0].data.value;
+            return params[0].data.title + " : " + params[0].data.value;
           }
         },
         xAxis: {
-          data: [303, 265, 213, 210, 203, 199],
+          data: _this.openNum,
           axisTick: { show: false },
           axisLine: { show: false },
           axisLabel: {
@@ -630,7 +718,9 @@ export default {
                     "#00C5FF",
                     "#00C5FF",
                     "#A243DA",
-                    "#D72FA7"
+                    "#D72FA7",
+                    "red",
+                    "blue"
                   ];
                   return colorList[params.dataIndex];
                 }
@@ -639,14 +729,17 @@ export default {
                 opacity: 1
               }
             },
-            data: [
-              { value: 303, hintText: "思想成长类" },
-              { value: 265, hintText: "实践实习类" },
-              { value: 213, hintText: "志愿服务类" },
-              { value: 210, hintText: "学术科技类" },
-              { value: 203, hintText: "文体活动类" },
-              { value: 199, hintText: "工作履历类" }
-            ]
+            // data: [
+            //   { value: 303},
+            //   { value: 265},
+            //   { value: 213},
+            //   { value: 210},
+            //   { value: 203},
+            //   { value: 199},
+            //   { value: 199},
+            //   { value: 199}
+            // ]
+            data: _this.heteExtent
           }
         ]
       };
@@ -977,7 +1070,6 @@ export default {
         ]
       };
       myChart.on("datazoom", function(params) {
-        console.log(params);
         if (params.batch[0].end > 99.9) {
           _this.youShow = false;
         } else {
@@ -1020,6 +1112,9 @@ export default {
   font-size: 0.24rem;
   color: #fff;
   margin-left: 0.4rem;
+}
+option{
+  color: #000;
 }
 /* 运算 */
 .fx-content {
@@ -1356,7 +1451,7 @@ select {
   line-height: 0.23rem;
   background: rgba(255, 255, 255, 8%);
   float: right;
-  margin-right: 0.75rem;
+  margin-right: 0.65rem;
 }
 .evaluatePart {
   font-size: 0.12rem;

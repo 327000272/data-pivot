@@ -145,7 +145,6 @@
                 :waveWidth="9"
                 :borderWidth="2"
                 :borderOffset="1"
-
               ></Hliquid>
               <p class="classReferenceRatio">到场与课程供给比例</p>
             </div>
@@ -167,21 +166,92 @@ export default {
   data() {
     return {
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzY3MjIwMzYsImV4cCI6MTU3NjcyNTYzNiwiaWF0IjoxNTc2NzIyMDM2fQ.snFr5abJPZVar3g0hE5_f09UEZ3UFp-rjTdw4k-Q0GA",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyMzY4MzIsImV4cCI6MTU3NzI0MDQzMiwiaWF0IjoxNTc3MjM2ODMyfQ.prjQnb25R6PUT0O9rmVwfjhN4TDzG8w_TMr2CTM_6L8",
       url: "https://class-ms-test.univteam.com/",
-      youShow:true,
-      zuoShow:false,
+      youShow: true,
+      zuoShow: false,
+      supplyComprehensive: [],
+      openRatio: [],
+      openPeopleTxt:[],
+      openPeopleDate:[],
+
     };
   },
   mounted() {
     this.collegePerson();
-    this.classPersonCake();
-    this.switchSlide();
+    // this.classPersonCake();
+    // this.switchSlide();
     this.funnel();
+    this.getsupply();
+    this.getactivation();
   },
   methods: {
+    //第二课堂整体参与度于信息系统活跃
+    getactivation(){
+      var _this = this;
+      axios
+        .get(
+          _this.url + "/api/Plat/activation?access_token=" + _this.token
+        )
+        .then(function(response) {
+        //  console.log(response.data);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    //请求各类课程
+    getsupply() {
+      var _this = this;
+      axios
+        .get(_this.url + "/api/Plat/course/supply?access_token=" + _this.token)
+        .then(function(response) {
+          //真实数据
+          _this.supplyComprehensive = response.data.data;
+          //假数据
+          var GetCulumPersonCount = {
+            data: [
+              {
+                id: 1578,
+                name: "经济学院1212",
+                count: 33653,
+                percent: "90.9%",
+              },
+              {
+                id: 1579,
+                name: "外语学院",
+                count: 2878,
+                percent: "7.8%",
+              },
+              {
+                id: 1581,
+                name: "经济学院保险系1212",
+                count: 504,
+                percent: "1.4%",
+              }
+            ],
+            code: 0,
+            msg: "ok"
+          };
+          // _this.classPersonCake(_this.supplyComprehensive);
+          _this.classPersonCake(GetCulumPersonCount.data);
+          _this.switchSlide(GetCulumPersonCount.data);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     //饼状图
-    classPersonCake() {
+    classPersonCake(num) {
+      var _this = this;
+      for (var i = 0; i < num.length; i++) {
+        Number(num[i].percent.split('%')[0]);
+        _this.openRatio.push({
+          value: Number(num[i].percent.split('%')[0]),
+          name: num[i].percent,
+          title:num[i].name
+        });
+      }
       let myChart = echarts.init(document.getElementById("classPersonCake"));
       let option = {
         title: {
@@ -196,20 +266,19 @@ export default {
         tooltip: {
           trigger: "item",
           formatter: function(params) {
-            return params.data.hintText + " : " + params.data.name;
+            return params.data.title + " : " + params.data.name;
           }
         },
-        graphic:{
-          type:'text',
-          left:'center',
-          top:'center',
-          style:{
-            text:"各类占比",
-            fill:"#fff",
-            textAlign:'middle',
-            textVerticalAlign:'middle',
-            fontSize:'0.14rem',
-
+        graphic: {
+          type: "text",
+          left: "center",
+          top: "center",
+          style: {
+            text: "各类占比",
+            fill: "#fff",
+            textAlign: "middle",
+            textVerticalAlign: "middle",
+            fontSize: "0.14rem"
           }
         },
         series: [
@@ -218,19 +287,20 @@ export default {
             type: "pie",
             radius: ["30%", "70%"],
             center: ["50%", "45%"],
-            data: [
-              { value: 90, name: "9.0%", hintText: "思想成长类" },
-              { value: 126, name: "12.6%", hintText: "实践实习类" },
-              { value: 170, name: "17.0%", hintText: "志愿服务类" },
-              { value: 183, name: "18.3%", hintText: "学术科技类" },
-              { value: 206, name: "20.6%", hintText: "文体活动类" },
-              { value: 225, name: "22.5%", hintText: "工作履历类" }
-            ],
+            // data: [
+            //   { value: 90, name: "9.0%", hintText: "思想成长类" },
+            //   { value: 126, name: "12.6%", hintText: "实践实习类" },
+            //   { value: 170, name: "17.0%", hintText: "志愿服务类" },
+            //   { value: 183, name: "18.3%", hintText: "学术科技类" },
+            //   { value: 206, name: "20.6%", hintText: "文体活动类" },
+            //   { value: 225, name: "22.5%", hintText: "工作履历类" }
+            // ],
+            data: _this.openRatio,
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,
                 shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)",
+                shadowColor: "rgba(0, 0, 0, 0.5)"
               },
               normal: {
                 color: function(params) {
@@ -244,10 +314,9 @@ export default {
                   ];
                   return colorList[params.dataIndex];
                 },
-                borderWidth:1,
-                borderColor: '#08263c',
-              },
-               
+                borderWidth: 1,
+                borderColor: "#08263c"
+              }
             },
             labelLine: {
               normal: {
@@ -267,147 +336,171 @@ export default {
       myChart.setOption(option);
     },
     //横向柱状图
-    switchSlide() {
+    switchSlide(num) {
+      var _this = this;
+      for (var i = 0; i < num.length; i++) {
+        _this.openPeopleTxt.push(
+          num[i].name
+        );
+        _this.openPeopleDate.push(
+          num[i].count
+        )
+      }
       let myChart = echarts.init(document.getElementById("switchSlide"));
-      let myColor = [ '#00c0e9', '#0096f3', '#33CCFF', '#33FFCC','#A243DA'],
-      option = {
-        title: {
-          text: "各类课程参与学生数比例",
-          x: "center",
-          y: "bottom",
-          textStyle: {
-            color: "rgba(255,255,255,0.5)",
-            fontSize: "0.14rem"
-          }
-        },
-    grid: {
-        left: '11%',
-        top: '12%',
-        right: '10%',
-        bottom: '8%',
-        containLabel: true
-    },
-    xAxis: [{
-        show: false,
-    }],
-    yAxis: [{
-        axisTick: 'none',
-        axisLine: 'none',
-        offset: '27',
-        axisLabel: {
+      let myColor = ["#00c0e9", "#0096f3", "#33CCFF", "#33FFCC", "#A243DA"],
+        option = {
+          title: {
+            text: "各类课程参与学生数比例",
+            x: "center",
+            y: "bottom",
             textStyle: {
-                color: '#ffffff',
-                fontSize: '16',
+              color: "rgba(255,255,255,0.5)",
+              fontSize: "0.14rem"
             }
-        },
-        data: [ '思想成长类', '实践实习类', '志愿服务类', '学术科技类','文体活动类','工作履历类']
-    }, {
-        axisTick: 'none',
-        axisLine: 'none',
-        axisLabel: {
-            textStyle: {
-                color: '#ffffff',
-                fontSize: '16',
+          },
+          grid: {
+            left: "11%",
+            top: "12%",
+            right: "10%",
+            bottom: "8%",
+            containLabel: true
+          },
+          xAxis: [
+            {
+              show: false
             }
-        },
-        data: []
-    }, {
-        name: '分拨延误TOP 10',
-        nameGap: '50',
-        nameTextStyle: {
-            color: '#ffffff',
-            fontSize: '16',
-        },
-        axisLine: {
-            lineStyle: {
-                color: 'rgba(0,0,0,0)'
+          ],
+          yAxis: [
+            {
+              axisTick: "none",
+              axisLine: "none",
+              offset: "27",
+              axisLabel: {
+                textStyle: {
+                  color: "#ffffff",
+                  fontSize: "16"
+                }
+              },
+              // data: [
+              //   "思想成长类",
+              //   "实践实习类",
+              //   "志愿服务类",
+              // ]
+              data:_this.openPeopleTxt
+            },
+            {
+              axisTick: "none",
+              axisLine: "none",
+              axisLabel: {
+                textStyle: {
+                  color: "#ffffff",
+                  fontSize: "16"
+                }
+              },
+              data: []
+            },
+            {
+              name: "分拨延误TOP 10",
+              nameGap: "50",
+              nameTextStyle: {
+                color: "#ffffff",
+                fontSize: "16"
+              },
+              axisLine: {
+                lineStyle: {
+                  color: "rgba(0,0,0,0)"
+                }
+              },
+              data: []
             }
-        },
-        data: [],
-    }],
-    series: [{
-            name: '条',
-            type: 'bar',
-            yAxisIndex: 0,
-            data: [ 50, 52, 60, 72, 42, 62],
-            label: {
+          ],
+          series: [
+            {
+              name: "条",
+              type: "bar",
+              yAxisIndex: 0,
+              // data: [50, 52, 60],
+              data:_this.openPeopleDate,
+              label: {
                 normal: {
-                    show: true,
-                    position: 'right',
-                    textStyle: {
-                        color: '#ffffff',
-                        fontSize: '16',
-                    }
+                  show: true,
+                  position: "right",
+                  textStyle: {
+                    color: "#ffffff",
+                    fontSize: "16"
+                  }
                 }
-            },
-            barWidth: 12,
-            itemStyle: {
+              },
+              barWidth: 12,
+              itemStyle: {
                 normal: {
-                    color: function(params) {
-                        var num = myColor.length;
-                        return myColor[params.dataIndex % num]
-                    },
+                  color: function(params) {
+                    var num = myColor.length;
+                    return myColor[params.dataIndex % num];
+                  }
                 }
+              },
+              z: 2
             },
-            z: 2
-        }, {
-            name: '白框',
-            type: 'bar',
-            yAxisIndex: 1,
-            barGap: '-100%',
-            data: [ 99.5, 99.5, 99.5, 99.5,99.5,99.5],
-            barWidth: 20,
-            itemStyle: {
+            {
+              name: "白框",
+              type: "bar",
+              yAxisIndex: 1,
+              barGap: "-100%",
+              data: [99999.5, 99999.5, 99999.5],
+              barWidth: 20,
+              itemStyle: {
                 normal: {
-                    color: '#0e2147',
-                    barBorderRadius: 5,
+                  color: "#072439",
+                  barBorderRadius: 5
                 }
+              },
+              z: 1
             },
-            z: 1
-        }, {
-            name: '外框',
-            type: 'bar',
-            yAxisIndex: 2,
-            barGap: '-100%',
-            data: [ 100, 100, 100, 100,100,100],
-            barWidth: 24,
-            itemStyle: {
+            {
+              name: "外框",
+              type: "bar",
+              yAxisIndex: 2,
+              barGap: "-100%",
+              data: [10000, 10000, 10000],
+              barWidth: 24,
+              itemStyle: {
                 normal: {
-                    color: function(params) {
-                        var num = myColor.length;
-                        return myColor[params.dataIndex % num]
-                    },
-                    barBorderRadius: 5,
+                  color: function(params) {
+                    var num = myColor.length;
+                    return myColor[params.dataIndex % num];
+                  },
+                  barBorderRadius: 5
                 }
+              },
+              z: 0
             },
-            z: 0
-        },
-        {
-            name: '外圆',
-            type: 'scatter',
-            hoverAnimation: false,
-            data: [ 0, 0, 0, 0,0,0],
-            yAxisIndex: 2,
-            symbolSize: 35,
-            itemStyle: {
+            {
+              name: "外圆",
+              type: "scatter",
+              hoverAnimation: false,
+              data: [0, 0, 0],
+              yAxisIndex: 2,
+              symbolSize: 30,
+              itemStyle: {
                 normal: {
-                    color: function(params) {
-                        var num = myColor.length;
-                        return myColor[params.dataIndex % num]
-                    },
-                    opacity: 1,
+                  color: function(params) {
+                    var num = myColor.length;
+                    return myColor[params.dataIndex % num];
+                  },
+                  opacity: 1
                 }
-            },
-            z: 2
-        }
-    ]
-};
+              },
+              z: 2
+            }
+          ]
+        };
       window.onresize = myChart.resize;
       myChart.setOption(option);
     },
     //柱状图
     collegePerson() {
-      var _this=this;
+      var _this = this;
       let myChart = echarts.init(document.getElementById("collegePerson"));
       var dataAxis = [
         "土木建筑工程学院",
@@ -555,14 +648,14 @@ export default {
       };
       myChart.on("datazoom", function(params) {
         if (params.batch[0].end > 99.9) {
-          _this.youShow=false
+          _this.youShow = false;
         } else {
-          _this.youShow=true
+          _this.youShow = true;
         }
         if (params.batch[0].start > 0) {
-          _this.zuoShow=true
+          _this.zuoShow = true;
         } else {
-          _this.zuoShow=false
+          _this.zuoShow = false;
         }
       });
       window.onresize = myChart.resize();
@@ -573,69 +666,58 @@ export default {
       let myChart = echarts.init(document.getElementById("funnel"));
       let option = {
         title: {
-          text: "参与漏斗图",
+          text: "投资项目漏斗图",
           x: "center",
           y: "bottom",
           textStyle: {
             color: "rgba(255,255,255,0.5)",
-            fontSize: "0.12rem"
+            fontSize: "0.14rem"
           }
         },
         tooltip: {
           trigger: "item",
           formatter: "{a} <br/>{b} : {c}%"
         },
+
         calculable: true,
         series: [
           {
             name: "漏斗图",
             type: "funnel",
-            left: "0%",
-            top: 30,
+            left: "10%",
+            top: 60,
             bottom: 60,
-            width: "100%",
-            height: "60%",
+            width: "80%",
             min: 0,
-            max: 100,
+            max: 30,
             minSize: "0%",
             maxSize: "100%",
             sort: "descending",
             gap: 2,
             label: {
-              show: true,
-              position: "inside"
-            },
-            labelLine: {
               normal: {
                 show: true,
-                length: 30
-              }
-              // length: 10,
-              // lineStyle: {
-              //   width: 1,
-              //   type: "solid"
-              // }
-            },
-            itemStyle: {
-              borderColor: "#fff",
-              borderWidth: 1,
-              normal: {
-                color: function(params) {
-                  var colorList = ["#00FCD5", "#00C5FF", "#478CEF", "#A243DA"];
-                  return colorList[params.dataIndex];
+                formatter: "{b} : {c}",
+                position: "outside"
+              },
+              emphasis: {
+                textStyle: {
+                  fontSize: 20
                 }
               }
             },
-            emphasis: {
-              label: {
-                fontSize: 20
+
+            itemStyle: {
+              normal: {
+                borderColor: "#fff",
+                borderWidth: 1
               }
             },
             data: [
-              { value: 60, name: "60%" },
-              { value: 40, name: "40%" },
-              { value: 20, name: "20%" },
-              { value: 80, name: "80%" }
+              { value: 100, name: "10.56万次" },
+              { value: 21, name: "2.21万次" },
+              { value: 7, name: "1.58万次" },
+              { value: 7, name: "1.16万次" }
             ]
           }
         ]
@@ -672,11 +754,11 @@ export default {
   font-size: 0.3rem;
   opacity: 0.5;
 }
-.iconduobianxing::before{
+.iconduobianxing::before {
   color: #fff;
   opacity: 1;
-  font-size: 0.10rem;
-  margin-right: 0.20rem;
+  font-size: 0.1rem;
+  margin-right: 0.2rem;
 }
 .iconjihuo,
 .iconrenshu,
@@ -956,31 +1038,29 @@ select {
   color: #fff;
   opacity: 0.5;
 }
-.classReferenceRatio{
+.classReferenceRatio {
   font-size: 0.14rem;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
   text-align: center;
 }
-.youjiantou{
-    position: absolute;
-    top: 1.5rem;
-    right: 0.05rem;
-    font-size: 0.22rem;
+.youjiantou {
+  position: absolute;
+  top: 1.5rem;
+  right: 0.05rem;
+  font-size: 0.22rem;
 }
-.zuojiantou{
-    position: absolute;
-    top: 1.5rem;
-    left: 0.10rem;
-    font-size: 0.22rem;
+.zuojiantou {
+  position: absolute;
+  top: 1.5rem;
+  left: 0.1rem;
+  font-size: 0.22rem;
 }
-.iconlujing,.iconlujing1{
-    opacity: 0.2;
-    font-size: 0.26rem;
+.iconlujing,
+.iconlujing1 {
+  opacity: 0.2;
+  font-size: 0.26rem;
 }
-#personStatistics{
+#personStatistics {
   position: relative;
 }
-/* .home-liquid{
-  margin-left: 1rem;
-} */
 </style>
