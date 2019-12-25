@@ -128,7 +128,7 @@
           <div class="zuojiantou iconfont iconlujing" v-if="zuoShow"></div>
           <div class="echarts-legend">
             <div class="echarts-legend-box">
-              <div class="echarts-legend-item" v-for="item in openClassName" :key="item.id">
+              <div class="echarts-legend-item" v-for="item in lineName" :key="item.id">
                 <div class="echarts-legend-item-bar"></div>
                 <div class="echarts-legend-item-txt">{{item}}</div>
               </div>
@@ -146,7 +146,7 @@ export default {
   data() {
     return {
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyNTY3MDEsImV4cCI6MTU3NzI2MDMwMSwiaWF0IjoxNTc3MjU2NzAxfQ.5ZDZAAv69_jRPUWHsklrJRK7AzChSxXZtN6zvaQWcN4",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyNjQ1OTYsImV4cCI6MTU3NzI2ODE5NiwiaWF0IjoxNTc3MjY0NTk2fQ.N9jsjOOt9FLdAeDwS3xp26vMFfhJtjVYKPC9w6vcmQU",
       url: "https://class-ms-test.univteam.com/",
       Condition: [],
       Comment: [],
@@ -167,6 +167,9 @@ export default {
       middle:"",
       bad:"",
       satisfactionDegree:'',
+      line:[],
+      lineName:[],
+      start:[],
 
     };
   },
@@ -181,10 +184,9 @@ export default {
     // this.satisfaction();
     // this.classNumber();
     // this.classNum();
-    this.date_condition();
+    // this.date_condition();
     this.getCondition();
     this.getComment();
-    // this.getClassEstablishNum();
     this.getCourseSupply();
     this.getsupply();
     this.schoolscope();
@@ -253,8 +255,10 @@ export default {
             if(_this.Comment[i].type==6){
                 _this.bad=_this.Comment[i]
             }
+
           }
-          _this.satisfactionDegree=Number((_this.good.data+_this.middle.data+_this.bad.data)/3);
+          _this.satisfactionDegree=Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3;
+
           _this.satisfaction(_this.satisfactionDegree);
         })
         .catch(function(error) {
@@ -281,55 +285,18 @@ export default {
       axios
         .get(_this.url + "/api/Plat/course/line?access_token=" + _this.token)
         .then(function(response) {
-            // console.log(response.data.data);
+            _this.line=response.data.data;
+            _this.date_condition(_this.line);
+            for(var i=0;i<response.data.data.length;i++){
+              _this.lineName.push(response.data.data[i].name);
+            }
+
         })
         .catch(function(error) {
           console.log(error);
         });
     },
-    //各类课程开课情况
-    getClassEstablishNum() {
-      var _this = this;
-      var data = [
-        {
-          id: 1,
-          name: "思想成长类",
-          datas: [
-            { start: "2019-03-05", end: "2019-03-08", count: 0 },
-            { start: "2019-03-05", end: "2019-03-08", count: 0 },
-            { start: "2019-03-05", end: "2019-03-08", count: 0 }
-          ]
-        },
-        {
-          id: 2,
-          name: "实践实习类",
-          datas: [{ start: "2019-03-05", end: "2019-03-08", count: 0 }]
-        },
-        {
-          id: 3,
-          name: "志愿服务类",
-          datas: [{ start: "2019-03-05", end: "2019-03-08", count: 0 }]
-        },
-        {
-          id: 4,
-          name: "学术科技类",
-          datas: [{ start: "2019-03-05", end: "2019-03-08", count: 0 }]
-        },
-        {
-          id: 5,
-          name: "文体活动类",
-          datas: [{ start: "2019-03-05", end: "2019-03-08", count: 0 }]
-        },
-        {
-          id: 6,
-          name: "工作履历类",
-          datas: [{ start: "2019-03-05", end: "2019-03-08", count: 0 }]
-        }
-      ];
-      for (var i = 0; i < data.length; i++) {
-        _this.openClassName.push(data[i].name);
-      }
-    },
+
     //各单位课程供给排行
     getCourseSupply() {
       var _this = this;
@@ -456,7 +423,7 @@ export default {
               width: 10,
               length: "90%"
             },
-            data: [{ value: 76 }]
+            data: [{ value: num }]
           },
           {
             name: "最内层线",
@@ -554,7 +521,7 @@ export default {
               }
             },
             animation: false,
-            data: [{ value: 76, name: "满意度" }]
+            data: [{ value: num, name: "满意度" }]
           }
         ]
       };
@@ -746,8 +713,11 @@ export default {
       myChart.setOption(option);
     },
     //课程开展分时情况表格
-    date_condition() {
+    date_condition(num) {
       var _this = this;
+      for(var i=0;i<num[0].datas.length;i++){
+        _this.start=num[0].datas[i].start+'~'+num[0].datas[i].end;
+      }
       let myChart = echarts.init(document.getElementById("date_condition"));
       let option = {
         grid: {
@@ -868,7 +838,6 @@ export default {
         ],
         series: [
           {
-            // name:linetitle[0],
             type: "line",
             // stack: '总量',
             symbol: "circle",
@@ -882,7 +851,6 @@ export default {
                   width: 1
                 },
                 areaStyle: {
-                  //color: '#94C9EC'
                   color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
@@ -904,10 +872,8 @@ export default {
               }
             },
             data: [120, 132, 101, 134, 90, 230, 210, 182, 191, 234, 290, 330]
-            // data:linedata1
           },
           {
-            // name:linetitle[1],
             type: "line",
             // stack: '总量',
             symbol: "circle",
@@ -921,7 +887,6 @@ export default {
                   width: 1
                 },
                 areaStyle: {
-                  //color: '#94C9EC'
                   color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
@@ -936,10 +901,8 @@ export default {
               }
             },
             data: [100, 182, 191, 234, 290, 330, 310, 201, 154, 190, 330, 410]
-            // data:linedata2
           },
           {
-            // name:linetitle[2],
             type: "line",
             // stack: '总量',
             symbol: "circle",
@@ -953,7 +916,6 @@ export default {
                   width: 1
                 },
                 areaStyle: {
-                  //color: '#94C9EC'
                   color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
@@ -968,10 +930,8 @@ export default {
               }
             },
             data: [130, 232, 201, 154, 190, 330, 410, 150, 232, 201, 154, 190]
-            // data:linedata3
           },
           {
-            // name:linetitle[3],
             type: "line",
             // stack: '总量',
             symbol: "circle",
@@ -985,7 +945,6 @@ export default {
                   width: 1
                 },
                 areaStyle: {
-                  //color: '#94C9EC'
                   color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
@@ -1000,10 +959,8 @@ export default {
               }
             },
             data: [50, 232, 201, 154, 190, 330, 410, 150, 232, 201, 154, 190]
-            // data:linedata4
           },
           {
-            // name:linetitle[4],
             type: "line",
             // stack: '总量',
             symbol: "circle",
@@ -1017,7 +974,6 @@ export default {
                   width: 1
                 },
                 areaStyle: {
-                  //color: '#94C9EC'
                   color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
@@ -1032,10 +988,8 @@ export default {
               }
             },
             data: [90, 200, 201, 154, 190, 330, 410, 150, 232, 201, 154, 190]
-            // data:linedata5
           },
           {
-            // name:linetitle[5],
             type: "line",
             // stack: '总量',
             symbol: "circle",
@@ -1049,7 +1003,6 @@ export default {
                   width: 1
                 },
                 areaStyle: {
-                  //color: '#94C9EC'
                   color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
                     {
                       offset: 0,
@@ -1064,7 +1017,6 @@ export default {
               }
             },
             data: [30, 232, 201, 154, 190, 330, 410, 150, 232, 201, 154, 190]
-            // data:linedata6
           }
         ]
       };
