@@ -145,8 +145,8 @@ import axios from "axios";
 export default {
   data() {
     return {
-      token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczMzg5MjAsImV4cCI6MTU3NzM0MjUyMCwiaWF0IjoxNTc3MzM4OTIwfQ.srkrYmmpiEfiaejkJ7xtWk8u16eIEAKqpqADzAgMbYw",
+      // token:
+      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNTM2NzgsImV4cCI6MTU3NzM1NzI3OCwiaWF0IjoxNTc3MzUzNjc4fQ.o3NYOAZFhH4u0PZ6erMUTB6Atv0kbT16XD10Tcl5SMQ",
       url: "https://class-ms-test.univteam.com/",
       Condition: [],
       Comment: [],
@@ -170,7 +170,9 @@ export default {
       line:[],
       lineName:[],
       start:[],
-
+      Token:"",
+      sessionToken:'',
+      platform:'',
     };
   },
   created() {
@@ -185,35 +187,77 @@ export default {
     // this.classNumber();
     // this.classNum();
     // this.date_condition();
-    this.getCondition();
-    this.getComment();
-    this.getCourseSupply();
-    this.getsupply();
-    this.schoolscope();
-    this.getline();
-    this.getT();
+
+    // this.getCondition();
+    // this.getComment();
+    // this.getCourseSupply();
+    // this.getsupply();
+    // this.schoolscope();
+    // this.getline();
+    this.whetherToken();
+    // this.postToken();
   },
   methods: {
     fetchData() {
       console.log("路由发送变化doing...");
     },
-    //获取t的值
-    getT(){
-      var _this=this;
-      var t= _this.$route.query.t;
-      if(t==undefined){
-        window.location.href=" http://class-admin.univteam.com/"+"cspt1119"+"/account/login?back=statistics";
-      }else{
-        alert(1111)
-      }
-      console.log(_this.$route.query.t)
-    },
+      //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
+      whetherToken(){
+          var _this=this;
+          var hash=window.location.hash;
+				  var list=hash.split("/");
+          _this.platform=list[1];
+           _this.sessionToken=sessionStorage.getItem("token");
+          //把每个调用的接口都写在此方法中,需要在接口中加token
+          if(_this.sessionToken!==null){
+            //不为null,本地已经存在token,调用方法
+            _this.schoolscope(_this.sessionToken);
+            _this.getCondition(_this.sessionToken);
+            _this.getComment(_this.sessionToken);
+            _this.getsupply(_this.sessionToken);
+            _this.getline(_this.sessionToken);
+            _this.getCourseSupply(_this.sessionToken);
+          }else{
+            //判断路径上有无参数,
+             _this.postToken();
+          }
+
+      },
+			//请求token并且保存token
+			postToken(){
+        var _this=this;
+          var hash=window.location.hash;
+				  var list=hash.split("/");
+				  var platform=list[1];//平台
+        var t=this.$route.query.t;
+        if(!t){
+           window.location.href=" http://class-admin.univteam.com/"+platform+"/account/login?back=statistics";
+        }
+				axios.post(_this.url+'api/Authorize/token',{
+						token: t
+				})
+				.then(function (response) {
+          // _this.Token=response.data.access_token;
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNjU1NDksImV4cCI6MTU3NzM2OTE0OSwiaWF0IjoxNTc3MzY1NTQ5fQ.W6v19OC_oD5MJvLV1LKI64Sz8wOqUm9VhH69WSMGwzU',
+          //将token写入到浏览器缓存中
+          sessionStorage.setItem("token", _this.sessionToken);	
+            _this.schoolscope(_this.sessionToken);
+            _this.getCondition(_this.sessionToken);
+            _this.getComment(_this.sessionToken);
+            _this.getsupply(_this.sessionToken);
+            _this.getline(_this.sessionToken);
+            _this.getCourseSupply(_this.sessionToken);
+				})
+				.catch(function (error) {
+          console.log('请求失败')
+				});
+      },
     //学院范围
-    schoolscope() {
+    schoolscope(token) {
       var _this = this;
       axios
         .get(
-          _this.url + "api/Plat/options/?access_token=" + _this.token
+          _this.url + "api/Plat/options/?access_token=" + token
         )
         .then(function(response) {
           _this.schoolUnits=response.data.data.units;
@@ -222,29 +266,31 @@ export default {
           }
         })
         .catch(function(error) {
-          console.log(error);
+          sessionStorage.removeItem("token");//清除失效的token
+          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
 
     //课程开展总览
-    getCondition() {
+    getCondition(token) {
       var _this = this;
       axios
         .get(
-          _this.url + "/api/Plat/course/condition?access_token=" + _this.token
+          _this.url + "api/Plat/course/condition?access_token=" + token
         )
         .then(function(response) {
           _this.Condition = response.data.data;
         })
         .catch(function(error) {
-          console.log(error);
+          sessionStorage.removeItem("token");//清除失效的token
+          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //评价与参评率
-    getComment() {
+    getComment(token) {
       var _this = this;
       axios
-        .get(_this.url + "/api/Plat/course/comment?access_token=" + _this.token)
+        .get(_this.url + "api/Plat/course/comment?access_token=" + token)
         .then(function(response) {
           _this.Comment = response.data.data;
           for(var i=0;i<_this.Comment.length;i++){
@@ -275,28 +321,30 @@ export default {
           _this.satisfaction(_this.satisfactionDegree);
         })
         .catch(function(error) {
-          console.log(error);
+          sessionStorage.removeItem("token");//清除失效的token
+          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //请求各类课程开课情况数据
-    getsupply() {
+    getsupply(token) {
       var _this = this;
       axios
-        .get(_this.url + "/api/Plat/course/supply?access_token=" + _this.token)
+        .get(_this.url + "api/Plat/course/supply?access_token=" + token)
         .then(function(response) {
           _this.supplyComprehensive = response.data.data;
           _this.classNum(_this.supplyComprehensive);
           _this.classNumber(_this.supplyComprehensive);
         })
         .catch(function(error) {
-          console.log(error);
+          sessionStorage.removeItem("token");//清除失效的token
+          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //请求课程开展分时情况
-    getline(){
+    getline(token){
       var _this = this;
       axios
-        .get(_this.url + "/api/Plat/course/line?access_token=" + _this.token)
+        .get(_this.url + "api/Plat/course/line?access_token=" + token)
         .then(function(response) {
             _this.line=response.data.data;
             _this.date_condition(_this.line);
@@ -306,23 +354,25 @@ export default {
 
         })
         .catch(function(error) {
-          console.log(error);
+          sessionStorage.removeItem("token");//清除失效的token
+          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
 
     //各单位课程供给排行
-    getCourseSupply() {
+    getCourseSupply(token) {
       var _this = this;
       axios
         .get(
-          _this.url + "/api/Plat/course/rank?unit=0&access_token=" + _this.token
+          _this.url + "api/Plat/course/rank?unit=0&access_token=" + token
         )
         .then(function(response) {
           _this.courseSupply = response.data.data;
-          console.log(_this.courseSupply)
+
         })
         .catch(function(error) {
-          console.log(error);
+          sessionStorage.removeItem("token");//清除失效的token
+          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //仪表盘
@@ -729,9 +779,9 @@ export default {
     //课程开展分时情况表格
     date_condition(num) {
       var _this = this;
-      for(var i=0;i<num[0].datas.length;i++){
-        _this.start=num[0].datas[i].start+'~'+num[0].datas[i].end;
-      }
+      // for(var i=0;i<num[0].datas.length;i++){
+      //   _this.start=num[0].datas[i].start+'~'+num[0].datas[i].end;
+      // }
       let myChart = echarts.init(document.getElementById("date_condition"));
       let option = {
         grid: {

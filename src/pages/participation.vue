@@ -152,8 +152,8 @@ export default {
   name: "participation",
   data() {
     return {
-      token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczMzg5MjAsImV4cCI6MTU3NzM0MjUyMCwiaWF0IjoxNTc3MzM4OTIwfQ.srkrYmmpiEfiaejkJ7xtWk8u16eIEAKqpqADzAgMbYw",
+      // token:
+      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNDgzMDksImV4cCI6MTU3NzM1MTkwOSwiaWF0IjoxNTc3MzQ4MzA5fQ.wIbyXDC6sB-lPUrXkopPNpDPLnAtiyuiLHHHoPzOyE8",
       url: "https://class-ms-test.univteam.com/",
       youShow: true,
       zuoShow: false,
@@ -192,7 +192,10 @@ export default {
       stuPersonNumData: "",
       stuPersonNumUnit: "",
       teacherCount: "",
-      studentCount: ""
+      studentCount: "",
+      Token:"",
+      sessionToken:'',
+      platform:'',
     };
   },
   mounted() {
@@ -200,30 +203,69 @@ export default {
     // this.classPersonCake();
     // this.switchSlide();
     this.funnel();
-    this.getCulumPersonCount();
-    this.getactivation();
-    this.GetUnitPersonCount();
-    this.schoolscope();
+    // this.getCulumPersonCount();
+    // this.getactivation();
+    // this.GetUnitPersonCount();
+    // this.schoolscope();
     // this.watchBall();
-    this.getT();
+    this.whetherToken();
+
   },
   methods: {
-    //获取t的值
-    getT(){
-      var _this=this;
-      var t= _this.$route.query.t;
-      if(t==undefined){
-        window.location.href=" http://class-admin.univteam.com/"+"cspt1119"+"/account/login?back=statistics";
-      }else{
-        alert(1111)
-      }
-      console.log(_this.$route.query.t)
-    },
+    //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
+      whetherToken(){
+          var _this=this;
+          var hash=window.location.hash;
+				  var list=hash.split("/");
+          _this.platform=list[1];
+           _this.sessionToken=sessionStorage.getItem("token");
+          //把每个调用的接口都写在此方法中,需要在接口中加token
+          if(_this.sessionToken!==null){
+            //不为null,本地已经存在token,调用方法
+            _this.schoolscope(_this.sessionToken);
+            _this.getactivation(_this.sessionToken);
+            _this.getCulumPersonCount(_this.sessionToken);
+            _this.GetUnitPersonCount(_this.sessionToken);
+
+          }else{
+            //判断路径上有无参数,
+             _this.postToken();
+          }
+
+      },
+      //请求token并且保存token
+			postToken(){
+        var _this=this;
+          var hash=window.location.hash;
+				  var list=hash.split("/");
+				  var platform=list[1];//平台
+        var t=this.$route.query.t;
+        if(!t){
+           window.location.href=" http://class-admin.univteam.com/"+platform+"/account/login?back=statistics";
+        }
+				axios.post(_this.url+'api/Authorize/token',{
+						token: t
+				})
+				.then(function (response) {
+          // _this.Token=response.data.access_token;
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNjgzNDMsImV4cCI6MTU3NzM3MTk0MywiaWF0IjoxNTc3MzY4MzQzfQ._icU5rR9ryIiHjpqGrJvUHwN41UjO3tDGWQG9zzPMs8',
+          //将token写入到浏览器缓存中
+          sessionStorage.setItem("token", _this.sessionToken);	
+            _this.schoolscope(_this.sessionToken);
+            _this.getactivation(_this.sessionToken);
+            _this.getCulumPersonCount(_this.sessionToken);
+            _this.GetUnitPersonCount(_this.sessionToken);
+				})
+				.catch(function (error) {
+          console.log('请求失败')
+        });
+        
+      },
     //学院范围
-    schoolscope() {
+    schoolscope(token) {
       var _this = this;
       axios
-        .get(_this.url + "api/Plat/options/?access_token=" + _this.token)
+        .get(_this.url + "api/Plat/options/?access_token=" + token)
         .then(function(response) {
           _this.schoolUnits = response.data.data.units;
           for (var i = 0; i < _this.schoolUnits.length; i++) {
@@ -231,14 +273,15 @@ export default {
           }
         })
         .catch(function(error) {
-          console.log(error);
+           sessionStorage.removeItem("token");//清除失效的token
+          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //第二课堂整体参与度于信息系统活跃
-    getactivation() {
+    getactivation(token) {
       var _this = this;
       axios
-        .get(_this.url + "/api/Plat/activation?access_token=" + _this.token)
+        .get(_this.url + "/api/Plat/activation?access_token=" + token)
         .then(function(response) {
           _this.teacherCount = response.data.data.activation.teacher_count;
           _this.studentCount = response.data.data.activation.student_count;
@@ -299,10 +342,10 @@ export default {
         });
     },
     //请求各类课程参与人次
-    getCulumPersonCount() {
+    getCulumPersonCount(token) {
       var _this = this;
       axios
-        .get(_this.url + "/api/Plat/culumCount?access_token=" + _this.token)
+        .get(_this.url + "/api/Plat/culumCount?access_token=" + token)
         .then(function(response) {
           _this.supplyComprehensive = response.data.data;
           _this.classPersonCake(_this.supplyComprehensive);
@@ -313,10 +356,10 @@ export default {
         });
     },
     //请求各学院学生参与人次统计
-    GetUnitPersonCount() {
+    GetUnitPersonCount(token) {
       var _this = this;
       axios
-        .get(_this.url + "/api/Plat/unitCount/?access_token=" + _this.token)
+        .get(_this.url + "/api/Plat/unitCount/?access_token=" + token)
         .then(function(response) {
           console.log(response);
           _this.UnitPersonCount = response.data;
@@ -396,7 +439,11 @@ export default {
                     "#00C5FF",
                     "#478CEF",
                     "#A243DA",
-                    "#D72FA7"
+                    "#D72FA7",
+                    "red",
+                    "blue",
+                    "aqua",
+                    "pink"
                   ];
                   return colorList[params.dataIndex];
                 },
@@ -406,7 +453,8 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: false,
+                
               }
             },
             label: {
@@ -423,13 +471,23 @@ export default {
     },
     //横向柱状图
     switchSlide(num) {
+      
       var _this = this;
       for (var i = 0; i < num.length; i++) {
         _this.openPeopleTxt.push(num[i].name);
         _this.openPeopleDate.push(num[i].count);
       }
       let myChart = echarts.init(document.getElementById("switchSlide"));
-      let myColor = ["#00c0e9", "#0096f3", "#33CCFF", "#33FFCC", "#A243DA"],
+      let myColor = ["#52F397",
+                    "#00E3E7",
+                    "#00C5FF",
+                    "#478CEF",
+                    "#A243DA",
+                    "#D72FA7",
+                    "red",
+                    "blue",
+                    "aqua",
+                    "pink"],
         option = {
           title: {
             text: "各类课程参与学生数比例",
@@ -457,11 +515,11 @@ export default {
             {
               axisTick: "none",
               axisLine: "none",
-              offset: "27",
+              offset: "17",
               axisLabel: {
                 textStyle: {
                   color: "#ffffff",
-                  fontSize: "16"
+                  fontSize: "10"
                 }
               },
               // data: [
@@ -497,20 +555,20 @@ export default {
               data: []
             }
           ],
+
           series: [
             {
               name: "条",
               type: "bar",
               yAxisIndex: 0,
-              // data: [50, 52, 60],
-              data: _this.openPeopleDate,
+              // data: _this.openPeopleDate,
               label: {
                 normal: {
                   show: true,
                   position: "right",
                   textStyle: {
                     color: "#ffffff",
-                    fontSize: "16"
+                    fontSize: "12"
                   }
                 }
               },
@@ -525,13 +583,14 @@ export default {
               },
               z: 2
             },
+
             {
               name: "白框",
               type: "bar",
               yAxisIndex: 1,
               barGap: "-100%",
               data: [100, 100, 100, 100, 100, 100, 100, 100, 100],
-              barWidth: 20,
+              barWidth: 10,
               itemStyle: {
                 normal: {
                   color: "#072439",
@@ -546,17 +605,17 @@ export default {
               yAxisIndex: 2,
               barGap: "-100%",
               data: [
-                10000,
-                10000,
-                10000,
-                10000,
-                10000,
-                10000,
-                10000,
-                10000,
-                10000
+                100,
+                100,
+                100,
+                100,
+                100,
+                100,
+                100,
+                100,
+                100
               ],
-              barWidth: 24,
+              barWidth: 14,
               itemStyle: {
                 normal: {
                   color: function(params) {
@@ -853,7 +912,7 @@ export default {
       let myChart = echarts.init(document.getElementById("funnel"));
       let option = {
         title: {
-          text: "投资项目漏斗图",
+          text: "参与漏斗图",
           x: "center",
           y: "bottom",
           textStyle: {

@@ -52,29 +52,75 @@ import axios from "axios";
 export default {
   data() {
     return {
-      token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyNTY3MDEsImV4cCI6MTU3NzI2MDMwMSwiaWF0IjoxNTc3MjU2NzAxfQ.5ZDZAAv69_jRPUWHsklrJRK7AzChSxXZtN6zvaQWcN4",
+      // token:
+      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNjU5NjAsImV4cCI6MTU3NzM2OTU2MCwiaWF0IjoxNTc3MzY1OTYwfQ.lptm6eA3_NnNW7WCV75tFnEhcsS2JIx_e4woMlM8mkU",
       url: "https://class-ms-test.univteam.com/",
       logo: [],
       index: "",
       dataToken: "",
       PlatDetail:[],
-
+      Token:"",
+      sessionToken:'',
+      platform:'',
     };
   },
   methods: {
+    //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
+      whetherToken(){
+          var _this=this;
+          var hash=window.location.hash;
+				  var list=hash.split("/");
+          _this.platform=list[1];
+           _this.sessionToken=sessionStorage.getItem("token");
+          //把每个调用的接口都写在此方法中,需要在接口中加token
+          if(_this.sessionToken!==null){
+            //不为null,本地已经存在token,调用方法
+            _this.GetPlatDetail(_this.sessionToken);
+          }else{
+            //判断路径上有无参数,
+             _this.postToken();
+          }
+
+      },
+      //请求token并且保存token
+			postToken(){
+        var _this=this;
+          var hash=window.location.hash;
+				  var list=hash.split("/");
+				  var platform=list[1];//平台
+        var t=this.$route.query.t;
+        if(!t){
+           window.location.href=" http://class-admin.univteam.com/"+platform+"/account/login?back=statistics";
+        }
+				axios.post(_this.url+'api/Authorize/token',{
+						token: t
+        })
+				.then(function (response) {
+          // _this.Token=response.data.access_token;
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNjgzNDMsImV4cCI6MTU3NzM3MTk0MywiaWF0IjoxNTc3MzY4MzQzfQ._icU5rR9ryIiHjpqGrJvUHwN41UjO3tDGWQG9zzPMs8',
+          //将token写入到浏览器缓存中
+          sessionStorage.setItem("token", _this.sessionToken);	
+           _this.GetPlatDetail(_this.sessionToken);
+				})
+				.catch(function (error) {
+          console.log('请求失败')
+        });
+        
+      },
     //获取学校logo,名称
-    GetPlatDetail(){
+    GetPlatDetail(token){
       var _this = this;
       axios
         .get(
-          _this.url + "/api/Plat/plat/detail?access_token=" + _this.token
+          _this.url + "api/Plat/plat/detail?access_token=" + token
         )
         .then(function(response) {
           _this.PlatDetail=response.data.data
         })
         .catch(function(error) {
-          console.log(error);
+          sessionStorage.removeItem("token");//清除失效的token
+          alert(2222)
+          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     openPage(pages, index) {
@@ -99,57 +145,11 @@ export default {
         this.index = "5";
       }
     },
-    getToken() {
-      var _this = this;
-      var url22 = this.$route.params.id;
-      var Pageurl = window.location.href;
-      var hash = window.location.hash;
-      var list = hash.split("/");
-      var url = list[1];
-      var dataToken = "";
-      var dataUrl = window.location.href;
-      var tokenStr = localStorage.getItem("token");
-      if (tokenStr !== null) {
-        this.token = tokenStr;
-        var token = tokenStr;
-        var Start = "";
-        var End = "";
-        var Unit = 0;
-        var Grade = 0;
-        return false;
-      }
-      if (dataToken == "") {
-        // window.location.href=" http://class-admin.univteam.com/"+url22+"/account/login?back=statistics";
-      } else {
-        axios
-          .post(
-            _this.url +
-              "/api/Authorize/token?url=" +
-              url22 +
-              "&token=" +
-              dataToken
-          )
-
-          .then(function(response) {
-            _this.token = response.data.data.access_token;
-            var token = _this.token;
-            localStorage.setItem("token", token);
-            var Start = "";
-            var End = "";
-            var Unit = 0;
-            var Grade = 0;
-          })
-          .catch(function(error) {
-            // window.location.href=" http://class-admin.univteam.com/"+url22+"/account/login?back=statistics";
-            console.log("数据加载失败");
-          });
-      }
-    }
   },
   mounted() {
     this.openHref();
-    this.getToken();
-    this.GetPlatDetail();
+    // this.GetPlatDetail();
+    this.whetherToken();
   }
 };
 </script>
