@@ -146,14 +146,14 @@
 </template>
 <script>
 import echarts from "echarts";
-import 'echarts-liquidfill';
+// import 'echarts-liquidfill';
 import axios from "axios";
 export default {
   name: "participation",
   data() {
     return {
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyNzAwNjAsImV4cCI6MTU3NzI3MzY2MCwiaWF0IjoxNTc3MjcwMDYwfQ.Yw4r30BRf5anNFz_Av5DRsHoHE5G88OQmEmF0O2u7DM",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczMzg5MjAsImV4cCI6MTU3NzM0MjUyMCwiaWF0IjoxNTc3MzM4OTIwfQ.srkrYmmpiEfiaejkJ7xtWk8u16eIEAKqpqADzAgMbYw",
       url: "https://class-ms-test.univteam.com/",
       youShow: true,
       zuoShow: false,
@@ -204,9 +204,21 @@ export default {
     this.getactivation();
     this.GetUnitPersonCount();
     this.schoolscope();
-    this.watchBall();
+    // this.watchBall();
+    this.getT();
   },
   methods: {
+    //获取t的值
+    getT(){
+      var _this=this;
+      var t= _this.$route.query.t;
+      if(t==undefined){
+        window.location.href=" http://class-admin.univteam.com/"+"cspt1119"+"/account/login?back=statistics";
+      }else{
+        alert(1111)
+      }
+      console.log(_this.$route.query.t)
+    },
     //学院范围
     schoolscope() {
       var _this = this;
@@ -354,6 +366,7 @@ export default {
             fontSize: "0.14rem"
           }
         },
+
         series: [
           {
             name: "",
@@ -434,6 +447,7 @@ export default {
             bottom: "8%",
             containLabel: true
           },
+
           xAxis: [
             {
               show: false
@@ -1038,10 +1052,16 @@ option {
 }
 .box-item-title-left {
   display: flex;
+  width: 50%;
+  font-size: 0.14rem;
+}
+.box-item-title-right{
+  width: 50%;
 }
 .box-item-title-right span {
   opacity: 0.5;
-  font-size: 0.12rem;
+  /* margin-left: 0.20rem; */
+  font-size: 0.14rem;
 }
 select {
   appearance: none;
@@ -1051,7 +1071,8 @@ select {
   outline: none;
   -webkit-tap-highlight-color: #fff;
   border: rem(1) solid #ebebeb;
-  width: rem(100);
+  /* width: rem(100); */
+  width: 60%;
   height: rem(50);
   line-height: rem(50);
   /*防止紧紧靠在边上*/
@@ -1060,6 +1081,7 @@ select {
   color: #fff;
   border: none;
   margin-right: 0.2rem;
+  font-size: 0.14rem;
 }
 .box-item-pic {
   display: flex;

@@ -146,7 +146,7 @@ export default {
   data() {
     return {
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzcyNjQ1OTYsImV4cCI6MTU3NzI2ODE5NiwiaWF0IjoxNTc3MjY0NTk2fQ.N9jsjOOt9FLdAeDwS3xp26vMFfhJtjVYKPC9w6vcmQU",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczMzg5MjAsImV4cCI6MTU3NzM0MjUyMCwiaWF0IjoxNTc3MzM4OTIwfQ.srkrYmmpiEfiaejkJ7xtWk8u16eIEAKqpqADzAgMbYw",
       url: "https://class-ms-test.univteam.com/",
       Condition: [],
       Comment: [],
@@ -191,10 +191,22 @@ export default {
     this.getsupply();
     this.schoolscope();
     this.getline();
+    this.getT();
   },
   methods: {
     fetchData() {
       console.log("路由发送变化doing...");
+    },
+    //获取t的值
+    getT(){
+      var _this=this;
+      var t= _this.$route.query.t;
+      if(t==undefined){
+        window.location.href=" http://class-admin.univteam.com/"+"cspt1119"+"/account/login?back=statistics";
+      }else{
+        alert(1111)
+      }
+      console.log(_this.$route.query.t)
     },
     //学院范围
     schoolscope() {
@@ -258,7 +270,7 @@ export default {
             }
 
           }
-          _this.satisfactionDegree=Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3;
+          _this.satisfactionDegree=Math.ceil(Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3);
 
           _this.satisfaction(_this.satisfactionDegree);
         })
@@ -1303,6 +1315,7 @@ option{
 .box-item-pic {
   display: flex;
   justify-content: space-between;
+  border-bottom: 0.02rem #08263c solid;
 }
 .classNumCircle {
   /* width: 2.59rem; */
@@ -1321,7 +1334,7 @@ option{
 
 .echarts-legend {
   display: flex;
-  border-top: 0.02rem #08263c solid;
+  /* border-top: 0.02rem #08263c solid; */
   height: 0.3rem;
   position: absolute;
   bottom: 0px;
@@ -1331,6 +1344,11 @@ option{
 .echarts-legend-box {
   display: flex;
   margin: 0 auto;
+  width: 100%;
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  margin-top: -0.15rem;
 }
 .echarts-legend-box .echarts-legend-item:nth-child(1) .echarts-legend-item-bar {
   background-color: #52f397;
@@ -1375,10 +1393,16 @@ option{
 
 .box-item-title-left {
   display: flex;
+  width: 50%;
+  font-size: 0.14rem;
+}
+.box-item-title-right{
+  width: 50%;
 }
 .box-item-title-right span {
   opacity: 0.5;
-  font-size: 0.12rem;
+  /* margin-left: 0.20rem; */
+  font-size: 0.14rem;
 }
 select {
   appearance: none;
@@ -1388,7 +1412,8 @@ select {
   outline: none;
   -webkit-tap-highlight-color: #fff;
   border: rem(1) solid #ebebeb;
-  width: rem(100);
+  /* width: rem(100); */
+  width: 60%;
   height: rem(50);
   line-height: rem(50);
   /*防止紧紧靠在边上*/
@@ -1397,14 +1422,15 @@ select {
   color: #fff;
   border: none;
   margin-right: 0.2rem;
+  font-size: 0.14rem;
 }
 .evaluatePart-box {
-  width: 1.5rem;
+  width: 2rem;
   height: 0.23rem;
   line-height: 0.23rem;
   background: rgba(255, 255, 255, 8%);
   float: right;
-  margin-right: 0.65rem;
+  margin-right: 0.35rem;
 }
 .evaluatePart {
   font-size: 0.12rem;
