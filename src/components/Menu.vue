@@ -97,7 +97,7 @@ export default {
         })
 				.then(function (response) {
           // _this.Token=response.data.access_token;
-          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNjgzNDMsImV4cCI6MTU3NzM3MTk0MywiaWF0IjoxNTc3MzY4MzQzfQ._icU5rR9ryIiHjpqGrJvUHwN41UjO3tDGWQG9zzPMs8',
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6Ijg3IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE3MTgiLCJwdXJsIjoiMSIsIm5iZiI6MTU3NzQwNzAwNSwiZXhwIjoxNTc3NDEwNjA1LCJpYXQiOjE1Nzc0MDcwMDV9.m1DANwaw9yx6e4XeIjn_mi5aESQ80Q_LpJJW_ugQR44&Start=&End=&Unit=0&Grade=0',
           //将token写入到浏览器缓存中
           sessionStorage.setItem("token", _this.sessionToken);	
            _this.GetPlatDetail(_this.sessionToken);
@@ -119,8 +119,7 @@ export default {
         })
         .catch(function(error) {
           sessionStorage.removeItem("token");//清除失效的token
-          alert(2222)
-          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     openPage(pages, index) {

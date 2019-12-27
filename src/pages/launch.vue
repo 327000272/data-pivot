@@ -238,7 +238,7 @@ export default {
 				})
 				.then(function (response) {
           // _this.Token=response.data.access_token;
-          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNjU1NDksImV4cCI6MTU3NzM2OTE0OSwiaWF0IjoxNTc3MzY1NTQ5fQ.W6v19OC_oD5MJvLV1LKI64Sz8wOqUm9VhH69WSMGwzU',
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6Ijg3IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE3MTgiLCJwdXJsIjoiMSIsIm5iZiI6MTU3NzQwNzAwNSwiZXhwIjoxNTc3NDEwNjA1LCJpYXQiOjE1Nzc0MDcwMDV9.m1DANwaw9yx6e4XeIjn_mi5aESQ80Q_LpJJW_ugQR44&Start=&End=&Unit=0&Grade=0',
           //将token写入到浏览器缓存中
           sessionStorage.setItem("token", _this.sessionToken);	
             _this.schoolscope(_this.sessionToken);
@@ -292,6 +292,7 @@ export default {
       axios
         .get(_this.url + "api/Plat/course/comment?access_token=" + token)
         .then(function(response) {
+          console.log(response.data.data)
           _this.Comment = response.data.data;
           for(var i=0;i<_this.Comment.length;i++){
             //保存评价数
@@ -316,8 +317,17 @@ export default {
             }
 
           }
-          _this.satisfactionDegree=Math.ceil(Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3);
-
+          // _this.satisfactionDegree=Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3;
+          var hao=Number(_this.good.data);
+          var zhong=Number(_this.middle.data);
+          var huai=Number(_this.bad.data);
+          console.log(hao);
+          console.log(zhong);
+          console.log(huai);
+          console.log(hao+zhong+huai);
+          console.log((hao+zhong+huai)/3);
+           _this.satisfactionDegree=Math.ceil((hao+zhong+huai)/3)
+           console.log(_this.satisfactionDegree)
           _this.satisfaction(_this.satisfactionDegree);
         })
         .catch(function(error) {
