@@ -652,7 +652,8 @@ export default {
             image: _this.PlatDetail,
             width: 100,
             height: 100,
-            center: ["10%", "50%"]
+            position:[10,20],
+            // center: ["10%", "10%"]
           }
         },
         series: [
@@ -1258,6 +1259,7 @@ option {
   display: flex;
   justify-content: space-between;
   /* border-bottom: 0.02rem #08263c solid; */
+  margin-top: 0.3rem;
 }
 .classNumCircle {
   /* width: 2.59rem; */
@@ -1396,6 +1398,7 @@ select {
 }
 .courseOverview {
   display: flex;
+  margin-top: 0.3rem;
 }
 .youjiantou {
   position: absolute;

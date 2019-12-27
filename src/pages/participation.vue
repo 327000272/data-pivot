@@ -7,6 +7,7 @@
         <div class="block">
           <span class="demonstration">统计日期</span>
           <el-date-picker
+            v-model="value1"
             type="daterange"
             range-separator="~"
             start-placeholder="开始日期"
@@ -49,53 +50,53 @@
             <div class="liveness-top">
               <div class="iconfont iconjihuo"></div>
               <div>
-                <p>学生用户激活总数</p>
+                <p style="opacity:50%;">学生用户激活总数</p>
                 <div>{{studentCount}}名学生</div>
               </div>
               <div>
-                <p>教师用户激活总数</p>
+                <p style="opacity:50%;">教师用户激活总数</p>
                 <div>{{teacherCount}}名教职工</div>
               </div>
               <div>
-                <p>{{unitJoinTitle}}</p>
+                <p style="opacity:50%;">{{unitJoinTitle}}</p>
                 <div>{{unitJoinCountData}}{{unitJoinCountUnit}}</div>
               </div>
               <div>
-                <p>{{teacherPersonTitle}}</p>
+                <p style="opacity:50%;">{{teacherPersonTitle}}</p>
                 <div>{{teacherPersonDate}}{{teacherPersonUnit}}</div>
               </div>
             </div>
             <div class="liveness-middle">
               <div class="iconfont iconrenshu"></div>
               <div>
-                <p>{{stuPersonTimeTitle}}</p>
+                <p style="opacity:50%;">{{stuPersonTimeTitle}}</p>
                 <div>{{stuPersonTimeData}}{{stuPersonTimeUnit}}</div>
               </div>
               <div>
-                <p>{{stuPersonNumTitle}}</p>
+                <p style="opacity:50%;">{{stuPersonNumTitle}}</p>
                 <div>{{stuPersonNumData}}{{stuPersonNumUnit}}</div>
               </div>
               <div>
-                <p>{{peopleJoinTitle}}</p>
+                <p style="opacity:50%;">{{peopleJoinTitle}}</p>
                 <div>{{peopleJoinCountData}}{{peopleJoinCountUnit}}</div>
               </div>
             </div>
             <div class="liveness-bottom">
               <div class="iconfont iconhuo"></div>
               <div>
-                <p>{{dayActiveCountTitle}}</p>
+                <p style="opacity:50%;">{{dayActiveCountTitle}}</p>
                 <div>{{dayActiveCountData}}{{dayActiveCountUnit}}</div>
               </div>
               <div>
-                <p>{{monthActiveCountTitle}}</p>
+                <p style="opacity:50%;">{{monthActiveCountTitle}}</p>
                 <div>{{monthActiveCountData}}{{monthActiveCountUnit}}</div>
               </div>
               <div>
-                <p>{{loginCountTitle}}</p>
+                <p style="opacity:50%;">{{loginCountTitle}}</p>
                 <div>{{loginCountData}}{{loginCountUnit}}</div>
               </div>
               <div>
-                <p>{{onLineTitle}}</p>
+                <p style="opacity:50%;">{{onLineTitle}}</p>
                 <div>{{onLineCountData}}{{onLineCountUnit}}</div>
               </div>
             </div>
@@ -154,6 +155,7 @@ export default {
       //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNDgzMDksImV4cCI6MTU3NzM1MTkwOSwiaWF0IjoxNTc3MzQ4MzA5fQ.wIbyXDC6sB-lPUrXkopPNpDPLnAtiyuiLHHHoPzOyE8",
       url: "https://class-ms-test.univteam.com/",
       back_url:"http://class-admin.univteam.com/",
+      value1: "", //日期
       youShow: true,
       zuoShow: false,
       supplyComprehensive: [],
@@ -1192,6 +1194,7 @@ select {
 .box-item-pic {
   display: flex;
   justify-content: space-between;
+  margin-top: 0.3rem;
 }
 .classPersonCake {
   /* width: 2.5rem; */
@@ -1218,7 +1221,7 @@ select {
   font-size: 0.12rem;
   margin: 0 auto;
   width: 80%;
-  margin-top: 0.2rem;
+  margin-top: 0.5rem;
 }
 .liveness-top {
   display: flex;
@@ -1335,12 +1338,14 @@ select {
   /* width: 5rem; */
   width: 100%;
   height: 2.5rem;
+  margin-top: 0.3rem;
 }
 .funnel-annotation {
   font-size: 0.12rem;
   text-align: center;
   color: #fff;
   opacity: 0.5;
+  margin-top: 0.2rem;
 }
 .classReferenceRatio {
   font-size: 0.14rem;
