@@ -239,7 +239,7 @@ export default {
 				})
 				.then(function (response) {
           // _this.Token=response.data.access_token;
-          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6Ijg3IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE3MTgiLCJwdXJsIjoiMSIsIm5iZiI6MTU3NzQwNzAwNSwiZXhwIjoxNTc3NDEwNjA1LCJpYXQiOjE1Nzc0MDcwMDV9.m1DANwaw9yx6e4XeIjn_mi5aESQ80Q_LpJJW_ugQR44&Start=&End=&Unit=0&Grade=0',
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6Ijg3IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE3MTgiLCJwdXJsIjoiMSIsIm5iZiI6MTU3NzQzMzQ0MSwiZXhwIjoxNTc3NDM3MDQxLCJpYXQiOjE1Nzc0MzM0NDF9.rlMEiP8rF3qMkB6tdpGRLJz7ZNirjKo9Bb6tIVjHv6k',
           //将token写入到浏览器缓存中
           sessionStorage.setItem("token", _this.sessionToken);	
             _this.schoolscope(_this.sessionToken);
@@ -293,7 +293,6 @@ export default {
       axios
         .get(_this.url + "api/Plat/course/comment?access_token=" + token)
         .then(function(response) {
-          console.log(response.data.data)
           _this.Comment = response.data.data;
           for(var i=0;i<_this.Comment.length;i++){
             //保存评价数
@@ -318,17 +317,17 @@ export default {
             }
 
           }
-          // _this.satisfactionDegree=Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3;
-          var hao=Number(_this.good.data);
-          var zhong=Number(_this.middle.data);
-          var huai=Number(_this.bad.data);
-          console.log(hao);
-          console.log(zhong);
-          console.log(huai);
-          console.log(hao+zhong+huai);
-          console.log((hao+zhong+huai)/3);
-           _this.satisfactionDegree=Math.ceil((hao+zhong+huai)/3)
-           console.log(_this.satisfactionDegree)
+          _this.satisfactionDegree=Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3;
+          // var hao=Number(_this.good.data);
+          // var zhong=Number(_this.middle.data);
+          // var huai=Number(_this.bad.data);
+          // console.log(hao);
+          // console.log(zhong);
+          // console.log(huai);
+          // console.log(hao+zhong+huai);
+          // console.log((hao+zhong+huai)/3);
+          //  _this.satisfactionDegree=Math.ceil((hao+zhong+huai)/3)
+          //  console.log(_this.satisfactionDegree)
           _this.satisfaction(_this.satisfactionDegree);
         })
         .catch(function(error) {
@@ -347,8 +346,8 @@ export default {
           _this.classNumber(_this.supplyComprehensive);
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          // sessionStorage.removeItem("token");//清除失效的token
+          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //请求课程开展分时情况
@@ -362,7 +361,6 @@ export default {
             for(var i=0;i<response.data.data.length;i++){
               _this.lineName.push(response.data.data[i].name);
             }
-
         })
         .catch(function(error) {
           sessionStorage.removeItem("token");//清除失效的token

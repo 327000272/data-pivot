@@ -146,7 +146,7 @@
 </template>
 <script>
 import echarts from "echarts";
-// import 'echarts-liquidfill';
+import '../../static/js/h-liquid.js'
 import axios from "axios";
 export default {
   name: "participation",
@@ -207,6 +207,12 @@ export default {
       funnelTitle:[],
       funneldataOther:[],
       funneltherUnit:[],
+      classNeedTitle:[],
+      classNeedData:[],
+      classNeedUnit:[],
+      classNeedCalcData:"",
+      maxV:'',
+      maxArr:[],
       bigColor:["#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7"],
     };
   },
@@ -221,7 +227,6 @@ export default {
     // this.schoolscope();
     // this.watchBall();
     this.whetherToken();
-    
   },
   methods: {
     //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
@@ -239,6 +244,7 @@ export default {
             _this.getCulumPersonCount(_this.sessionToken);
             _this.GetUnitPersonCount(_this.sessionToken);
             _this.getInitiative(_this.sessionToken);
+
           }else{
             //判断路径上有无参数,
              _this.postToken();
@@ -260,7 +266,7 @@ export default {
 				})
 				.then(function (response) {
           // _this.Token=response.data.access_token;
-          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQyNTM4OCwiZXhwIjoxNTc3NDI4OTg4LCJpYXQiOjE1Nzc0MjUzODh9.KVNx8uJ3R6TYunlSvAjs-UW4ON55t2ULeYYjUz8LBaw',
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6Ijg3IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE3MTgiLCJwdXJsIjoiMSIsIm5iZiI6MTU3NzQzMzQ0MSwiZXhwIjoxNTc3NDM3MDQxLCJpYXQiOjE1Nzc0MzM0NDF9.rlMEiP8rF3qMkB6tdpGRLJz7ZNirjKo9Bb6tIVjHv6k',
           //将token写入到浏览器缓存中
           sessionStorage.setItem("token", _this.sessionToken);	
             _this.schoolscope(_this.sessionToken);
@@ -268,6 +274,7 @@ export default {
             _this.getCulumPersonCount(_this.sessionToken);
             _this.GetUnitPersonCount(_this.sessionToken);
             _this.getInitiative(_this.sessionToken);
+            
 				})
 				.catch(function (error) {
           console.log('请求失败')
@@ -398,6 +405,7 @@ export default {
         .then(function(response) {
           _this.funnelData=response.data.data;
           _this.funnel(_this.funnelData);
+          _this.watchBall(_this.funnelData);
         })
         .catch(function(error) {
 
@@ -499,6 +507,11 @@ export default {
       for (var i = 0; i < num.length; i++) {
         _this.openPeopleTxt.push(num[i].name);
         _this.openPeopleDate.push(num[i].count);
+        
+      }
+      _this.maxV=Math.max.apply(null,_this.openPeopleDate);
+      for(var j=0;j<num.length;j++){
+        _this.maxArr.push(_this.maxV);
       }
       let myChart = echarts.init(document.getElementById("switchSlide"));
       let myColor = ["#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7"],
@@ -598,8 +611,8 @@ export default {
               type: "bar",
               yAxisIndex: 1,
               barGap: "-100%",
-              data: [50, 10, 20, 30, 100, 100, 100, 100, 100],
-              // data:_this.openPeopleDate,
+              // data: [2000, 10, 20, 30, 100, 100, 100, 100, 100],
+              data:_this.openPeopleDate,
               barWidth: 10,
               itemStyle: {
                 normal: {
@@ -617,22 +630,23 @@ export default {
               type: "bar",
               yAxisIndex: 2,
               barGap: "-100%",
-              data: [
-                100,
-                100,
-                100,
-                100,
-                100,
-                100,
-                100,
-                100,
-                100
-              ],
-              // data:_this.openPeopleDate,
+              // data: [
+              //   100,
+              //   100,
+              //   100,
+              //   100,
+              //   100,
+              //   100,
+              //   100,
+              //   100,
+              //   100
+              // ],
+              data:_this.maxArr,
               barWidth: 14,
               itemStyle: {
                 normal: {
                   color: "#072439",
+                  borderColor:'#072439',
                   barBorderRadius: 5
                 }
               },
@@ -644,7 +658,7 @@ export default {
               hoverAnimation: false,
               data: [0, 0, 0, 0, 0, 0, 0, 0, 0],
               yAxisIndex: 2,
-              symbolSize: 25,
+              symbolSize: 20,
               itemStyle: {
                 normal: {
                   color: function(params) {
@@ -818,9 +832,28 @@ export default {
       myChart.setOption(option);
     },
     //水球图
-    watchBall() {
+    watchBall(num) {
+      var _this=this;
+      for(var i=0;i<num.length;i++){
+        if(num[i].type==34){
+          _this.classNeedTitle=num[i].title;
+          _this.classNeedData=num[i].data;
+          _this.classNeedUnit=num[i].unit;
+          _this.classNeedCalcData=(num[i].data)/100;
+        }
+      }
+
       let myChart = echarts.init(document.getElementById("circlePic"));
       let option = {
+                    title: {
+          text: "到场与课程供给比例",
+          x: "center",
+          y: "bottom",
+          textStyle: {
+            color: "rgba(255,255,255,0.5)",
+            fontSize: "0.14rem"
+          }
+        },
         graphic: [
           {
             type: "group",
@@ -834,8 +867,8 @@ export default {
                 top: "middle",
                 style: {
                   fill: "#fff",
-                  text: "重过载",
-                  font: "20px Microsoft YaHei"
+                  text: _this.classNeedTitle,
+                  font: "20px Microsoft YaHei",
                 }
               }
             ]
@@ -847,8 +880,8 @@ export default {
             name: "50",
             data: [
               {
-                name: "50%",
-                value: 0.5
+                name: _this.classNeedData+_this.classNeedUnit,
+                value: _this.classNeedCalcData
               }
             ],
             color: {
@@ -860,11 +893,15 @@ export default {
               colorStops: [
                 {
                   offset: 1,
-                  color: ["rgba(131,249,103,0.01)"] // 0% 处的颜色
+                  color: ["rgba(0,197,255,27%)"] // 0% 处的颜色
+                },
+                {
+                  offset:0.5,
+                  color:["rgba(162,67,218,76%)"]
                 },
                 {
                   offset: 0,
-                  color: ["rgb(131,249,103)"] // 100% 处的颜色
+                  color: ["rgb(215,47,167)"] // 100% 处的颜色
                 }
               ],
               global: false // 缺省为 false
@@ -878,8 +915,8 @@ export default {
             },
             backgroundStyle: {
               borderWidth: 1,
-              borderColor: "rgba(255,255,255, 0)",
-              color: ["rgba(255,255,255, 0)"]
+              borderColor: "rgba(0,197,255, 100%)",
+              // color: ["rgba(255,255,255, 0)"]
             },
             itemStyle: {
               shadowBlur: 0
@@ -996,7 +1033,7 @@ export default {
                 {value:_this.look.data, name: _this.look.data+_this.look.unit},
                 {value:_this.Apply.data, name: _this.Apply.data+_this.Apply.unit},
                 {value:_this.sign.data, name: _this.sign.data+_this.sign.unit},
-                {value:_this.affirm, name: _this.affirm.data+_this.affirm.unit},
+                {value:_this.affirm.data, name: _this.affirm.data+_this.affirm.unit},
                 
             ]
         }
