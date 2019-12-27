@@ -97,7 +97,7 @@ export default {
         })
 				.then(function (response) {
           // _this.Token=response.data.access_token;
-          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6Ijg3IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE3MTgiLCJwdXJsIjoiMSIsIm5iZiI6MTU3NzQwNzAwNSwiZXhwIjoxNTc3NDEwNjA1LCJpYXQiOjE1Nzc0MDcwMDV9.m1DANwaw9yx6e4XeIjn_mi5aESQ80Q_LpJJW_ugQR44&Start=&End=&Unit=0&Grade=0',
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQyNTM4OCwiZXhwIjoxNTc3NDI4OTg4LCJpYXQiOjE1Nzc0MjUzODh9.KVNx8uJ3R6TYunlSvAjs-UW4ON55t2ULeYYjUz8LBaw',
           //将token写入到浏览器缓存中
           sessionStorage.setItem("token", _this.sessionToken);	
            _this.GetPlatDetail(_this.sessionToken);

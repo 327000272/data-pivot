@@ -62,8 +62,8 @@
                 <div>{{unitJoinCountData}}{{unitJoinCountUnit}}</div>
               </div>
               <div>
-                <p>教职工参与人数</p>
-                <div>-人</div>
+                <p>{{teacherPersonTitle}}</p>
+                <div>{{teacherPersonDate}}{{teacherPersonUnit}}</div>
               </div>
             </div>
             <div class="liveness-middle">
@@ -191,11 +191,22 @@ export default {
       stuPersonNumTitle: "",
       stuPersonNumData: "",
       stuPersonNumUnit: "",
+      teacherPersonTitle:"",
+      teacherPersonDate:"",
+      teacherPersonUnit:"",
       teacherCount: "",
       studentCount: "",
       Token:"",
       sessionToken:'',
       platform:'',
+      funnelData:'',
+      look:[],
+      Apply:[],
+      sign:[],
+      affirm:[],
+      funnelTitle:[],
+      funneldataOther:[],
+      funneltherUnit:[],
       bigColor:["#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7"],
     };
   },
@@ -203,14 +214,14 @@ export default {
     // this.collegePerson();
     // this.classPersonCake();
     // this.switchSlide();
-    this.funnel();
+    // this.funnel();
     // this.getCulumPersonCount();
     // this.getactivation();
     // this.GetUnitPersonCount();
     // this.schoolscope();
     // this.watchBall();
     this.whetherToken();
-
+    
   },
   methods: {
     //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
@@ -227,7 +238,7 @@ export default {
             _this.getactivation(_this.sessionToken);
             _this.getCulumPersonCount(_this.sessionToken);
             _this.GetUnitPersonCount(_this.sessionToken);
-
+            _this.getInitiative(_this.sessionToken);
           }else{
             //判断路径上有无参数,
              _this.postToken();
@@ -249,13 +260,14 @@ export default {
 				})
 				.then(function (response) {
           // _this.Token=response.data.access_token;
-          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6Ijg3IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE3MTgiLCJwdXJsIjoiMSIsIm5iZiI6MTU3NzQwNzAwNSwiZXhwIjoxNTc3NDEwNjA1LCJpYXQiOjE1Nzc0MDcwMDV9.m1DANwaw9yx6e4XeIjn_mi5aESQ80Q_LpJJW_ugQR44&Start=&End=&Unit=0&Grade=0',
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQyNTM4OCwiZXhwIjoxNTc3NDI4OTg4LCJpYXQiOjE1Nzc0MjUzODh9.KVNx8uJ3R6TYunlSvAjs-UW4ON55t2ULeYYjUz8LBaw',
           //将token写入到浏览器缓存中
           sessionStorage.setItem("token", _this.sessionToken);	
             _this.schoolscope(_this.sessionToken);
             _this.getactivation(_this.sessionToken);
             _this.getCulumPersonCount(_this.sessionToken);
             _this.GetUnitPersonCount(_this.sessionToken);
+            _this.getInitiative(_this.sessionToken);
 				})
 				.catch(function (error) {
           console.log('请求失败')
@@ -331,10 +343,16 @@ export default {
               _this.stuPersonTimeUnit = response.data.data.summary[i].unit;
             }
             //学生参与总人数
-            if (response.data.data.summary[i].type == 33) {
+            if (response.data.data.summary[i].type == 22) {
               _this.stuPersonNumTitle = response.data.data.summary[i].title;
               _this.stuPersonNumData = response.data.data.summary[i].data;
               _this.stuPersonNumUnit = response.data.data.summary[i].unit;
+            }
+            //教职工参与人数
+            if (response.data.data.summary[i].type == 39) {
+              _this.teacherPersonTitle = response.data.data.summary[i].title;
+              _this.teacherPersonDate = response.data.data.summary[i].data;
+              _this.teacherPersonUnit = response.data.data.summary[i].unit;
             }
           }
         })
@@ -364,13 +382,27 @@ export default {
       axios
         .get(_this.url + "/api/Plat/unitCount/?access_token=" + token)
         .then(function(response) {
-          console.log(response);
           _this.UnitPersonCount = response.data;
           _this.collegePerson(_this.UnitPersonCount);
         })
         .catch(function(error) {
           sessionStorage.removeItem("token");//清除失效的token
           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+        });
+    },
+    //课程参与积极性指标
+    getInitiative(token){
+      var _this = this;
+      axios
+        .get(_this.url + "api/Plat/join/Initiative?access_token=" + token)
+        .then(function(response) {
+          _this.funnelData=response.data.data;
+          _this.funnel(_this.funnelData);
+        })
+        .catch(function(error) {
+
+          // sessionStorage.removeItem("token");//清除失效的token
+          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //饼状图
@@ -463,7 +495,6 @@ export default {
     },
     //横向柱状图
     switchSlide(num) {
-      console.log(num);
       var _this = this;
       for (var i = 0; i < num.length; i++) {
         _this.openPeopleTxt.push(num[i].name);
@@ -874,10 +905,36 @@ export default {
       myChart.setOption(option);
     },
     //漏斗图
-    funnel() {
+    funnel(num) {
+      var _this=this;
+      for(var i=0;i<num.length;i++){
+        //查看
+        if(num[i].type==35){
+          _this.look=num[i];
+        }
+        //报名
+        if(num[i].type==36){
+          _this.Apply=num[i];
+        }
+        //签到
+        if(num[i].type==37){
+          _this.sign=num[i];
+        }
+        //认定
+        if(num[i].type==38){
+          _this.affirm=num[i];
+        }
+      }
+      //拼数组
+      for (var j = 1; j < num.length; j++) {
+        _this.funnelTitle.push(num[j].title);
+        _this.funneldataOther.push(num[j].dataOther);
+        _this.funneltherUnit.push(num[j].therUnit);
+      }
       let myChart = echarts.init(document.getElementById("funnel"));
       let option = {
-        title: {
+    color:_this.bigColor,
+            title: {
           text: "参与漏斗图",
           x: "center",
           y: "bottom",
@@ -886,54 +943,66 @@ export default {
             fontSize: "0.14rem"
           }
         },
-        tooltip: {
-          trigger: "item",
-          formatter: "{a} <br/>{b} : {c}%"
-        },
+    tooltip: {
+        trigger: 'item',
+        // formatter: "查看 : 1.58万次"
+        formatter:function(params){
+          return _this.funnelTitle[params.dataIndex]+":"+_this.funneldataOther[params.dataIndex]+_this.funneltherUnit[params.dataIndex];
+        }
+    },
 
-        calculable: true,
-        series: [
-          {
-            name: "漏斗图",
-            type: "funnel",
-            left: "10%",
+    calculable: true,
+    series: [
+        {
+            name:'漏斗图',
+            type:'funnel',
+            left: '10%',
             top: 60,
             bottom: 60,
-            width: "80%",
+            width: '80%',
             min: 0,
-            max: 30,
-            minSize: "0%",
-            maxSize: "100%",
-            sort: "descending",
+            max: 100,
+            minSize: '0%',
+            maxSize: '100%',
+            sort: 'descending',
             gap: 2,
             label: {
-              normal: {
-                show: true,
-                formatter: "{b} : {c}",
-                position: "outside"
-              },
-              emphasis: {
-                textStyle: {
-                  fontSize: 20
+                normal: {
+                    show: true,
+                    position: 'inside'
+                },
+                emphasis: {
+                    textStyle: {
+                        fontSize: 20
+                    }
                 }
-              }
             },
-
+            labelLine: {
+                normal: {
+                    length: 10,
+                    lineStyle: {
+                        width: 1,
+                        type: 'solid'
+                    }
+                }
+            },
             itemStyle: {
-              normal: {
-                borderColor: "#fff",
-                borderWidth: 1
-              }
+                normal: {
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }
             },
             data: [
-              { value: 100, name: "10.56万次" },
-              { value: 21, name: "2.21万次" },
-              { value: 7, name: "1.58万次" },
-              { value: 7, name: "1.16万次" }
+                {value:_this.look.data, name: _this.look.data+_this.look.unit},
+                {value:_this.Apply.data, name: _this.Apply.data+_this.Apply.unit},
+                {value:_this.sign.data, name: _this.sign.data+_this.sign.unit},
+                {value:_this.affirm, name: _this.affirm.data+_this.affirm.unit},
+                
             ]
-          }
-        ]
-      };
+        }
+    ]
+};
+
 
       window.onresize = myChart.resize();
       myChart.setOption(option);
