@@ -5,7 +5,7 @@
         <ul class="school-content">
           <li class="school-sublogo">
             <img :src="PlatDetail.logo" class="icon-logo" />
-            <span>
+            <span class="platName-box">
               <p>{{PlatDetail.platName}}</p>
               <p>{{PlatDetail.schoolName}}</p>
             </span>
@@ -97,7 +97,7 @@ export default {
         })
 				.then(function (response) {
           // _this.Token=response.data.access_token;
-          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQzNzk4MiwiZXhwIjoxNTc3NDQxNTgyLCJpYXQiOjE1Nzc0Mzc5ODJ9.k3apc97i7HN_rvghUmlF-vQNutorAy7Edkr02t7r11w',
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQ0MTk5NCwiZXhwIjoxNTc3NDQ1NTk0LCJpYXQiOjE1Nzc0NDE5OTR9.3A7Lo2LNN0TZpvTvLANAf2N18Iw2rz9VbTZAopACFdQ',
           //将token写入到浏览器缓存中
           sessionStorage.setItem("token", _this.sessionToken);	
            _this.GetPlatDetail(_this.sessionToken);
@@ -225,7 +225,7 @@ div {
 }
 .school-sublogo {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   margin: 0px 10px;
   margin-top: 10px;
   padding-left: 4px;
@@ -236,12 +236,12 @@ div {
   position: relative;
   margin-bottom: 0.1rem;
 }
-.websiteTitle::after {
+.websiteTitle:before {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 1px;
+  left: 10%;
+  top: 3px;
+  width: 80%;
+  height: 2px;
   background: #aaaaaa;
   content: "";
   transform: scaleY(0.2);
@@ -259,9 +259,15 @@ div {
   margin-top: 5px;
 }
 .websiteTitle{
-  font-size: 0.13rem;
+  font-size: 15px;
   color: #fff;
   opacity: 0.5;
   text-align: center;
+  position: relative;
+    padding-top: 6px;
+}
+.platName-box{
+  font-size: 0.12rem;
+  color: #fff;
 }
 </style>

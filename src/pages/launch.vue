@@ -65,7 +65,7 @@
               <select>
                 <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
               </select>
-              <span class="iconfont iconduobianxing"></span>
+              <!-- <span class="iconfont iconduobianxing"></span> -->
             </div>
           </div>
           <div class="box-item-pic">
@@ -120,7 +120,6 @@
               <select>
                 <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
               </select>
-              <span class="iconfont iconduobianxing"></span>
             </div>
           </div>
           <div id="date_condition" style="height: 100%;width:70%;"></div>
@@ -255,7 +254,7 @@ export default {
         .then(function(response) {
           // _this.Token=response.data.access_token;
           (_this.sessionToken =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQzNzk4MiwiZXhwIjoxNTc3NDQxNTgyLCJpYXQiOjE1Nzc0Mzc5ODJ9.k3apc97i7HN_rvghUmlF-vQNutorAy7Edkr02t7r11w"),
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQ0MTk5NCwiZXhwIjoxNTc3NDQ1NTk0LCJpYXQiOjE1Nzc0NDE5OTR9.3A7Lo2LNN0TZpvTvLANAf2N18Iw2rz9VbTZAopACFdQ"),
             //将token写入到浏览器缓存中
             sessionStorage.setItem("token", _this.sessionToken);
           _this.schoolscope(_this.sessionToken);
@@ -688,7 +687,8 @@ export default {
             image: _this.PlatDetail,
             width: 100,
             height: 100,
-            center:[50,10]
+            center:['10%','50%']
+
           }
         },
         series: [
@@ -842,20 +842,24 @@ export default {
           symbolSize: 3,
           itemStyle: {
             normal: {
-              color: "rgba(0,227,231,.8)",
+              // color: "rgba(0,227,231,.8)",
+              color:_this.bigColor[aa],
               lineStyle: {
-                color: "rgba(0,227,231,.5)",
+                // color: "rgba(0,227,231,.5)",
+                color:_this.bigColor[aa],
                 width: 1
               },
               areaStyle: {
                 color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
                   {
                     offset: 0,
-                    color: "rgba(0,227,231,.1)"
+                    // color: "rgba(0,227,231,.1)"
+                    color:_this.bigColor[aa],
                   },
                   {
                     offset: 1,
-                    color: "rgba(0,227,231,0.9)"
+                    // color: "rgba(0,227,231,0.9)"
+                    color:_this.bigColor[aa],
                   }
                 ])
               }
@@ -869,8 +873,8 @@ export default {
         grid: {
           left: "5%",
           right: "10%",
-          top: "10%",
-          bottom: "10%",
+          top: "0%",
+          bottom: "0%",
           containLabel: true
         },
         dataZoom: [
@@ -1387,7 +1391,7 @@ option {
 select {
   appearance: none;
   -moz-appearance: none;
-  -webkit-appearance: none; /*兼容苹果手机*/
+  -webkit-appearance: none; 
   -ms-appearance: none;
   outline: none;
   -webkit-tap-highlight-color: #fff;
@@ -1403,6 +1407,8 @@ select {
   border: none;
   margin-right: 0.2rem;
   font-size: 0.14rem;
+  background: url('../assets/xialakuang.png') no-repeat scroll right center ;
+  background-size: 10%;
 }
 .evaluatePart-box {
   width: 2rem;

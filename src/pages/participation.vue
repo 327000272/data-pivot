@@ -43,7 +43,6 @@
               <select>
                 <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
               </select>
-              <span class="iconfont iconduobianxing"></span>
             </div>
           </div>
           <div class="liveness">
@@ -127,7 +126,6 @@
               <select>
                 <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
               </select>
-              <span class="iconfont iconduobianxing"></span>
             </div>
           </div>
           <div class="box-item-pic">
@@ -213,6 +211,7 @@ export default {
       classNeedCalcData:"",
       maxV:'',
       maxArr:[],
+      maxArr2:[],
       bigColor:["#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7"],
     };
   },
@@ -266,7 +265,7 @@ export default {
 				})
 				.then(function (response) {
           // _this.Token=response.data.access_token;
-          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQzNzk4MiwiZXhwIjoxNTc3NDQxNTgyLCJpYXQiOjE1Nzc0Mzc5ODJ9.k3apc97i7HN_rvghUmlF-vQNutorAy7Edkr02t7r11w',
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQ0MTk5NCwiZXhwIjoxNTc3NDQ1NTk0LCJpYXQiOjE1Nzc0NDE5OTR9.3A7Lo2LNN0TZpvTvLANAf2N18Iw2rz9VbTZAopACFdQ',
           //将token写入到浏览器缓存中
           sessionStorage.setItem("token", _this.sessionToken);	
             _this.schoolscope(_this.sessionToken);
@@ -504,14 +503,15 @@ export default {
     //横向柱状图
     switchSlide(num) {
       var _this = this;
+      console.log(num)
       for (var i = 0; i < num.length; i++) {
         _this.openPeopleTxt.push(num[i].name);
         _this.openPeopleDate.push(num[i].count);
-        
       }
-      _this.maxV=Math.max.apply(null,_this.openPeopleDate);
+      _this.maxV=Math.max.apply(null,_this.openPeopleDate)!=0?Math.max.apply(null,_this.openPeopleDate):100;
       for(var j=0;j<num.length;j++){
         _this.maxArr.push(_this.maxV);
+        _this.maxArr2.push(_this.maxV-0.5)
       }
       let myChart = echarts.init(document.getElementById("switchSlide"));
       let myColor = ["#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7"],
@@ -532,7 +532,6 @@ export default {
             bottom: "8%",
             containLabel: true
           },
-
           xAxis: [
             {
               show: false
@@ -583,7 +582,7 @@ export default {
               name: "条",
               type: "bar",
               yAxisIndex: 0,
-              // data: _this.openPeopleDate,
+              data: _this.openPeopleDate,
               label: {
                 normal: {
                   show: true,
@@ -611,15 +610,12 @@ export default {
               type: "bar",
               yAxisIndex: 1,
               barGap: "-100%",
-              // data: [2000, 10, 20, 30, 100, 100, 100, 100, 100],
-              data:_this.openPeopleDate,
+              // data: [20.11, 10, 20, 30, 100, 100, 100, 100, 100],
+              data:_this.maxArr2,
               barWidth: 10,
               itemStyle: {
                 normal: {
-                color: function(params) {
-                    var num = myColor.length;
-                    return myColor[params.dataIndex % num];
-                  },
+                color: '#0e2147',
                   barBorderRadius: 5
                 }
               },
@@ -645,8 +641,10 @@ export default {
               barWidth: 14,
               itemStyle: {
                 normal: {
-                  color: "#072439",
-                  borderColor:'#072439',
+                color: function(params) {
+                        var num = myColor.length;
+                        return myColor[params.dataIndex % num]
+                },
                   barBorderRadius: 5
                 }
               },
@@ -1072,12 +1070,7 @@ export default {
   font-size: 0.3rem;
   opacity: 0.5;
 }
-.iconduobianxing::before {
-  color: #fff;
-  opacity: 1;
-  font-size: 0.1rem;
-  margin-right: 0.2rem;
-}
+
 .iconjihuo,
 .iconrenshu,
 .iconhuo {
@@ -1214,6 +1207,8 @@ select {
   border: none;
   margin-right: 0.2rem;
   font-size: 0.14rem;
+    background: url('../assets/xialakuang.png') no-repeat scroll right center ;
+  background-size: 10%;
 }
 .box-item-pic {
   display: flex;
