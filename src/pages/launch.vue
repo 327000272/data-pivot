@@ -173,6 +173,7 @@ export default {
       Token:"",
       sessionToken:'',
       platform:'',
+      bigColor:["#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7"],
     };
   },
   created() {
@@ -664,15 +665,7 @@ export default {
               },
               normal: {
                 color: function(params) {
-                  var colorList = [
-                    "#52F397",
-                    "#00E3E7",
-                    "#00C5FF",
-                    "#00C5FF",
-                    "#A243DA",
-                    "#D72FA7"
-                  ];
-                  return colorList[params.dataIndex];
+                  return _this.bigColor[params.dataIndex];
                 },
                 shadowColor: "#fff",
                 shadowBlur: "5"
@@ -752,17 +745,7 @@ export default {
               normal: {
                 opacity: 0.5,
                 color: function(params) {
-                  var colorList = [
-                    "#52F397",
-                    "#00E3E7",
-                    "#00C5FF",
-                    "#00C5FF",
-                    "#A243DA",
-                    "#D72FA7",
-                    "red",
-                    "blue"
-                  ];
-                  return colorList[params.dataIndex];
+                  return _this.bigColor[params.dataIndex];
                 }
               },
               emphasis: {

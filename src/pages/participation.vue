@@ -196,6 +196,7 @@ export default {
       Token:"",
       sessionToken:'',
       platform:'',
+      bigColor:["#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7"],
     };
   },
   mounted() {
@@ -436,19 +437,7 @@ export default {
               },
               normal: {
                 color: function(params) {
-                  var colorList = [
-                    "#52F397",
-                    "#00E3E7",
-                    "#00C5FF",
-                    "#478CEF",
-                    "#A243DA",
-                    "#D72FA7",
-                    "red",
-                    "blue",
-                    "aqua",
-                    "pink"
-                  ];
-                  return colorList[params.dataIndex];
+                  return _this.bigColor[params.dataIndex];
                 },
                 borderWidth: 1,
                 borderColor: "#08263c"
@@ -474,23 +463,14 @@ export default {
     },
     //横向柱状图
     switchSlide(num) {
-      
+      console.log(num);
       var _this = this;
       for (var i = 0; i < num.length; i++) {
         _this.openPeopleTxt.push(num[i].name);
         _this.openPeopleDate.push(num[i].count);
       }
       let myChart = echarts.init(document.getElementById("switchSlide"));
-      let myColor = ["#52F397",
-                    "#00E3E7",
-                    "#00C5FF",
-                    "#478CEF",
-                    "#A243DA",
-                    "#D72FA7",
-                    "red",
-                    "blue",
-                    "aqua",
-                    "pink"],
+      let myColor = ["#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7"],
         option = {
           title: {
             text: "各类课程参与学生数比例",
@@ -525,11 +505,6 @@ export default {
                   fontSize: "10"
                 }
               },
-              // data: [
-              //   "思想成长类",
-              //   "实践实习类",
-              //   "志愿服务类",
-              // ]
               data: _this.openPeopleTxt
             },
             {
@@ -592,11 +567,15 @@ export default {
               type: "bar",
               yAxisIndex: 1,
               barGap: "-100%",
-              data: [100, 100, 100, 100, 100, 100, 100, 100, 100],
+              data: [50, 10, 20, 30, 100, 100, 100, 100, 100],
+              // data:_this.openPeopleDate,
               barWidth: 10,
               itemStyle: {
                 normal: {
-                  color: "#072439",
+                color: function(params) {
+                    var num = myColor.length;
+                    return myColor[params.dataIndex % num];
+                  },
                   barBorderRadius: 5
                 }
               },
@@ -618,13 +597,11 @@ export default {
                 100,
                 100
               ],
+              // data:_this.openPeopleDate,
               barWidth: 14,
               itemStyle: {
                 normal: {
-                  color: function(params) {
-                    var num = myColor.length;
-                    return myColor[params.dataIndex % num];
-                  },
+                  color: "#072439",
                   barBorderRadius: 5
                 }
               },
@@ -636,7 +613,7 @@ export default {
               hoverAnimation: false,
               data: [0, 0, 0, 0, 0, 0, 0, 0, 0],
               yAxisIndex: 2,
-              symbolSize: 30,
+              symbolSize: 25,
               itemStyle: {
                 normal: {
                   color: function(params) {
@@ -662,21 +639,7 @@ export default {
       }
 
       let myChart = echarts.init(document.getElementById("collegePerson"));
-      // var dataAxis = [
-      //   "土木建筑工程学院",
-      //   "马克思主义学院",
-      //   "经济与管理学院",
-      //   "信息管理学院",
-      //   "11",
-      //   "11",
-      //   "11",
-      //   "11",
-      //   "12",
-      //   "13",
-      //   "14"
-      // ];
       var dataAxis = _this.perpleStatisticsTitle;
-      // var data = [2200, 1820, 1600, 1600, 1000, 2000, 1200, 800, 500, 600, 700];
       var data = _this.perpleStatisticsNumber;
       let option = {
         tooltip: {
