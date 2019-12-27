@@ -55,6 +55,7 @@ export default {
       // token:
       //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNjU5NjAsImV4cCI6MTU3NzM2OTU2MCwiaWF0IjoxNTc3MzY1OTYwfQ.lptm6eA3_NnNW7WCV75tFnEhcsS2JIx_e4woMlM8mkU",
       url: "https://class-ms-test.univteam.com/",
+      back_url:"http://class-admin.univteam.com/",
       logo: [],
       index: "",
       dataToken: "",
@@ -62,64 +63,82 @@ export default {
       Token:"",
       sessionToken:'',
       platform:'',
+      res:'',
+      debug:true
     };
   },
   methods: {
     //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
       whetherToken(){
           var _this=this;
-          var hash=window.location.hash;
-				  var list=hash.split("/");
-          _this.platform=list[1];
+          _this.platform = this.$route.params.id;
+          //在session 中获取token 如果存在直接使用 否则 调用获取token的方法
            _this.sessionToken=sessionStorage.getItem("token");
           //把每个调用的接口都写在此方法中,需要在接口中加token
           if(_this.sessionToken!==null){
             //不为null,本地已经存在token,调用方法
-            _this.GetPlatDetail(_this.sessionToken);
+          _this.getInfos();
           }else{
-            //判断路径上有无参数,
+            //判断路径上有无参数,获取token
              _this.postToken();
           }
 
       },
+      tourl(){
+        var _this=this;
+        console.log(_this.sessionToken);
+         window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
+      },
+      getInfos(){
+        var _this = this;
+        _this.GetPlatDetail(_this.sessionToken);
+      },
       //请求token并且保存token
 			postToken(){
         var _this=this;
-          var hash=window.location.hash;
-				  var list=hash.split("/");
-				  var platform=list[1];//平台
         var t=this.$route.query.t;
         if(!t){
-           window.location.href=" http://class-admin.univteam.com/"+platform+"/account/login?back=statistics";
+          //判断路径中是否存在code 不存在的话就跳转到admin 
+          _this.tourl();
         }
-				axios.post(_this.url+'api/Authorize/token',{
-						token: t
-        })
-				.then(function (response) {
-          _this.sessionToken=response.data.access_token;
-          // _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQ0MjcxMiwiZXhwIjoxNTc3NDQ2MzEyLCJpYXQiOjE1Nzc0NDI3MTJ9.Krl6vhy2selZYEEzQrPqPe4I28FgeK09PEkSiBRyyeQ',
+        //t 存在 使用t 获取token
+         var tokenurl= _this.debug?_this.url +"/api/Authorize/tokenTest":_this.url +"/api/Authorize/token?url=" +_this.platform +"&token=" +t;
+				axios.post(tokenurl)
+        .then(function (response) {
+          var res=response.data.data;
+          _this.res=response.data.data;
+        if(res.access_token!=null){
+        //获取token 成功
+          _this.sessionToken=res.access_token;
           //将token写入到浏览器缓存中
           sessionStorage.setItem("token", _this.sessionToken);	
-           _this.GetPlatDetail(_this.sessionToken);
+         _this.getInfos();
+          }else{
+            console.log("token获取失败");
+            if(_this.res.err=="无效的校验结果"){
+              _this.tourl();
+            }
+          }
 				})
 				.catch(function (error) {
+            _this.tourl();
           console.log('请求失败')
         });
-        
       },
     //获取学校logo,名称
     GetPlatDetail(token){
       var _this = this;
-      axios
-        .get(
-          _this.url + "api/Plat/plat/detail?access_token=" + token
-        )
+      axios.get(_this.url + "api/Plat/plat/detail?access_token=" + token)
         .then(function(response) {
-          _this.PlatDetail=response.data.data
+          if(response.data.code==0){
+            _this.PlatDetail=response.data.data;
+          }else{
+            //_this.tourl();
+          }
         })
         .catch(function(error) {
           sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          //window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     openPage(pages, index) {

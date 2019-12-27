@@ -153,6 +153,7 @@ export default {
       // token:
       //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNDgzMDksImV4cCI6MTU3NzM1MTkwOSwiaWF0IjoxNTc3MzQ4MzA5fQ.wIbyXDC6sB-lPUrXkopPNpDPLnAtiyuiLHHHoPzOyE8",
       url: "https://class-ms-test.univteam.com/",
+      back_url:"http://class-admin.univteam.com/",
       youShow: true,
       zuoShow: false,
       supplyComprehensive: [],
@@ -231,9 +232,13 @@ export default {
     //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
       whetherToken(){
           var _this=this;
-          var hash=window.location.hash;
-				  var list=hash.split("/");
-          _this.platform=list[1];
+          _this.platform=this.$route.params.id;
+           switch(_this.platform){
+          case 'whu':
+            _this.url="http://app.dekt.whu.edu.cn/whu/";
+            _this.back_url="http://dekt.whu.edu.cn/whu/";
+            break;
+      }
            _this.sessionToken=sessionStorage.getItem("token");
           //把每个调用的接口都写在此方法中,需要在接口中加token
           if(_this.sessionToken!==null){
@@ -243,42 +248,17 @@ export default {
             _this.getCulumPersonCount(_this.sessionToken);
             _this.GetUnitPersonCount(_this.sessionToken);
             _this.getInitiative(_this.sessionToken);
-
           }else{
             //判断路径上有无参数,
-             _this.postToken();
+             //_this.postToken();
+             setTimeout(function(){ 
+              _this.whetherToken();
+            }, 1000);
           }
-
       },
-      //请求token并且保存token
-			postToken(){
+      tourl(){
         var _this=this;
-          var hash=window.location.hash;
-				  var list=hash.split("/");
-				  var platform=list[1];//平台
-        var t=this.$route.query.t;
-        if(!t){
-           window.location.href=" http://class-admin.univteam.com/"+platform+"/account/login?back=statistics";
-        }
-				axios.post(_this.url+'api/Authorize/token',{
-						token: t
-				})
-				.then(function (response) {
-          _this.sessionToken=response.data.access_token;
-          // _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQ0MjcxMiwiZXhwIjoxNTc3NDQ2MzEyLCJpYXQiOjE1Nzc0NDI3MTJ9.Krl6vhy2selZYEEzQrPqPe4I28FgeK09PEkSiBRyyeQ',
-          //将token写入到浏览器缓存中
-          sessionStorage.setItem("token", _this.sessionToken);	
-            _this.schoolscope(_this.sessionToken);
-            _this.getactivation(_this.sessionToken);
-            _this.getCulumPersonCount(_this.sessionToken);
-            _this.GetUnitPersonCount(_this.sessionToken);
-            _this.getInitiative(_this.sessionToken);
-            
-				})
-				.catch(function (error) {
-          console.log('请求失败')
-        });
-        
+       window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
       },
     //学院范围
     schoolscope(token) {
@@ -299,8 +279,7 @@ export default {
     //第二课堂整体参与度于信息系统活跃
     getactivation(token) {
       var _this = this;
-      axios
-        .get(_this.url + "/api/Plat/activation?access_token=" + token)
+      axios.get(_this.url + "/api/Plat/activation?access_token=" + token)
         .then(function(response) {
           _this.teacherCount = response.data.data.activation.teacher_count;
           _this.studentCount = response.data.data.activation.student_count;
@@ -1205,7 +1184,6 @@ select {
   background-color: transparent;
   color: #fff;
   border: none;
-  margin-right: 0.2rem;
   font-size: 0.14rem;
     background: url('../assets/xialakuang.png') no-repeat scroll right center ;
   background-size: 5%;

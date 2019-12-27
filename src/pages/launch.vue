@@ -148,8 +148,10 @@ export default {
       // token:
       //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNTM2NzgsImV4cCI6MTU3NzM1NzI3OCwiaWF0IjoxNTc3MzUzNjc4fQ.o3NYOAZFhH4u0PZ6erMUTB6Atv0kbT16XD10Tcl5SMQ",
       url: "https://class-ms-test.univteam.com/",
+      back_url:"http://class-admin.univteam.com/",
       value1: "", //日期
       value2: "",
+      debug:true,
       Condition: [],
       Comment: [],
       evaluateNum: "",
@@ -206,6 +208,7 @@ export default {
     $route: "fetchData"
   },
   mounted() {
+    //延迟执行
     this.whetherToken();
   },
   methods: {
@@ -214,14 +217,33 @@ export default {
     },
     //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
     whetherToken() {
+      console.log("进入了whetherToken");
       var _this = this;
-      var hash = window.location.hash;
-      var list = hash.split("/");
-      _this.platform = list[1];
+      _this.platform = this.$route.params.id;
+      switch(_this.platform){
+          case 'whu':
+            _this.url="http://app.dekt.whu.edu.cn/whu/";
+            _this.back_url="http://dekt.whu.edu.cn/whu/";
+            break;
+      }
       _this.sessionToken = sessionStorage.getItem("token");
       //把每个调用的接口都写在此方法中,需要在接口中加token
       if (_this.sessionToken !== null) {
+        console.log("sessionToken:" + _this.sessionToken);
         //不为null,本地已经存在token,调用方法
+          _this.getInfos();
+      } else {
+        //判断路径上有无参数,
+        setTimeout(function(){ 
+          _this.whetherToken();
+         }, 1000);
+
+        
+        //_this.postToken();
+      }
+    },
+    getInfos(){
+        var _this = this;
         _this.schoolscope(_this.sessionToken);
         _this.getCondition(_this.sessionToken);
         _this.getComment(_this.sessionToken);
@@ -229,47 +251,8 @@ export default {
         _this.getline(_this.sessionToken);
         _this.getCourseSupply(_this.sessionToken);
         _this.GetPlatDetail(_this.sessionToken);
-      } else {
-        //判断路径上有无参数,
-        _this.postToken();
-      }
     },
-    //请求token并且保存token
-    postToken() {
-      var _this = this;
-      var hash = window.location.hash;
-      var list = hash.split("/");
-      var platform = list[1]; //平台
-      var t = this.$route.query.t;
-      if (!t) {
-        window.location.href =
-          " http://class-admin.univteam.com/" +
-          platform +
-          "/account/login?back=statistics";
-      }
-      axios
-        .post(_this.url + "api/Authorize/token", {
-          token: t
-        })
-        .then(function(response) {
-          _this.sessionToken=response.data.access_token;
-          // (
-          //   _this.sessionToken =
-          //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQ0MjcxMiwiZXhwIjoxNTc3NDQ2MzEyLCJpYXQiOjE1Nzc0NDI3MTJ9.Krl6vhy2selZYEEzQrPqPe4I28FgeK09PEkSiBRyyeQ"),
-            //将token写入到浏览器缓存中
-            sessionStorage.setItem("token", _this.sessionToken);
-          _this.schoolscope(_this.sessionToken);
-          _this.getCondition(_this.sessionToken);
-          _this.getComment(_this.sessionToken);
-          _this.getsupply(_this.sessionToken);
-          _this.getline(_this.sessionToken);
-          _this.getCourseSupply(_this.sessionToken);
-          _this.GetPlatDetail(_this.sessionToken);
-        })
-        .catch(function(error) {
-          console.log("请求失败");
-        });
-    },
+    
     //获取饼状图中间的学校logo
     GetPlatDetail(token) {
       var _this = this;
@@ -286,18 +269,12 @@ export default {
             })
             .catch(function(error) {
               sessionStorage.removeItem("token"); //清除失效的token
-              window.location.href =
-                " http://class-admin.univteam.com/" +
-                _this.platform +
-                "/account/login?back=statistics";
+              _this.tourl(_this.platform);
             });
         })
         .catch(function(error) {
           sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          _this.tourl(_this.platform);
         });
     },
     //学院范围
@@ -306,20 +283,23 @@ export default {
       axios
         .get(_this.url + "api/Plat/options/?access_token=" + token)
         .then(function(response) {
-          _this.schoolUnits = response.data.data.units;
-          for (var i = 0; i < _this.schoolUnits.length; i++) {
-            _this.UnitsName.push(_this.schoolUnits[i].name);
-          }
+
+            _this.schoolUnits = response.data.data.units;
+            for (var i = 0; i < _this.schoolUnits.length; i++) {
+              _this.UnitsName.push(_this.schoolUnits[i].name);
+            }
+
         })
         .catch(function(error) {
           sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          _this.tourl(_this.platform);
         });
     },
-
+    tourl(platName) {
+       console.log("跳转到admin");
+       var _this = this;
+      //window.location.href =_this.back_url +platName +"/account/login?back=statistics";
+    },
     //课程开展总览
     getCondition(token) {
       var _this = this;
@@ -330,10 +310,7 @@ export default {
         })
         .catch(function(error) {
           sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          _this.tourl(_this.platform);
         });
     },
     //评价与参评率
@@ -374,10 +351,7 @@ export default {
         })
         .catch(function(error) {
           sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          _this.tourl(_this.platform);
         });
     },
     //请求各类课程开课情况数据
@@ -392,10 +366,6 @@ export default {
         })
         .catch(function(error) {
           sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
         });
     },
     //请求课程开展分时情况
@@ -412,10 +382,7 @@ export default {
         })
         .catch(function(error) {
           sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          _this.tourl(_this.platform);
         });
     },
 
@@ -429,10 +396,7 @@ export default {
         })
         .catch(function(error) {
           sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          _this.tourl(_this.platform);
         });
     },
     //仪表盘
@@ -688,8 +652,7 @@ export default {
             image: _this.PlatDetail,
             width: 100,
             height: 100,
-            center:['10%','50%']
-
+            center: ["10%", "50%"]
           }
         },
         series: [
@@ -844,10 +807,10 @@ export default {
           itemStyle: {
             normal: {
               // color: "rgba(0,227,231,.8)",
-              color:_this.bigColor[aa],
+              color: _this.bigColor[aa],
               lineStyle: {
                 // color: "rgba(0,227,231,.5)",
-                color:_this.bigColor[aa],
+                color: _this.bigColor[aa],
                 width: 1
               },
               areaStyle: {
@@ -855,12 +818,12 @@ export default {
                   {
                     offset: 0,
                     // color: "rgba(0,227,231,.1)"
-                    color:_this.bigColor[aa],
+                    color: _this.bigColor[aa]
                   },
                   {
                     offset: 1,
                     // color: "rgba(0,227,231,0.9)"
-                    color:_this.bigColor[aa],
+                    color: _this.bigColor[aa]
                   }
                 ])
               }
@@ -1330,12 +1293,10 @@ option {
   overflow-x: scroll;
   overflow-y: hidden;
   margin-top: -0.15rem;
-  border-top: 0.02rem #08263c solid;  
+  border-top: 0.02rem #08263c solid;
 }
 .echarts-legend-box2 {
-
-  justify-content:center;
-
+  justify-content: center;
 }
 .echarts-legend-box .echarts-legend-item:nth-child(1) .echarts-legend-item-bar {
   background-color: #52f397;
@@ -1394,7 +1355,7 @@ option {
 select {
   appearance: none;
   -moz-appearance: none;
-  -webkit-appearance: none; 
+  -webkit-appearance: none;
   -ms-appearance: none;
   outline: none;
   -webkit-tap-highlight-color: #fff;
@@ -1408,9 +1369,8 @@ select {
   background-color: transparent;
   color: #fff;
   border: none;
-  margin-right: 0.2rem;
   font-size: 0.14rem;
-  background: url('../assets/xialakuang.png') no-repeat scroll right center ;
+  background: url("../assets/xialakuang.png") no-repeat scroll right center;
   background-size: 5%;
   margin-left: 0.3rem;
 }
