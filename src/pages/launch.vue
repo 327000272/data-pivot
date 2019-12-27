@@ -252,9 +252,10 @@ export default {
           token: t
         })
         .then(function(response) {
-          // _this.Token=response.data.access_token;
-          (_this.sessionToken =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQ0MTk5NCwiZXhwIjoxNTc3NDQ1NTk0LCJpYXQiOjE1Nzc0NDE5OTR9.3A7Lo2LNN0TZpvTvLANAf2N18Iw2rz9VbTZAopACFdQ"),
+          _this.sessionToken=response.data.access_token;
+          // (
+          //   _this.sessionToken =
+          //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQ0MjcxMiwiZXhwIjoxNTc3NDQ2MzEyLCJpYXQiOjE1Nzc0NDI3MTJ9.Krl6vhy2selZYEEzQrPqPe4I28FgeK09PEkSiBRyyeQ"),
             //将token写入到浏览器缓存中
             sessionStorage.setItem("token", _this.sessionToken);
           _this.schoolscope(_this.sessionToken);
@@ -1293,7 +1294,7 @@ option {
 .box-item-pic {
   display: flex;
   justify-content: space-between;
-  border-bottom: 0.02rem #08263c solid;
+  /* border-bottom: 0.02rem #08263c solid; */
 }
 .classNumCircle {
   /* width: 2.59rem; */
@@ -1308,6 +1309,7 @@ option {
 #date_condition {
   width: 100% !important;
   height: 2.32rem !important;
+  margin-top: 0.3rem;
 }
 
 .echarts-legend {
@@ -1328,6 +1330,7 @@ option {
   overflow-x: scroll;
   overflow-y: hidden;
   margin-top: -0.15rem;
+  border-top: 0.02rem #08263c solid;  
 }
 .echarts-legend-box2 {
 
@@ -1408,7 +1411,8 @@ select {
   margin-right: 0.2rem;
   font-size: 0.14rem;
   background: url('../assets/xialakuang.png') no-repeat scroll right center ;
-  background-size: 10%;
+  background-size: 5%;
+  margin-left: 0.3rem;
 }
 .evaluatePart-box {
   width: 2rem;
