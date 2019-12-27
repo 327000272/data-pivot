@@ -266,7 +266,7 @@ export default {
 				})
 				.then(function (response) {
           // _this.Token=response.data.access_token;
-          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6Ijg3IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE3MTgiLCJwdXJsIjoiMSIsIm5iZiI6MTU3NzQzMzQ0MSwiZXhwIjoxNTc3NDM3MDQxLCJpYXQiOjE1Nzc0MzM0NDF9.rlMEiP8rF3qMkB6tdpGRLJz7ZNirjKo9Bb6tIVjHv6k',
+          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQzNzk4MiwiZXhwIjoxNTc3NDQxNTgyLCJpYXQiOjE1Nzc0Mzc5ODJ9.k3apc97i7HN_rvghUmlF-vQNutorAy7Edkr02t7r11w',
           //将token写入到浏览器缓存中
           sessionStorage.setItem("token", _this.sessionToken);	
             _this.schoolscope(_this.sessionToken);
@@ -1110,6 +1110,7 @@ option {
   align-items: center;
   justify-content: space-between;
   font-size: 0.12rem;
+  margin-right: 0.2rem;
 }
 .block {
   height: 40px;
@@ -1151,8 +1152,8 @@ option {
   display: flex;
 }
 .box-item {
-  width: 7.76rem;
-  height: 3.28rem;
+  width: 9rem;
+  height: 4rem;
   background: rgba(255, 255, 255, 5%);
   margin-right: 0.2rem;
   margin-bottom: 0.2rem;

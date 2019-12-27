@@ -7,6 +7,7 @@
         <div class="block">
           <span class="demonstration">统计日期</span>
           <el-date-picker
+            v-model="value1"
             type="daterange"
             range-separator="~"
             start-placeholder="开始日期"
@@ -62,7 +63,7 @@
             <div class="box-item-title-right">
               <span>学院范围</span>
               <select>
-                <option v-for="item in UnitsName" :key='item.id' :value="item">{{item}}</option>
+                <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
               </select>
               <span class="iconfont iconduobianxing"></span>
             </div>
@@ -117,7 +118,7 @@
             <div class="box-item-title-right">
               <span>学院范围</span>
               <select>
-                <option v-for="item in UnitsName" :key='item.id' :value="item">{{item}}</option>
+                <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
               </select>
               <span class="iconfont iconduobianxing"></span>
             </div>
@@ -127,7 +128,7 @@
           <div class="youjiantou iconfont iconlujing1" v-if="youShow"></div>
           <div class="zuojiantou iconfont iconlujing" v-if="zuoShow"></div>
           <div class="echarts-legend">
-            <div class="echarts-legend-box">
+            <div class="echarts-legend-box echarts-legend-box2">
               <div class="echarts-legend-item" v-for="item in lineName" :key="item.id">
                 <div class="echarts-legend-item-bar"></div>
                 <div class="echarts-legend-item-txt">{{item}}</div>
@@ -148,6 +149,8 @@ export default {
       // token:
       //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNTM2NzgsImV4cCI6MTU3NzM1NzI3OCwiaWF0IjoxNTc3MzUzNjc4fQ.o3NYOAZFhH4u0PZ6erMUTB6Atv0kbT16XD10Tcl5SMQ",
       url: "https://class-ms-test.univteam.com/",
+      value1: "", //日期
+      value2: "",
       Condition: [],
       Comment: [],
       evaluateNum: "",
@@ -161,19 +164,39 @@ export default {
       openNum: [],
       heteExtent: [],
       openRatio: [],
-      schoolUnits:[],
-      UnitsName:[],
-      good:"",
-      middle:"",
-      bad:"",
-      satisfactionDegree:'',
-      line:[],
-      lineName:[],
-      start:[],
-      Token:"",
-      sessionToken:'',
-      platform:'',
-      bigColor:["#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7"],
+      schoolUnits: [],
+      UnitsName: [],
+      good: "",
+      middle: "",
+      bad: "",
+      satisfactionDegree: "",
+      line: [],
+      lineName: [],
+      start: [],
+      Token: "",
+      sessionToken: "",
+      platform: "",
+      PlatDetail: "",
+      bigColor: [
+        "#52F397",
+        "#00E3E7",
+        "#00C5FF",
+        "#00C5FF",
+        "#A243DA",
+        "#D72FA7",
+        "#52F397",
+        "#00E3E7",
+        "#00C5FF",
+        "#00C5FF",
+        "#A243DA",
+        "#D72FA7",
+        "#52F397",
+        "#00E3E7",
+        "#00C5FF",
+        "#00C5FF",
+        "#A243DA",
+        "#D72FA7"
+      ]
     };
   },
   created() {
@@ -184,91 +207,116 @@ export default {
     $route: "fetchData"
   },
   mounted() {
-    // this.satisfaction();
-    // this.classNumber();
-    // this.classNum();
-    // this.date_condition();
-
-    // this.getCondition();
-    // this.getComment();
-    // this.getCourseSupply();
-    // this.getsupply();
-    // this.schoolscope();
-    // this.getline();
     this.whetherToken();
-    // this.postToken();
   },
   methods: {
     fetchData() {
       console.log("路由发送变化doing...");
     },
-      //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
-      whetherToken(){
-          var _this=this;
-          var hash=window.location.hash;
-				  var list=hash.split("/");
-          _this.platform=list[1];
-           _this.sessionToken=sessionStorage.getItem("token");
-          //把每个调用的接口都写在此方法中,需要在接口中加token
-          if(_this.sessionToken!==null){
-            //不为null,本地已经存在token,调用方法
-            _this.schoolscope(_this.sessionToken);
-            _this.getCondition(_this.sessionToken);
-            _this.getComment(_this.sessionToken);
-            _this.getsupply(_this.sessionToken);
-            _this.getline(_this.sessionToken);
-            _this.getCourseSupply(_this.sessionToken);
-          }else{
-            //判断路径上有无参数,
-             _this.postToken();
-          }
-
-      },
-			//请求token并且保存token
-			postToken(){
-        var _this=this;
-          var hash=window.location.hash;
-				  var list=hash.split("/");
-				  var platform=list[1];//平台
-        var t=this.$route.query.t;
-        if(!t){
-           window.location.href=" http://class-admin.univteam.com/"+platform+"/account/login?back=statistics";
-        }
-				axios.post(_this.url+'api/Authorize/token',{
-						token: t
-				})
-				.then(function (response) {
+    //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
+    whetherToken() {
+      var _this = this;
+      var hash = window.location.hash;
+      var list = hash.split("/");
+      _this.platform = list[1];
+      _this.sessionToken = sessionStorage.getItem("token");
+      //把每个调用的接口都写在此方法中,需要在接口中加token
+      if (_this.sessionToken !== null) {
+        //不为null,本地已经存在token,调用方法
+        _this.schoolscope(_this.sessionToken);
+        _this.getCondition(_this.sessionToken);
+        _this.getComment(_this.sessionToken);
+        _this.getsupply(_this.sessionToken);
+        _this.getline(_this.sessionToken);
+        _this.getCourseSupply(_this.sessionToken);
+        _this.GetPlatDetail(_this.sessionToken);
+      } else {
+        //判断路径上有无参数,
+        _this.postToken();
+      }
+    },
+    //请求token并且保存token
+    postToken() {
+      var _this = this;
+      var hash = window.location.hash;
+      var list = hash.split("/");
+      var platform = list[1]; //平台
+      var t = this.$route.query.t;
+      if (!t) {
+        window.location.href =
+          " http://class-admin.univteam.com/" +
+          platform +
+          "/account/login?back=statistics";
+      }
+      axios
+        .post(_this.url + "api/Authorize/token", {
+          token: t
+        })
+        .then(function(response) {
           // _this.Token=response.data.access_token;
-          _this.sessionToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6Ijg3IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE3MTgiLCJwdXJsIjoiMSIsIm5iZiI6MTU3NzQzMzQ0MSwiZXhwIjoxNTc3NDM3MDQxLCJpYXQiOjE1Nzc0MzM0NDF9.rlMEiP8rF3qMkB6tdpGRLJz7ZNirjKo9Bb6tIVjHv6k',
-          //将token写入到浏览器缓存中
-          sessionStorage.setItem("token", _this.sessionToken);	
-            _this.schoolscope(_this.sessionToken);
-            _this.getCondition(_this.sessionToken);
-            _this.getComment(_this.sessionToken);
-            _this.getsupply(_this.sessionToken);
-            _this.getline(_this.sessionToken);
-            _this.getCourseSupply(_this.sessionToken);
-				})
-				.catch(function (error) {
-          console.log('请求失败')
-				});
-      },
+          (_this.sessionToken =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjEwODE3MjkiLCJuYW1lIjoiYW5vbnltb3VzIiwicGlkIjoiMTY5NSIsInB1cmwiOiJjc3B0MTExOSIsIm5iZiI6MTU3NzQzNzk4MiwiZXhwIjoxNTc3NDQxNTgyLCJpYXQiOjE1Nzc0Mzc5ODJ9.k3apc97i7HN_rvghUmlF-vQNutorAy7Edkr02t7r11w"),
+            //将token写入到浏览器缓存中
+            sessionStorage.setItem("token", _this.sessionToken);
+          _this.schoolscope(_this.sessionToken);
+          _this.getCondition(_this.sessionToken);
+          _this.getComment(_this.sessionToken);
+          _this.getsupply(_this.sessionToken);
+          _this.getline(_this.sessionToken);
+          _this.getCourseSupply(_this.sessionToken);
+          _this.GetPlatDetail(_this.sessionToken);
+        })
+        .catch(function(error) {
+          console.log("请求失败");
+        });
+    },
+    //获取饼状图中间的学校logo
+    GetPlatDetail(token) {
+      var _this = this;
+      axios
+        .get(_this.url + "api/Plat/plat/detail?access_token=" + token)
+        .then(function(response) {
+          _this.PlatDetail = response.data.data.logo;
+          axios
+            .get(_this.url + "api/Plat/course/supply?access_token=" + token)
+            .then(function(response) {
+              _this.supplyComprehensive = response.data.data;
+              _this.classNum(_this.supplyComprehensive);
+              _this.classNumber(_this.supplyComprehensive, _this.PlatDetail);
+            })
+            .catch(function(error) {
+              sessionStorage.removeItem("token"); //清除失效的token
+              window.location.href =
+                " http://class-admin.univteam.com/" +
+                _this.platform +
+                "/account/login?back=statistics";
+            });
+        })
+        .catch(function(error) {
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
+        });
+    },
     //学院范围
     schoolscope(token) {
       var _this = this;
       axios
-        .get(
-          _this.url + "api/Plat/options/?access_token=" + token
-        )
+        .get(_this.url + "api/Plat/options/?access_token=" + token)
         .then(function(response) {
-          _this.schoolUnits=response.data.data.units;
-          for(var i=0;i<_this.schoolUnits.length;i++){
+          _this.schoolUnits = response.data.data.units;
+          for (var i = 0; i < _this.schoolUnits.length; i++) {
             _this.UnitsName.push(_this.schoolUnits[i].name);
           }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
         });
     },
 
@@ -276,15 +324,16 @@ export default {
     getCondition(token) {
       var _this = this;
       axios
-        .get(
-          _this.url + "api/Plat/course/condition?access_token=" + token
-        )
+        .get(_this.url + "api/Plat/course/condition?access_token=" + token)
         .then(function(response) {
           _this.Condition = response.data.data;
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
         });
     },
     //评价与参评率
@@ -294,45 +343,41 @@ export default {
         .get(_this.url + "api/Plat/course/comment?access_token=" + token)
         .then(function(response) {
           _this.Comment = response.data.data;
-          for(var i=0;i<_this.Comment.length;i++){
+          for (var i = 0; i < _this.Comment.length; i++) {
             //保存评价数
-            if(_this.Comment[i].type==15){
-                 _this.evaluateNum=_this.Comment[i];
+            if (_this.Comment[i].type == 15) {
+              _this.evaluateNum = _this.Comment[i];
             }
             //保存参与率
-            if(_this.Comment[i].type==16){
-                _this.participationRate=_this.Comment[i];
+            if (_this.Comment[i].type == 16) {
+              _this.participationRate = _this.Comment[i];
             }
             //保存好评率
-            if(_this.Comment[i].type==6){
-                _this.good=_this.Comment[i]
+            if (_this.Comment[i].type == 6) {
+              _this.good = _this.Comment[i];
             }
             //保存中评率
-            if(_this.Comment[i].type==17){
-                _this.middle=_this.Comment[i]
+            if (_this.Comment[i].type == 17) {
+              _this.middle = _this.Comment[i];
             }
             //保存差评率
-            if(_this.Comment[i].type==6){
-                _this.bad=_this.Comment[i]
+            if (_this.Comment[i].type == 6) {
+              _this.bad = _this.Comment[i];
             }
-
           }
-          _this.satisfactionDegree=Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3;
-          // var hao=Number(_this.good.data);
-          // var zhong=Number(_this.middle.data);
-          // var huai=Number(_this.bad.data);
-          // console.log(hao);
-          // console.log(zhong);
-          // console.log(huai);
-          // console.log(hao+zhong+huai);
-          // console.log((hao+zhong+huai)/3);
-          //  _this.satisfactionDegree=Math.ceil((hao+zhong+huai)/3)
-          //  console.log(_this.satisfactionDegree)
+          // _this.satisfactionDegree=Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3;
+          var hao = Number(_this.good.data);
+          var zhong = Number(_this.middle.data);
+          var huai = Number(_this.bad.data);
+          _this.satisfactionDegree = Math.ceil((hao + zhong + huai) / 3);
           _this.satisfaction(_this.satisfactionDegree);
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
         });
     },
     //请求各类课程开课情况数据
@@ -346,25 +391,31 @@ export default {
           _this.classNumber(_this.supplyComprehensive);
         })
         .catch(function(error) {
-          // sessionStorage.removeItem("token");//清除失效的token
-          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
         });
     },
     //请求课程开展分时情况
-    getline(token){
+    getline(token) {
       var _this = this;
       axios
         .get(_this.url + "api/Plat/course/line?access_token=" + token)
-        .then(function(response) {
-            _this.line=response.data.data;
-            _this.date_condition(_this.line);
-            for(var i=0;i<response.data.data.length;i++){
-              _this.lineName.push(response.data.data[i].name);
-            }
+        .then(function(res) {
+          _this.line = res.data.data;
+          _this.date_condition(_this.line);
+          for (var i = 0; i < res.data.data.length; i++) {
+            _this.lineName.push(res.data.data[i].name);
+          }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
         });
     },
 
@@ -372,16 +423,16 @@ export default {
     getCourseSupply(token) {
       var _this = this;
       axios
-        .get(
-          _this.url + "api/Plat/course/rank?unit=0&access_token=" + token
-        )
+        .get(_this.url + "api/Plat/course/rank?unit=0&access_token=" + token)
         .then(function(response) {
           _this.courseSupply = response.data.data;
-
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
         });
     },
     //仪表盘
@@ -634,10 +685,10 @@ export default {
           left: "center",
           top: "center",
           style: {
-            image:
-              "http://file02.16sucai.com/d/file/2015/0408/779334da99e40adb587d0ba715eca102.jpg",
-            width: 50,
-            height: 50
+            image: _this.PlatDetail,
+            width: 100,
+            height: 100,
+            center:[50,10]
           }
         },
         series: [
@@ -770,9 +821,49 @@ export default {
     //课程开展分时情况表格
     date_condition(num) {
       var _this = this;
-      // for(var i=0;i<num[0].datas.length;i++){
-      //   _this.start=num[0].datas[i].start+'~'+num[0].datas[i].end;
-      // }
+      var arrSeries = [];
+      console.log(num);
+      for (var a = 0; a < num[0].datas.length; a++) {
+        _this.start.push(num[0].datas[a].start + "~" + num[0].datas[a].end);
+      }
+      var allList = [];
+      for (var i = 0; i < num.length; i++) {
+        var list = [];
+        for (var j = 0; j < num[i].datas.length; j++) {
+          list.push(num[i].datas[j].count);
+        }
+        allList.push(list);
+      }
+      for (var aa = 0; aa < allList.length; aa++) {
+        arrSeries.push({
+          type: "line",
+          symbol: "circle",
+          showSymbol: false,
+          symbolSize: 3,
+          itemStyle: {
+            normal: {
+              color: "rgba(0,227,231,.8)",
+              lineStyle: {
+                color: "rgba(0,227,231,.5)",
+                width: 1
+              },
+              areaStyle: {
+                color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+                  {
+                    offset: 0,
+                    color: "rgba(0,227,231,.1)"
+                  },
+                  {
+                    offset: 1,
+                    color: "rgba(0,227,231,0.9)"
+                  }
+                ])
+              }
+            }
+          },
+          data: allList[aa]
+        });
+      }
       let myChart = echarts.init(document.getElementById("date_condition"));
       let option = {
         grid: {
@@ -845,20 +936,21 @@ export default {
             axisPointer: {
               show: true
             },
-            data: [
-              "3/4~3/10",
-              "3/11~3/17",
-              "3/4~3/10",
-              "3/10~3/17",
-              "3/10~3/17",
-              "3/10~3/17",
-              "3/10~3/17",
-              "3/10~3/17",
-              "3/10~3/17",
-              "3/10~3/17",
-              "3/10~3/17",
-              "3/10~3/17"
-            ]
+            // data: [
+            //   "3/4~3/10",
+            //   "3/11~3/17",
+            //   "3/4~3/10",
+            //   "3/10~3/17",
+            //   "3/10~3/17",
+            //   "3/10~3/17",
+            //   "3/10~3/17",
+            //   "3/10~3/17",
+            //   "3/10~3/17",
+            //   "3/10~3/17",
+            //   "3/10~3/17",
+            //   "3/10~3/17"
+            // ]
+            data: _this.start
             // data:linedate
           }
         ],
@@ -891,189 +983,7 @@ export default {
             }
           }
         ],
-        series: [
-          {
-            type: "line",
-            // stack: '总量',
-            symbol: "circle",
-            symbolSize: 3,
-            showSymbol: false,
-            itemStyle: {
-              normal: {
-                color: "rgba(82,243,151,.8)",
-                lineStyle: {
-                  color: "rgba(82,243,151,.5)",
-                  width: 1
-                },
-                areaStyle: {
-                  color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
-                    {
-                      offset: 0,
-                      color: "rgba(82,243,151,.1)"
-                    },
-                    {
-                      offset: 1,
-                      color: "rgba(82,243,151,0.9)"
-                    }
-                  ])
-                }
-              }
-            },
-            markPoint: {
-              itemStyle: {
-                normal: {
-                  color: "red"
-                }
-              }
-            },
-            data: [120, 132, 101, 134, 90, 230, 210, 182, 191, 234, 290, 330]
-          },
-          {
-            type: "line",
-            // stack: '总量',
-            symbol: "circle",
-            showSymbol: false,
-            symbolSize: 3,
-            itemStyle: {
-              normal: {
-                color: "rgba(0,227,231,.8)",
-                lineStyle: {
-                  color: "rgba(0,227,231,.5)",
-                  width: 1
-                },
-                areaStyle: {
-                  color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
-                    {
-                      offset: 0,
-                      color: "rgba(0,227,231,.1)"
-                    },
-                    {
-                      offset: 1,
-                      color: "rgba(0,227,231,0.9)"
-                    }
-                  ])
-                }
-              }
-            },
-            data: [100, 182, 191, 234, 290, 330, 310, 201, 154, 190, 330, 410]
-          },
-          {
-            type: "line",
-            // stack: '总量',
-            symbol: "circle",
-            symbolSize: 3,
-            showSymbol: false,
-            itemStyle: {
-              normal: {
-                color: "rgba(0,197,255,.8)",
-                lineStyle: {
-                  color: "rgba(0,197,255,.5)",
-                  width: 1
-                },
-                areaStyle: {
-                  color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
-                    {
-                      offset: 0,
-                      color: "rgba(0,197,255,.1)"
-                    },
-                    {
-                      offset: 1,
-                      color: "rgba(0,197,255,0.9)"
-                    }
-                  ])
-                }
-              }
-            },
-            data: [130, 232, 201, 154, 190, 330, 410, 150, 232, 201, 154, 190]
-          },
-          {
-            type: "line",
-            // stack: '总量',
-            symbol: "circle",
-            showSymbol: false,
-            symbolSize: 3,
-            itemStyle: {
-              normal: {
-                color: "rgba(71,140,239,.8)",
-                lineStyle: {
-                  color: "rgba(71,140,239,.5)",
-                  width: 1
-                },
-                areaStyle: {
-                  color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
-                    {
-                      offset: 0,
-                      color: "rgba(71,140,239,.1)"
-                    },
-                    {
-                      offset: 1,
-                      color: "rgba(71,140,239,0.9)"
-                    }
-                  ])
-                }
-              }
-            },
-            data: [50, 232, 201, 154, 190, 330, 410, 150, 232, 201, 154, 190]
-          },
-          {
-            type: "line",
-            // stack: '总量',
-            symbol: "circle",
-            symbolSize: 3,
-            showSymbol: false,
-            itemStyle: {
-              normal: {
-                color: "rgba(162,67,218,.8)",
-                lineStyle: {
-                  color: "rgba(162,67,218,.5)",
-                  width: 1
-                },
-                areaStyle: {
-                  color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
-                    {
-                      offset: 0,
-                      color: "rgba(162,67,218,.1)"
-                    },
-                    {
-                      offset: 1,
-                      color: "rgba(162,67,218,0.9)"
-                    }
-                  ])
-                }
-              }
-            },
-            data: [90, 200, 201, 154, 190, 330, 410, 150, 232, 201, 154, 190]
-          },
-          {
-            type: "line",
-            // stack: '总量',
-            symbol: "circle",
-            symbolSize: 3,
-            showSymbol: false,
-            itemStyle: {
-              normal: {
-                color: "rgba(215,47,167,.8)",
-                lineStyle: {
-                  color: "rgba(215,47,167,.5)",
-                  width: 1
-                },
-                areaStyle: {
-                  color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
-                    {
-                      offset: 0,
-                      color: "rgba(215,47,167,.1)"
-                    },
-                    {
-                      offset: 1,
-                      color: "rgba(215,47,167,0.9)"
-                    }
-                  ])
-                }
-              }
-            },
-            data: [30, 232, 201, 154, 190, 330, 410, 150, 232, 201, 154, 190]
-          }
-        ]
+        series: arrSeries
       };
       myChart.on("datazoom", function(params) {
         if (params.batch[0].end > 99.9) {
@@ -1093,6 +1003,26 @@ export default {
   }
 };
 </script>
+<style>
+.data-picker input {
+  background-color: #213c50 !important;
+  color: #c4cbd1;
+}
+.data-picker .el-range__icon {
+  display: none;
+}
+.data-picker .el-range-separator {
+  color: #c4cbd1;
+}
+.fx-scope input {
+  border: none;
+  background: #213c50;
+  color: #ffffff;
+}
+.el-date-editor .el-range-input {
+  color: #ffffff;
+}
+</style>
 <style scoped>
 .iconfont {
   font-size: 0.1rem;
@@ -1119,7 +1049,7 @@ export default {
   color: #fff;
   margin-left: 0.4rem;
 }
-option{
+option {
   color: #000;
 }
 /* 运算 */
@@ -1128,6 +1058,7 @@ option{
   align-items: center;
   justify-content: space-between;
   font-size: 0.12rem;
+  margin-right: 0.2rem;
 }
 .block {
   height: 40px;
@@ -1168,8 +1099,10 @@ option{
   display: flex;
 }
 .box-item {
-  width: 7.76rem;
-  height: 3.28rem;
+  /* width: 7.76rem;
+  height: 3.28rem; */
+  width: 9rem;
+  height: 4rem;
   background: rgba(255, 255, 255, 5%);
   margin-right: 0.2rem;
   margin-bottom: 0.2rem;
@@ -1384,12 +1317,18 @@ option{
 }
 .echarts-legend-box {
   display: flex;
+  /* justify-content:center; */
   margin: 0 auto;
   width: 100%;
   white-space: nowrap;
   overflow-x: scroll;
   overflow-y: hidden;
   margin-top: -0.15rem;
+}
+.echarts-legend-box2 {
+
+  justify-content:center;
+
 }
 .echarts-legend-box .echarts-legend-item:nth-child(1) .echarts-legend-item-bar {
   background-color: #52f397;
@@ -1437,7 +1376,7 @@ option{
   width: 50%;
   font-size: 0.14rem;
 }
-.box-item-title-right{
+.box-item-title-right {
   width: 50%;
 }
 .box-item-title-right span {
