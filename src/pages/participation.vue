@@ -42,6 +42,7 @@
             <div class="box-item-title-right">
               <span>学院范围</span>
               <select>
+                <option>全部</option>
                 <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
               </select>
             </div>
@@ -125,6 +126,7 @@
             <div class="box-item-title-right">
               <span>学院范围</span>
               <select>
+                <option>全部</option>
                 <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
               </select>
             </div>
@@ -151,9 +153,8 @@ export default {
   name: "participation",
   data() {
     return {
-      // token:
-      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNDgzMDksImV4cCI6MTU3NzM1MTkwOSwiaWF0IjoxNTc3MzQ4MzA5fQ.wIbyXDC6sB-lPUrXkopPNpDPLnAtiyuiLHHHoPzOyE8",
-      url: "https://class-ms-test.univteam.com/",
+      // url: "https://class-ms-test.univteam.com/",
+      url: "https://classroom.univteam.com/",
       back_url:"http://class-admin.univteam.com/",
       value1: "", //日期
       youShow: true,
@@ -219,15 +220,6 @@ export default {
     };
   },
   mounted() {
-    // this.collegePerson();
-    // this.classPersonCake();
-    // this.switchSlide();
-    // this.funnel();
-    // this.getCulumPersonCount();
-    // this.getactivation();
-    // this.GetUnitPersonCount();
-    // this.schoolscope();
-    // this.watchBall();
     this.whetherToken();
   },
   methods: {
@@ -235,10 +227,14 @@ export default {
       whetherToken(){
           var _this=this;
           _this.platform=this.$route.params.id;
-           switch(_this.platform){
+      switch(_this.platform){
           case 'whu':
             _this.url="http://app.dekt.whu.edu.cn/whu/";
             _this.back_url="http://dekt.whu.edu.cn/whu/";
+            break;
+            default:
+             _this.url="https://classroom.univteam.com/"+_this.platform+"/Statistics/";
+            _this.back_url="http://class-admin.univteam.com/";
             break;
       }
            _this.sessionToken=sessionStorage.getItem("token");
@@ -258,15 +254,15 @@ export default {
             }, 1000);
           }
       },
-      tourl(){
-        var _this=this;
-       window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
-      },
+      // tourl(){
+      //   var _this=this;
+      //  window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
+      // },
     //学院范围
     schoolscope(token) {
       var _this = this;
       axios
-        .get(_this.url + "api/Plat/options/?access_token=" + token)
+        .get(_this.url + "options/?access_token=" + token)
         .then(function(response) {
           _this.schoolUnits = response.data.data.units;
           for (var i = 0; i < _this.schoolUnits.length; i++) {
@@ -281,7 +277,7 @@ export default {
     //第二课堂整体参与度于信息系统活跃
     getactivation(token) {
       var _this = this;
-      axios.get(_this.url + "/api/Plat/activation?access_token=" + token)
+      axios.get(_this.url + "activation?access_token=" + token)
         .then(function(response) {
           _this.teacherCount = response.data.data.activation.teacher_count;
           _this.studentCount = response.data.data.activation.student_count;
@@ -346,13 +342,14 @@ export default {
         .catch(function(error) {
           sessionStorage.removeItem("token");//清除失效的token
           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+
         });
     },
     //请求各类课程参与人次
     getCulumPersonCount(token) {
       var _this = this;
       axios
-        .get(_this.url + "/api/Plat/culumCount?access_token=" + token)
+        .get(_this.url + "culumCount?access_token=" + token)
         .then(function(response) {
           _this.supplyComprehensive = response.data.data;
           _this.classPersonCake(_this.supplyComprehensive);
@@ -367,7 +364,7 @@ export default {
     GetUnitPersonCount(token) {
       var _this = this;
       axios
-        .get(_this.url + "/api/Plat/unitCount/?access_token=" + token)
+        .get(_this.url + "unitCount/?access_token=" + token)
         .then(function(response) {
           _this.UnitPersonCount = response.data;
           _this.collegePerson(_this.UnitPersonCount);
@@ -381,16 +378,15 @@ export default {
     getInitiative(token){
       var _this = this;
       axios
-        .get(_this.url + "api/Plat/join/Initiative?access_token=" + token)
+        .get(_this.url + "join_Initiative?access_token=" + token)
         .then(function(response) {
           _this.funnelData=response.data.data;
           _this.funnel(_this.funnelData);
           _this.watchBall(_this.funnelData);
         })
         .catch(function(error) {
-
-          // sessionStorage.removeItem("token");//清除失效的token
-          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+           sessionStorage.removeItem("token");//清除失效的token
+           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //饼状图
@@ -484,7 +480,6 @@ export default {
     //横向柱状图
     switchSlide(num) {
       var _this = this;
-      console.log(num)
       for (var i = 0; i < num.length; i++) {
         _this.openPeopleTxt.push(num[i].name);
         _this.openPeopleDate.push(num[i].count);
@@ -574,7 +569,7 @@ export default {
                   }
                 }
               },
-              barWidth: 12,
+              barWidth: 10,
               itemStyle: {
                 normal: {
                   color: function(params) {
@@ -619,7 +614,7 @@ export default {
               //   100
               // ],
               data:_this.maxArr,
-              barWidth: 14,
+              barWidth: 12,
               itemStyle: {
                 normal: {
                 color: function(params) {
@@ -680,10 +675,13 @@ export default {
         },
         grid: {
           borderWidth: 0,
-          top: 40,
-          bottom: 40,
-          left: 50,
-          right: 10,
+          top: '20',
+          bottom: 'auto',
+          left: 'auto',
+          right: 'auto',
+          height:'auto',
+          width:'auto',
+          containLabel: true,
           textStyle: {
             color: "#fff"
           }
@@ -1158,21 +1156,22 @@ option {
 }
 .box-item-title-left {
   display: flex;
-  width: 50%;
+  width: 60%;
   font-size: 0.14rem;
 }
 .box-item-title-right{
-  width: 50%;
+    width: 40%;
+    display: flex;
+  justify-content: space-between;
 }
 .box-item-title-right span {
   opacity: 0.5;
-  /* margin-left: 0.20rem; */
   font-size: 0.14rem;
 }
 select {
   appearance: none;
   -moz-appearance: none;
-  -webkit-appearance: none; /*兼容苹果手机*/
+  -webkit-appearance: none;
   -ms-appearance: none;
   outline: none;
   -webkit-tap-highlight-color: #fff;
@@ -1187,9 +1186,10 @@ select {
   color: #fff;
   border: none;
   font-size: 0.14rem;
-    background: url('../assets/xialakuang.png') no-repeat scroll right center ;
-  background-size: 5%;
-  margin-left: 0.3rem;
+  background: url("../assets/xialakuang.png") no-repeat scroll right center;
+  background-size: 7%;
+  /* margin-left: 0.3rem; */
+  margin-right: 0.1rem;
 }
 .box-item-pic {
   display: flex;
@@ -1198,12 +1198,12 @@ select {
 }
 .classPersonCake {
   /* width: 2.5rem; */
-  width: 50%;
+  width: 40%;
   height: 2.5rem;
 }
 .switchSlide {
   /* width: 4.5rem; */
-  width: 50%;
+  width: 60%;
   height: 2.5rem;
 }
 
@@ -1218,7 +1218,7 @@ select {
   height: 2.5rem;
 }
 .liveness {
-  font-size: 0.12rem;
+  font-size: 0.10rem;
   margin: 0 auto;
   width: 80%;
   margin-top: 0.5rem;
@@ -1235,21 +1235,26 @@ select {
 .liveness-top > div:nth-child(1) {
   width: 0.68rem;
   height: 0.68rem;
+
 }
 .liveness-top > div:nth-child(2) {
   width: 1.3rem;
+  /* width: 2rem; */
   height: 0.68rem;
 }
 .liveness-top > div:nth-child(3) {
   width: 1.3rem;
+  /* width: 2rem; */
   height: 0.68rem;
 }
 .liveness-top > div:nth-child(4) {
   width: 1.3rem;
+  /* width: 2rem; */
   height: 0.68rem;
 }
 .liveness-top > div:nth-child(5) {
   width: 1.3rem;
+  /* width: 2rem; */
   height: 0.68rem;
 }
 .liveness-top > div > p {

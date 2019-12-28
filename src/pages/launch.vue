@@ -63,6 +63,7 @@
             <div class="box-item-title-right">
               <span>学院范围</span>
               <select>
+                <option>全部</option>
                 <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
               </select>
               <!-- <span class="iconfont iconduobianxing"></span> -->
@@ -118,6 +119,7 @@
             <div class="box-item-title-right">
               <span>学院范围</span>
               <select>
+                <option>全部</option>
                 <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
               </select>
             </div>
@@ -147,7 +149,8 @@ export default {
     return {
       // token:
       //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNTM2NzgsImV4cCI6MTU3NzM1NzI3OCwiaWF0IjoxNTc3MzUzNjc4fQ.o3NYOAZFhH4u0PZ6erMUTB6Atv0kbT16XD10Tcl5SMQ",
-      url: "https://class-ms-test.univteam.com/",
+      // url: "https://class-ms-test.univteam.com/",
+      url: "https://classroom.univteam.com/",
       back_url:"http://class-admin.univteam.com/",
       value1: "", //日期
       value2: "",
@@ -225,6 +228,10 @@ export default {
             _this.url="http://app.dekt.whu.edu.cn/whu/";
             _this.back_url="http://dekt.whu.edu.cn/whu/";
             break;
+            default:
+             _this.url="https://classroom.univteam.com/"+_this.platform+"/Statistics/";
+            _this.back_url="http://class-admin.univteam.com/";
+            break;
       }
       _this.sessionToken = sessionStorage.getItem("token");
       //把每个调用的接口都写在此方法中,需要在接口中加token
@@ -256,12 +263,12 @@ export default {
     //获取饼状图中间的学校logo
     GetPlatDetail(token) {
       var _this = this;
-      axios
-        .get(_this.url + "api/Plat/plat/detail?access_token=" + token)
+      // axios.get(_this.url + "api/Plat/plat/detail?access_token=" + token)
+        axios.get(_this.url + "plat_detail?access_token=" + token)
         .then(function(response) {
           _this.PlatDetail = response.data.data.logo;
           axios
-            .get(_this.url + "api/Plat/course/supply?access_token=" + token)
+            .get(_this.url + "course_supply?access_token=" + token)
             .then(function(response) {
               _this.supplyComprehensive = response.data.data;
               _this.classNum(_this.supplyComprehensive);
@@ -280,10 +287,9 @@ export default {
     //学院范围
     schoolscope(token) {
       var _this = this;
-      axios
-        .get(_this.url + "api/Plat/options/?access_token=" + token)
+      // axios.get(_this.url + "api/Plat/options/?access_token=" + token)
+      axios.get(_this.url + "options?access_token=" + token)
         .then(function(response) {
-
             _this.schoolUnits = response.data.data.units;
             for (var i = 0; i < _this.schoolUnits.length; i++) {
               _this.UnitsName.push(_this.schoolUnits[i].name);
@@ -303,8 +309,8 @@ export default {
     //课程开展总览
     getCondition(token) {
       var _this = this;
-      axios
-        .get(_this.url + "api/Plat/course/condition?access_token=" + token)
+      // axios.get(_this.url + "api/Plat/course/condition?access_token=" + token)
+      axios.get(_this.url + "course_condition?access_token=" + token)
         .then(function(response) {
           _this.Condition = response.data.data;
         })
@@ -316,8 +322,8 @@ export default {
     //评价与参评率
     getComment(token) {
       var _this = this;
-      axios
-        .get(_this.url + "api/Plat/course/comment?access_token=" + token)
+      // axios.get(_this.url + "api/Plat/course/comment?access_token=" + token)
+        axios.get(_this.url + "course_comment?access_token=" + token)
         .then(function(response) {
           _this.Comment = response.data.data;
           for (var i = 0; i < _this.Comment.length; i++) {
@@ -357,8 +363,8 @@ export default {
     //请求各类课程开课情况数据
     getsupply(token) {
       var _this = this;
-      axios
-        .get(_this.url + "api/Plat/course/supply?access_token=" + token)
+      // axios.get(_this.url + "api/Plat/course/supply?access_token=" + token)
+      axios.get(_this.url + "course_supply?access_token=" + token)
         .then(function(response) {
           _this.supplyComprehensive = response.data.data;
           _this.classNum(_this.supplyComprehensive);
@@ -371,8 +377,7 @@ export default {
     //请求课程开展分时情况
     getline(token) {
       var _this = this;
-      axios
-        .get(_this.url + "api/Plat/course/line?access_token=" + token)
+      axios.get(_this.url + "course_line?access_token=" + token)
         .then(function(res) {
           _this.line = res.data.data;
           _this.date_condition(_this.line);
@@ -389,8 +394,8 @@ export default {
     //各单位课程供给排行
     getCourseSupply(token) {
       var _this = this;
-      axios
-        .get(_this.url + "api/Plat/course/rank?unit=0&access_token=" + token)
+      // axios.get(_this.url + "api/Plat/course/rank?unit=0&access_token=" + token)
+      axios.get(_this.url + "course_rank?unit=0&access_token=" + token)
         .then(function(response) {
           _this.courseSupply = response.data.data;
         })
@@ -1165,6 +1170,7 @@ option {
   width: 2.5rem;
   height: 2.2rem;
   float: right;
+  /* margin-left: 0.8rem; */
 }
 
 .fxbox1-li {
@@ -1217,7 +1223,6 @@ option {
   /* min-height: 400px; */
   background: #153146;
   /* margin-left: 1%; */
-  overflow: auto;
   padding-bottom: 5px;
 }
 .fx-box4::-webkit-scrollbar {
@@ -1227,6 +1232,7 @@ option {
   height: 80%;
   padding: 0 10px;
   margin-top: 10px;
+  overflow: auto;
 }
 .fxbox4-li {
   display: flex;
@@ -1294,7 +1300,7 @@ option {
   white-space: nowrap;
   overflow-x: scroll;
   overflow-y: hidden;
-  margin-top: -0.15rem;
+  margin-top: -0.23rem;
   border-top: 0.02rem #08263c solid;
 }
 .echarts-legend-box2 {
@@ -1340,19 +1346,21 @@ option {
 #timeSituation {
   position: relative;
 }
-
 .box-item-title-left {
   display: flex;
-  width: 50%;
+  width: 60%;
   font-size: 0.14rem;
+ 
 }
 .box-item-title-right {
-  width: 50%;
+  width: 40%;
+    display: flex;
+  justify-content: space-between;
 }
 .box-item-title-right span {
   opacity: 0.5;
-  /* margin-left: 0.20rem; */
   font-size: 0.14rem;
+
 }
 select {
   appearance: none;
@@ -1373,16 +1381,22 @@ select {
   border: none;
   font-size: 0.14rem;
   background: url("../assets/xialakuang.png") no-repeat scroll right center;
-  background-size: 5%;
-  margin-left: 0.3rem;
+  background-size: 7%;
+  /* margin-left: 0.3rem; */
+  margin-right: 0.1rem;
+  
+}
+option{
+  width: 20px;
+  
 }
 .evaluatePart-box {
-  width: 2rem;
+  width: 2.5rem;
   height: 0.23rem;
   line-height: 0.23rem;
   background: rgba(255, 255, 255, 8%);
   float: right;
-  margin-right: 0.35rem;
+  margin-right: 0.15rem;
 }
 .evaluatePart {
   font-size: 0.12rem;
@@ -1417,4 +1431,37 @@ select {
   opacity: 0.2;
   font-size: 0.26rem;
 }
+::-webkit-scrollbar {
+
+/*滚动条整体样式*/
+
+width: 14px; /*高宽分别对应横竖滚动条的尺寸*/
+
+height: 14px;
+
+}
+::-webkit-scrollbar-thumb {
+
+/*滚动条里面小方块*/
+
+border-radius: 5px;
+
+-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+
+background: rgba(0, 0, 0, 0.2);
+
+}
+
+::-webkit-scrollbar-track {
+
+/*滚动条里面轨道*/
+
+-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+
+border-radius: 0;
+
+background: rgba(0, 0, 0, 0.1);
+
+}
+
 </style>

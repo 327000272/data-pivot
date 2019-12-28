@@ -54,7 +54,7 @@ export default {
     return {
       // token:
       //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNjU5NjAsImV4cCI6MTU3NzM2OTU2MCwiaWF0IjoxNTc3MzY1OTYwfQ.lptm6eA3_NnNW7WCV75tFnEhcsS2JIx_e4woMlM8mkU",
-      url: "https://class-ms-test.univteam.com/",
+      url: "https://classroom.univteam.com/",
       back_url:"http://class-admin.univteam.com/",
       logo: [],
       index: "",
@@ -72,6 +72,16 @@ export default {
       whetherToken(){
           var _this=this;
           _this.platform = this.$route.params.id;
+        switch(_this.platform){
+          case 'whu':
+            _this.url="http://app.dekt.whu.edu.cn/whu/Statistics/";
+            _this.back_url="http://dekt.whu.edu.cn/whu/";
+            break;
+            default:
+             _this.url="https://classroom.univteam.com/"+_this.platform+"/Statistics/";
+            _this.back_url="http://class-admin.univteam.com/";
+            break;
+      }
           //在session 中获取token 如果存在直接使用 否则 调用获取token的方法
            _this.sessionToken=sessionStorage.getItem("token");
           //把每个调用的接口都写在此方法中,需要在接口中加token
@@ -87,7 +97,7 @@ export default {
       tourl(){
         var _this=this;
         console.log(_this.sessionToken);
-         window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
+         //window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
       },
       getInfos(){
         var _this = this;
@@ -102,7 +112,8 @@ export default {
           _this.tourl();
         }
         //t 存在 使用t 获取token
-         var tokenurl= _this.debug?_this.url +"/api/Authorize/tokenTest":_this.url +"/api/Authorize/token?url=" +_this.platform +"&token=" +t;
+         var tokenurl= _this.debug?_this.url +"tokenTest":_this.url +"token?url=" +_this.platform +"&token=" +t;
+         console.log(tokenurl);
 				axios.post(tokenurl)
         .then(function (response) {
           var res=response.data.data;
@@ -128,7 +139,8 @@ export default {
     //获取学校logo,名称
     GetPlatDetail(token){
       var _this = this;
-      axios.get(_this.url + "api/Plat/plat/detail?access_token=" + token)
+      console.log(_this.url + "plat_detail?access_token=");
+      axios.get(_this.url + "plat_detail?access_token=" + token)
         .then(function(response) {
           if(response.data.code==0){
             _this.PlatDetail=response.data.data;
