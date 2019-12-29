@@ -15,7 +15,7 @@
             class="data-picker"
           ></el-date-picker>
         </div>
-        <div class="fx-btn">运算</div>
+        <div class="fx-btn" @click="pointer()">运算</div>
       </div>
     </div>
     <!-- 四块主内容 -->
@@ -41,9 +41,9 @@
             </div>
             <div class="box-item-title-right">
               <span>学院范围</span>
-              <select>
+              <select @change="change($event)">
                 <option>全部</option>
-                <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
+                <option v-for="item in haha" :key="item.index" :value="item.id">{{item.name}}</option>
               </select>
             </div>
           </div>
@@ -125,9 +125,9 @@
             </div>
             <div class="box-item-title-right">
               <span>学院范围</span>
-              <select>
+              <select @change="change2($event)">
                 <option>全部</option>
-                <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
+                <option v-for="item in haha" :key="item.index" :value="item.id">{{item.name}}</option>
               </select>
             </div>
           </div>
@@ -147,7 +147,7 @@
 </template>
 <script>
 import echarts from "echarts";
-import '../../static/js/h-liquid.js'
+import "../../static/js/h-liquid.js";
 import axios from "axios";
 export default {
   name: "participation",
@@ -155,8 +155,8 @@ export default {
     return {
       // url: "https://class-ms-test.univteam.com/",
       url: "https://classroom.univteam.com/",
-      back_url:"http://class-admin.univteam.com/",
-      value1: "", //日期
+      back_url: "http://class-admin.univteam.com/",
+      value1: [new Date(2019, 10, 29), new Date(2019, 11, 29)], //日期
       youShow: true,
       zuoShow: false,
       supplyComprehensive: [],
@@ -193,156 +193,254 @@ export default {
       stuPersonNumTitle: "",
       stuPersonNumData: "",
       stuPersonNumUnit: "",
-      teacherPersonTitle:"",
-      teacherPersonDate:"",
-      teacherPersonUnit:"",
+      teacherPersonTitle: "",
+      teacherPersonDate: "",
+      teacherPersonUnit: "",
       teacherCount: "",
       studentCount: "",
-      Token:"",
-      sessionToken:'',
-      platform:'',
-      funnelData:'',
-      look:[],
-      Apply:[],
-      sign:[],
-      affirm:[],
-      funnelTitle:[],
-      funneldataOther:[],
-      funneltherUnit:[],
-      classNeedTitle:[],
-      classNeedData:[],
-      classNeedUnit:[],
-      classNeedCalcData:"",
-      maxV:'',
-      maxArr:[],
-      maxArr2:[],
-      bigColor:["#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7"],
+      Token: "",
+      sessionToken: "",
+      platform: "",
+      funnelData: "",
+      look: [],
+      Apply: [],
+      sign: [],
+      affirm: [],
+      funnelTitle: [],
+      funneldataOther: [],
+      funneltherUnit: [],
+      classNeedTitle: [],
+      classNeedData: [],
+      classNeedUnit: [],
+      unitsId: [],
+      classNeedCalcData: "",
+      maxV: "",
+      ida: 0,
+      ida2: 0,
+      haha: [],
+      maxArr: [],
+      maxArr2: [],
+      bigColor: [
+        "#52F397",
+        "#00E3E7",
+        "#00C5FF",
+        "#00C5FF",
+        "#A243DA",
+        "#D72FA7",
+        "#52F397",
+        "#00E3E7",
+        "#00C5FF",
+        "#00C5FF",
+        "#A243DA",
+        "#D72FA7",
+        "#52F397",
+        "#00E3E7",
+        "#00C5FF",
+        "#00C5FF",
+        "#A243DA",
+        "#D72FA7"
+      ]
     };
   },
   mounted() {
     this.whetherToken();
   },
   methods: {
+    change(event) {
+      var _this = this;
+      // console.log(event.target.value)
+      _this.ida = event.target.value;
+      console.log(_this.ida);
+    },
+    change2() {
+      var _this = this;
+      // console.log(event.target.value)
+      _this.ida2 = event.target.value;
+      console.log(_this.ida2);
+    },
     //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
-      whetherToken(){
-          var _this=this;
-          _this.platform=this.$route.params.id;
-      switch(_this.platform){
-          case 'whu':
-            _this.url="http://app.dekt.whu.edu.cn/whu/";
-            _this.back_url="http://dekt.whu.edu.cn/whu/";
-            break;
-            default:
-             _this.url="https://classroom.univteam.com/"+_this.platform+"/Statistics/";
-            _this.back_url="http://class-admin.univteam.com/";
-            break;
+    whetherToken() {
+      var _this = this;
+      _this.platform = this.$route.params.id;
+      switch (_this.platform) {
+        case "whu":
+          _this.url = "http://app.dekt.whu.edu.cn/whu/";
+          _this.back_url = "http://dekt.whu.edu.cn/whu/";
+          break;
+        default:
+          _this.url =
+            "https://classroom.univteam.com/" + _this.platform + "/Statistics/";
+          _this.back_url = "http://class-admin.univteam.com/";
+          break;
       }
-           _this.sessionToken=sessionStorage.getItem("token");
-          //把每个调用的接口都写在此方法中,需要在接口中加token
-          if(_this.sessionToken!==null){
-            //不为null,本地已经存在token,调用方法
-            _this.schoolscope(_this.sessionToken);
-            _this.getactivation(_this.sessionToken);
-            _this.getCulumPersonCount(_this.sessionToken);
-            _this.GetUnitPersonCount(_this.sessionToken);
-            _this.getInitiative(_this.sessionToken);
-          }else{
-            //判断路径上有无参数,
-             //_this.postToken();
-             setTimeout(function(){ 
-              _this.whetherToken();
-            }, 1000);
-          }
-      },
-      // tourl(){
-      //   var _this=this;
-      //  window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
-      // },
+      _this.sessionToken = sessionStorage.getItem("token");
+      //把每个调用的接口都写在此方法中,需要在接口中加token
+      if (_this.sessionToken !== null) {
+        //不为null,本地已经存在token,调用方法
+        var Start =
+          this.DateTimes(this.value1[0]) != ""
+            ? this.DateTimes(this.value1[0])
+            : "";
+        var End =
+          this.DateTimes(this.value1[1]) != ""
+            ? this.DateTimes(this.value1[1])
+            : "";
+        _this.schoolscope(_this.sessionToken);
+        _this.getactivation(_this.sessionToken, Start, End, _this.ida);
+        _this.getCulumPersonCount(_this.sessionToken);
+        _this.GetUnitPersonCount(_this.sessionToken);
+        _this.getInitiative(_this.sessionToken, Start, End, _this.ida2);
+      } else {
+        //判断路径上有无参数,
+        //_this.postToken();
+        setTimeout(function() {
+          _this.whetherToken();
+        }, 1000);
+      }
+    },
+    // tourl(){
+    //   var _this=this;
+    //  window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
+    // },
+    //点击指示器,重新计算
+    pointer() {
+      var _this = this;
+      var Start =
+        this.DateTimes(this.value1[0]) != ""
+          ? this.DateTimes(this.value1[0])
+          : "";
+      var End =
+        this.DateTimes(this.value1[1]) != ""
+          ? this.DateTimes(this.value1[1])
+          : "";
+
+      _this.schoolscope(_this.sessionToken);
+      _this.getactivation(_this.sessionToken, Start, End, _this.ida);
+      _this.getCulumPersonCount(_this.sessionToken);
+      _this.GetUnitPersonCount(_this.sessionToken);
+      _this.getInitiative(_this.sessionToken, Start, End, _this.ida2);
+    },
+    // 处理时间戳
+    DateTimes(id) {
+      var result;
+      var myDate = new Date(id);
+      var yaer = myDate.getYear(); //获取当前年份(2位)
+      var fullyaer = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
+      var month = myDate.getMonth() + 1; //获取当前月份(0-11,0代表1月)
+      var date = myDate.getDate(); //获取当前日(1-31)
+      if (month < 10) {
+        month = "0" + month;
+      }
+      if (date < 10) {
+        date = "0" + date;
+      }
+      result = fullyaer.toString() + "-" + month + "-" + date;
+      return result;
+    },
     //学院范围
     schoolscope(token) {
       var _this = this;
       axios
         .get(_this.url + "options/?access_token=" + token)
         .then(function(response) {
-          _this.schoolUnits = response.data.data.units;
-          for (var i = 0; i < _this.schoolUnits.length; i++) {
-            _this.UnitsName.push(_this.schoolUnits[i].name);
+          var resD = response.data;
+          if (resD.code == 0) {
+            _this.schoolUnits = response.data.data.units;
+            for (var i = 0; i < _this.schoolUnits.length; i++) {
+              _this.haha.push(_this.schoolUnits[i]);
+              _this.UnitsName.push(_this.schoolUnits[i].name);
+              _this.unitsId.push(_this.schoolUnits[i].id);
+            }
           }
         })
         .catch(function(error) {
-           sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          //  sessionStorage.removeItem("token");//清除失效的token
+          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //第二课堂整体参与度于信息系统活跃
-    getactivation(token) {
+    getactivation(token, Start, End, Unit) {
       var _this = this;
-      axios.get(_this.url + "activation?access_token=" + token)
+      axios
+        .get(
+          _this.url +
+            "activation?access_token=" +
+            token +
+            "&Start=" +
+            Start +
+            "&End=" +
+            End +
+            "&Unit=" +
+            Unit
+        )
         .then(function(response) {
-          _this.teacherCount = response.data.data.activation.teacher_count;
-          _this.studentCount = response.data.data.activation.student_count;
-          for (var i = 0; i < response.data.data.summary.length; i++) {
-            //登录次数
-            if (response.data.data.summary[i].type == 1) {
-              _this.loginCountTitle = response.data.data.summary[i].title;
-              _this.loginCountData = response.data.data.summary[i].data;
-              _this.loginCountUnit = response.data.data.summary[i].unit;
-            }
+          var resD = response.data;
+          if (resD.code == 0) {
+            _this.teacherCount = response.data.data.activation.teacher_count;
+            _this.studentCount = response.data.data.activation.student_count;
+            for (var i = 0; i < response.data.data.summary.length; i++) {
+              //登录次数
+              if (response.data.data.summary[i].type == 1) {
+                _this.loginCountTitle = response.data.data.summary[i].title;
+                _this.loginCountData = response.data.data.summary[i].data;
+                _this.loginCountUnit = response.data.data.summary[i].unit;
+              }
 
-            //平均日活
-            if (response.data.data.summary[i].type == 3) {
-              _this.dayActiveCountTitle = response.data.data.summary[i].title;
-              _this.dayActiveCountData = response.data.data.summary[i].data;
-              _this.dayActiveCountUnit = response.data.data.summary[i].unit;
-            }
-            //月活跃度
-            if (response.data.data.summary[i].type == 4) {
-              _this.monthActiveCountTitle = response.data.data.summary[i].title;
-              _this.monthActiveCountData = response.data.data.summary[i].data;
-              _this.monthActiveCountUnit = response.data.data.summary[i].unit;
-            }
-            //人均在线
-            if (response.data.data.summary[i].type == 2) {
-              _this.onLineTitle = response.data.data.summary[i].title;
-              _this.onLineCountData = response.data.data.summary[i].data;
-              _this.onLineCountUnit = response.data.data.summary[i].unit;
-            }
-            //人均参与次数
-            if (response.data.data.summary[i].type == 11) {
-              _this.peopleJoinTitle = response.data.data.summary[i].title;
-              _this.peopleJoinCountData = response.data.data.summary[i].data;
-              _this.peopleJoinCountUnit = response.data.data.summary[i].unit;
-            }
-            //单位参与数量
-            if (response.data.data.summary[i].type == 14) {
-              _this.unitJoinTitle = response.data.data.summary[i].title;
-              _this.unitJoinCountData = response.data.data.summary[i].data;
-              _this.unitJoinCountUnit = response.data.data.summary[i].unit;
-            }
-            //学生参与总人次
-            if (response.data.data.summary[i].type == 33) {
-              _this.stuPersonTimeTitle = response.data.data.summary[i].title;
-              _this.stuPersonTimeData = response.data.data.summary[i].data;
-              _this.stuPersonTimeUnit = response.data.data.summary[i].unit;
-            }
-            //学生参与总人数
-            if (response.data.data.summary[i].type == 22) {
-              _this.stuPersonNumTitle = response.data.data.summary[i].title;
-              _this.stuPersonNumData = response.data.data.summary[i].data;
-              _this.stuPersonNumUnit = response.data.data.summary[i].unit;
-            }
-            //教职工参与人数
-            if (response.data.data.summary[i].type == 39) {
-              _this.teacherPersonTitle = response.data.data.summary[i].title;
-              _this.teacherPersonDate = response.data.data.summary[i].data;
-              _this.teacherPersonUnit = response.data.data.summary[i].unit;
+              //平均日活
+              if (response.data.data.summary[i].type == 3) {
+                _this.dayActiveCountTitle = response.data.data.summary[i].title;
+                _this.dayActiveCountData = response.data.data.summary[i].data;
+                _this.dayActiveCountUnit = response.data.data.summary[i].unit;
+              }
+              //月活跃度
+              if (response.data.data.summary[i].type == 4) {
+                _this.monthActiveCountTitle =
+                  response.data.data.summary[i].title;
+                _this.monthActiveCountData = response.data.data.summary[i].data;
+                _this.monthActiveCountUnit = response.data.data.summary[i].unit;
+              }
+              //人均在线
+              if (response.data.data.summary[i].type == 2) {
+                _this.onLineTitle = response.data.data.summary[i].title;
+                _this.onLineCountData = response.data.data.summary[i].data;
+                _this.onLineCountUnit = response.data.data.summary[i].unit;
+              }
+              //人均参与次数
+              if (response.data.data.summary[i].type == 11) {
+                _this.peopleJoinTitle = response.data.data.summary[i].title;
+                _this.peopleJoinCountData = response.data.data.summary[i].data;
+                _this.peopleJoinCountUnit = response.data.data.summary[i].unit;
+              }
+              //单位参与数量
+              if (response.data.data.summary[i].type == 14) {
+                _this.unitJoinTitle = response.data.data.summary[i].title;
+                _this.unitJoinCountData = response.data.data.summary[i].data;
+                _this.unitJoinCountUnit = response.data.data.summary[i].unit;
+              }
+              //学生参与总人次
+              if (response.data.data.summary[i].type == 33) {
+                _this.stuPersonTimeTitle = response.data.data.summary[i].title;
+                _this.stuPersonTimeData = response.data.data.summary[i].data;
+                _this.stuPersonTimeUnit = response.data.data.summary[i].unit;
+              }
+              //学生参与总人数
+              if (response.data.data.summary[i].type == 22) {
+                _this.stuPersonNumTitle = response.data.data.summary[i].title;
+                _this.stuPersonNumData = response.data.data.summary[i].data;
+                _this.stuPersonNumUnit = response.data.data.summary[i].unit;
+              }
+              //教职工参与人数
+              if (response.data.data.summary[i].type == 39) {
+                _this.teacherPersonTitle = response.data.data.summary[i].title;
+                _this.teacherPersonDate = response.data.data.summary[i].data;
+                _this.teacherPersonUnit = response.data.data.summary[i].unit;
+              }
             }
           }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
-
+          // sessionStorage.removeItem("token");//清除失效的token
+          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //请求各类课程参与人次
@@ -351,13 +449,17 @@ export default {
       axios
         .get(_this.url + "culumCount?access_token=" + token)
         .then(function(response) {
-          _this.supplyComprehensive = response.data.data;
-          _this.classPersonCake(_this.supplyComprehensive);
-          _this.switchSlide(_this.supplyComprehensive);
+          var resD = response.data;
+          if (resD.code == 0 && resD.data.length > 0) {
+            _this.supplyComprehensive = [];
+            _this.supplyComprehensive = response.data.data;
+            _this.classPersonCake(_this.supplyComprehensive);
+            _this.switchSlide(_this.supplyComprehensive);
+          }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          // sessionStorage.removeItem("token");//清除失效的token
+          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //请求各学院学生参与人次统计
@@ -366,35 +468,58 @@ export default {
       axios
         .get(_this.url + "unitCount/?access_token=" + token)
         .then(function(response) {
-          _this.UnitPersonCount = response.data;
-          _this.collegePerson(_this.UnitPersonCount);
+          var resD = response.data;
+          var arr=[];
+          var arr2=[];
+          if (resD.code == 0 && resD.data.length > 0) {
+            _this.UnitPersonCount = response.data;
+            for (var i = 0; i <  response.data.data.length; i++) {
+              arr.push( response.data.data[i].name);
+              arr2.push( response.data.data[i].count);
+            }
+            _this.collegePerson(arr,arr2);
+          }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          // sessionStorage.removeItem("token");//清除失效的token
+          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //课程参与积极性指标
-    getInitiative(token){
+    getInitiative(token, Start, End, Unit) {
       var _this = this;
       axios
-        .get(_this.url + "join_Initiative?access_token=" + token)
+        .get(
+          _this.url +
+            "join_Initiative?access_token=" +
+            token +
+            "&Start=" +
+            Start +
+            "&End=" +
+            End +
+            "&Unit=" +
+            Unit
+        )
         .then(function(response) {
-          _this.funnelData=response.data.data;
-          _this.funnel(_this.funnelData);
-          _this.watchBall(_this.funnelData);
+          var resD = response.data;
+          if (resD.code == 0 && resD.data.length > 0) {
+            _this.funnelData = response.data.data;
+            _this.funnel(_this.funnelData);
+            _this.watchBall(_this.funnelData);
+          }
         })
         .catch(function(error) {
-           sessionStorage.removeItem("token");//清除失效的token
-           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          //  sessionStorage.removeItem("token");//清除失效的token
+          //  window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //饼状图
     classPersonCake(num) {
       var _this = this;
+       var arr=[];
       for (var i = 0; i < num.length; i++) {
         Number(num[i].percent.split("%")[0]);
-        _this.openRatio.push({
+       arr.push({
           value: Number(num[i].percent.split("%")[0]),
           name: num[i].percent,
           title: num[i].name
@@ -444,7 +569,7 @@ export default {
             //   { value: 206, name: "20.6%", hintText: "文体活动类" },
             //   { value: 225, name: "22.5%", hintText: "工作履历类" }
             // ],
-            data: _this.openRatio,
+            data: arr,
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,
@@ -461,8 +586,7 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false,
-                
+                show: false
               }
             },
             label: {
@@ -480,17 +604,43 @@ export default {
     //横向柱状图
     switchSlide(num) {
       var _this = this;
+      var openTextArr=[];
+      var openDateArr=[];
       for (var i = 0; i < num.length; i++) {
-        _this.openPeopleTxt.push(num[i].name);
-        _this.openPeopleDate.push(num[i].count);
+        openTextArr.push(num[i].name);
+        openDateArr.push(num[i].count);
       }
-      _this.maxV=Math.max.apply(null,_this.openPeopleDate)!=0?Math.max.apply(null,_this.openPeopleDate):100;
-      for(var j=0;j<num.length;j++){
-        _this.maxArr.push(_this.maxV);
-        _this.maxArr2.push(_this.maxV-0.5)
+      _this.maxV =
+        Math.max.apply(null, openDateArr) != 0
+          ? Math.max.apply(null, openDateArr)
+          : 100;
+      var maxARR=[];
+      var maxARR2=[];
+      for (var j = 0; j < num.length; j++) {
+         maxARR.push(_this.maxV);
+         maxARR2.push(_this.maxV - 0.5);
       }
       let myChart = echarts.init(document.getElementById("switchSlide"));
-      let myColor = ["#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7","#52F397","#00E3E7","#00C5FF","#00C5FF","#A243DA","#D72FA7"],
+      let myColor = [
+          "#52F397",
+          "#00E3E7",
+          "#00C5FF",
+          "#00C5FF",
+          "#A243DA",
+          "#D72FA7",
+          "#52F397",
+          "#00E3E7",
+          "#00C5FF",
+          "#00C5FF",
+          "#A243DA",
+          "#D72FA7",
+          "#52F397",
+          "#00E3E7",
+          "#00C5FF",
+          "#00C5FF",
+          "#A243DA",
+          "#D72FA7"
+        ],
         option = {
           title: {
             text: "各类课程参与学生数比例",
@@ -524,7 +674,7 @@ export default {
                   fontSize: "10"
                 }
               },
-              data: _this.openPeopleTxt
+              data: openTextArr
             },
             {
               axisTick: "none",
@@ -558,7 +708,7 @@ export default {
               name: "条",
               type: "bar",
               yAxisIndex: 0,
-              data: _this.openPeopleDate,
+              data: openDateArr,
               label: {
                 normal: {
                   show: true,
@@ -587,11 +737,11 @@ export default {
               yAxisIndex: 1,
               barGap: "-100%",
               // data: [20.11, 10, 20, 30, 100, 100, 100, 100, 100],
-              data:_this.maxArr2,
+              data: maxARR2,
               barWidth: 10,
               itemStyle: {
                 normal: {
-                color: '#0e2147',
+                  color: "#0e2147",
                   barBorderRadius: 5
                 }
               },
@@ -613,14 +763,14 @@ export default {
               //   100,
               //   100
               // ],
-              data:_this.maxArr,
+              data: maxARR,
               barWidth: 12,
               itemStyle: {
                 normal: {
-                color: function(params) {
-                        var num = myColor.length;
-                        return myColor[params.dataIndex % num]
-                },
+                  color: function(params) {
+                    var num = myColor.length;
+                    return myColor[params.dataIndex % num];
+                  },
                   barBorderRadius: 5
                 }
               },
@@ -650,16 +800,12 @@ export default {
       myChart.setOption(option);
     },
     //柱状图
-    collegePerson(num) {
+    collegePerson(perpleStatisticsTitle,perpleStatisticsNumber) {
       var _this = this;
-      for (var i = 0; i < num.data.length; i++) {
-        _this.perpleStatisticsTitle.push(num.data[i].name);
-        _this.perpleStatisticsNumber.push(num.data[i].count);
-      }
-
+      var arr=[];
       let myChart = echarts.init(document.getElementById("collegePerson"));
-      var dataAxis = _this.perpleStatisticsTitle;
-      var data = _this.perpleStatisticsNumber;
+      var dataAxis = perpleStatisticsTitle;
+      var data =perpleStatisticsNumber;
       let option = {
         tooltip: {
           trigger: "axis",
@@ -675,12 +821,12 @@ export default {
         },
         grid: {
           borderWidth: 0,
-          top: '20',
-          bottom: 'auto',
-          left: 'auto',
-          right: 'auto',
-          height:'auto',
-          width:'auto',
+          top: "20",
+          bottom: "auto",
+          left: "auto",
+          right: "auto",
+          height: "auto",
+          width: "auto",
           containLabel: true,
           textStyle: {
             color: "#fff"
@@ -810,19 +956,19 @@ export default {
     },
     //水球图
     watchBall(num) {
-      var _this=this;
-      for(var i=0;i<num.length;i++){
-        if(num[i].type==34){
-          _this.classNeedTitle=num[i].title;
-          _this.classNeedData=num[i].data;
-          _this.classNeedUnit=num[i].unit;
-          _this.classNeedCalcData=(num[i].data)/100;
+      var _this = this;
+      for (var i = 0; i < num.length; i++) {
+        if (num[i].type == 34) {
+          _this.classNeedTitle = num[i].title;
+          _this.classNeedData = num[i].data;
+          _this.classNeedUnit = num[i].unit;
+          _this.classNeedCalcData = num[i].data / 100;
         }
       }
 
       let myChart = echarts.init(document.getElementById("circlePic"));
       let option = {
-                    title: {
+        title: {
           text: "到场与课程供给比例",
           x: "center",
           y: "bottom",
@@ -845,7 +991,7 @@ export default {
                 style: {
                   fill: "#fff",
                   text: _this.classNeedTitle,
-                  font: "20px Microsoft YaHei",
+                  font: "20px Microsoft YaHei"
                 }
               }
             ]
@@ -857,7 +1003,7 @@ export default {
             name: "50",
             data: [
               {
-                name: _this.classNeedData+_this.classNeedUnit,
+                name: _this.classNeedData + _this.classNeedUnit,
                 value: _this.classNeedCalcData
               }
             ],
@@ -873,8 +1019,8 @@ export default {
                   color: ["rgba(0,197,255,27%)"] // 0% 处的颜色
                 },
                 {
-                  offset:0.5,
-                  color:["rgba(162,67,218,76%)"]
+                  offset: 0.5,
+                  color: ["rgba(162,67,218,76%)"]
                 },
                 {
                   offset: 0,
@@ -892,7 +1038,7 @@ export default {
             },
             backgroundStyle: {
               borderWidth: 1,
-              borderColor: "rgba(0,197,255, 100%)",
+              borderColor: "rgba(0,197,255, 100%)"
               // color: ["rgba(255,255,255, 0)"]
             },
             itemStyle: {
@@ -920,23 +1066,23 @@ export default {
     },
     //漏斗图
     funnel(num) {
-      var _this=this;
-      for(var i=0;i<num.length;i++){
+      var _this = this;
+      for (var i = 0; i < num.length; i++) {
         //查看
-        if(num[i].type==35){
-          _this.look=num[i];
+        if (num[i].type == 35) {
+          _this.look = num[i];
         }
         //报名
-        if(num[i].type==36){
-          _this.Apply=num[i];
+        if (num[i].type == 36) {
+          _this.Apply = num[i];
         }
         //签到
-        if(num[i].type==37){
-          _this.sign=num[i];
+        if (num[i].type == 37) {
+          _this.sign = num[i];
         }
         //认定
-        if(num[i].type==38){
-          _this.affirm=num[i];
+        if (num[i].type == 38) {
+          _this.affirm = num[i];
         }
       }
       //拼数组
@@ -947,8 +1093,8 @@ export default {
       }
       let myChart = echarts.init(document.getElementById("funnel"));
       let option = {
-    color:_this.bigColor,
-            title: {
+        color: _this.bigColor,
+        title: {
           text: "参与漏斗图",
           x: "center",
           y: "bottom",
@@ -957,66 +1103,81 @@ export default {
             fontSize: "0.14rem"
           }
         },
-    tooltip: {
-        trigger: 'item',
-        // formatter: "查看 : 1.58万次"
-        formatter:function(params){
-          return _this.funnelTitle[params.dataIndex]+":"+_this.funneldataOther[params.dataIndex]+_this.funneltherUnit[params.dataIndex];
-        }
-    },
+        tooltip: {
+          trigger: "item",
+          // formatter: "查看 : 1.58万次"
+          formatter: function(params) {
+            return (
+              _this.funnelTitle[params.dataIndex] +
+              ":" +
+              _this.funneldataOther[params.dataIndex] +
+              _this.funneltherUnit[params.dataIndex]
+            );
+          }
+        },
 
-    calculable: true,
-    series: [
-        {
-            name:'漏斗图',
-            type:'funnel',
-            left: '10%',
+        calculable: true,
+        series: [
+          {
+            name: "漏斗图",
+            type: "funnel",
+            left: "10%",
             top: 60,
             bottom: 60,
-            width: '80%',
+            width: "80%",
             min: 0,
             max: 100,
-            minSize: '0%',
-            maxSize: '100%',
-            sort: 'descending',
+            minSize: "0%",
+            maxSize: "100%",
+            sort: "descending",
             gap: 2,
             label: {
-                normal: {
-                    show: true,
-                    position: 'inside'
-                },
-                emphasis: {
-                    textStyle: {
-                        fontSize: 20
-                    }
+              normal: {
+                show: true,
+                position: "inside"
+              },
+              emphasis: {
+                textStyle: {
+                  fontSize: 20
                 }
+              }
             },
             labelLine: {
-                normal: {
-                    length: 10,
-                    lineStyle: {
-                        width: 1,
-                        type: 'solid'
-                    }
+              normal: {
+                length: 10,
+                lineStyle: {
+                  width: 1,
+                  type: "solid"
                 }
+              }
             },
             itemStyle: {
-                normal: {
-                    borderColor: '#fff',
-                    borderWidth: 1
-                }
+              normal: {
+                borderColor: "#fff",
+                borderWidth: 1
+              }
             },
             data: [
-                {value:_this.look.data, name: _this.look.data+_this.look.unit},
-                {value:_this.Apply.data, name: _this.Apply.data+_this.Apply.unit},
-                {value:_this.sign.data, name: _this.sign.data+_this.sign.unit},
-                {value:_this.affirm.data, name: _this.affirm.data+_this.affirm.unit},
-                
+              {
+                value: _this.look.data,
+                name: _this.look.data + _this.look.unit
+              },
+              {
+                value: _this.Apply.data,
+                name: _this.Apply.data + _this.Apply.unit
+              },
+              {
+                value: _this.sign.data,
+                name: _this.sign.data + _this.sign.unit
+              },
+              {
+                value: _this.affirm.data,
+                name: _this.affirm.data + _this.affirm.unit
+              }
             ]
-        }
-    ]
-};
-
+          }
+        ]
+      };
 
       window.onresize = myChart.resize();
       myChart.setOption(option);
@@ -1113,6 +1274,7 @@ option {
   text-align: center;
   line-height: 0.3rem;
   margin-left: 0.1rem;
+  cursor: pointer;
 }
 .box-content {
   margin-left: 0.4rem;
@@ -1159,9 +1321,9 @@ option {
   width: 60%;
   font-size: 0.14rem;
 }
-.box-item-title-right{
-    width: 40%;
-    display: flex;
+.box-item-title-right {
+  width: 40%;
+  display: flex;
   justify-content: space-between;
 }
 .box-item-title-right span {
@@ -1218,7 +1380,7 @@ select {
   height: 2.5rem;
 }
 .liveness {
-  font-size: 0.10rem;
+  font-size: 0.1rem;
   margin: 0 auto;
   width: 80%;
   margin-top: 0.5rem;
@@ -1235,7 +1397,6 @@ select {
 .liveness-top > div:nth-child(1) {
   width: 0.68rem;
   height: 0.68rem;
-
 }
 .liveness-top > div:nth-child(2) {
   width: 1.3rem;

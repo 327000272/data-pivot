@@ -15,7 +15,7 @@
             class="data-picker"
           ></el-date-picker>
         </div>
-        <div class="fx-btn">运算</div>
+        <div class="fx-btn" @click="pointer()">运算</div>
       </div>
     </div>
     <!-- 四块主内容 -->
@@ -62,9 +62,9 @@
             </div>
             <div class="box-item-title-right">
               <span>学院范围</span>
-              <select>
+              <select @change="change($event)">
                 <option>全部</option>
-                <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
+                <option v-for="item in haha" :key="item.index" :value="item.id">{{item.name}}</option>
               </select>
               <!-- <span class="iconfont iconduobianxing"></span> -->
             </div>
@@ -118,9 +118,9 @@
             </div>
             <div class="box-item-title-right">
               <span>学院范围</span>
-              <select>
+              <select @change="change2($event)">
                 <option>全部</option>
-                <option v-for="item in UnitsName" :key="item.id" :value="item">{{item}}</option>
+                <option v-for="item in haha" :key="item.index" :value="item.id">{{item.name}}</option>
               </select>
             </div>
           </div>
@@ -151,10 +151,8 @@ export default {
       //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNTM2NzgsImV4cCI6MTU3NzM1NzI3OCwiaWF0IjoxNTc3MzUzNjc4fQ.o3NYOAZFhH4u0PZ6erMUTB6Atv0kbT16XD10Tcl5SMQ",
       // url: "https://class-ms-test.univteam.com/",
       url: "https://classroom.univteam.com/",
-      back_url:"http://class-admin.univteam.com/",
-      value1: "", //日期
-      value2: "",
-      debug:true,
+      back_url: "http://class-admin.univteam.com/",
+      value1: [new Date(2019, 10, 29), new Date(2019, 11, 29)], //日期
       Condition: [],
       Comment: [],
       evaluateNum: "",
@@ -181,6 +179,11 @@ export default {
       sessionToken: "",
       platform: "",
       PlatDetail: "",
+      unitsId: [],
+      haha: [],
+      openclassOne: "",
+      ida: 0,
+      ida2: 0,
       bigColor: [
         "#52F397",
         "#00E3E7",
@@ -215,6 +218,18 @@ export default {
     this.whetherToken();
   },
   methods: {
+    change(event) {
+      var _this = this;
+      // console.log(event.target.value)
+      _this.ida = event.target.value;
+      console.log(_this.ida);
+    },
+    change2() {
+      var _this = this;
+      // console.log(event.target.value)
+      _this.ida2 = event.target.value;
+      console.log(_this.ida2);
+    },
     fetchData() {
       console.log("路由发送变化doing...");
     },
@@ -223,64 +238,97 @@ export default {
       console.log("进入了whetherToken");
       var _this = this;
       _this.platform = this.$route.params.id;
-      switch(_this.platform){
-          case 'whu':
-            _this.url="http://app.dekt.whu.edu.cn/whu/";
-            _this.back_url="http://dekt.whu.edu.cn/whu/";
-            break;
-            default:
-             _this.url="https://classroom.univteam.com/"+_this.platform+"/Statistics/";
-            _this.back_url="http://class-admin.univteam.com/";
-            break;
+      switch (_this.platform) {
+        case "whu":
+          _this.url = "http://app.dekt.whu.edu.cn/whu/";
+          _this.back_url = "http://dekt.whu.edu.cn/whu/";
+          break;
+        default:
+          _this.url =
+            "https://classroom.univteam.com/" + _this.platform + "/Statistics/";
+          _this.back_url = "http://class-admin.univteam.com/";
+          break;
       }
       _this.sessionToken = sessionStorage.getItem("token");
       //把每个调用的接口都写在此方法中,需要在接口中加token
       if (_this.sessionToken !== null) {
         console.log("sessionToken:" + _this.sessionToken);
         //不为null,本地已经存在token,调用方法
-          _this.getInfos();
+        _this.getInfos();
       } else {
         //判断路径上有无参数,
-        setTimeout(function(){ 
+        setTimeout(function() {
           _this.whetherToken();
-         }, 1000);
+        }, 1000);
 
-        
         //_this.postToken();
       }
     },
-    getInfos(){
-        var _this = this;
-        _this.schoolscope(_this.sessionToken);
-        _this.getCondition(_this.sessionToken);
-        _this.getComment(_this.sessionToken);
-        _this.getsupply(_this.sessionToken);
-        _this.getline(_this.sessionToken);
-        _this.getCourseSupply(_this.sessionToken);
-        _this.GetPlatDetail(_this.sessionToken);
+    getInfos() {
+      var _this = this;
+      var Start =
+        this.DateTimes(this.value1[0]) != ""
+          ? this.DateTimes(this.value1[0])
+          : "";
+      var End =
+        this.DateTimes(this.value1[1]) != ""
+          ? this.DateTimes(this.value1[1])
+          : "";
+      _this.schoolscope(_this.sessionToken);
+      _this.getCondition(_this.sessionToken);
+      _this.getComment(_this.sessionToken);
+      _this.getsupply(_this.sessionToken, Start, End, _this.ida);
+      _this.getline(_this.sessionToken, Start, End, _this.ida2);
+      _this.getCourseSupply(_this.sessionToken);
+      _this.GetPlatDetail(_this.sessionToken);
     },
-    
+    //点击指示器,重新运算
+    pointer() {
+      var _this = this;
+      _this.getInfos();
+    },
+    // 处理时间戳
+    DateTimes(id) {
+      var result;
+      var myDate = new Date(id);
+      var yaer = myDate.getYear(); //获取当前年份(2位)
+      var fullyaer = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
+      var month = myDate.getMonth() + 1; //获取当前月份(0-11,0代表1月)
+      var date = myDate.getDate(); //获取当前日(1-31)
+      if (month < 10) {
+        month = "0" + month;
+      }
+      if (date < 10) {
+        date = "0" + date;
+      }
+      result = fullyaer.toString() + "-" + month + "-" + date;
+      return result;
+    },
     //获取饼状图中间的学校logo
     GetPlatDetail(token) {
       var _this = this;
       // axios.get(_this.url + "api/Plat/plat/detail?access_token=" + token)
-        axios.get(_this.url + "plat_detail?access_token=" + token)
+      axios
+        .get(_this.url + "plat_detail?access_token=" + token)
         .then(function(response) {
           _this.PlatDetail = response.data.data.logo;
           axios
             .get(_this.url + "course_supply?access_token=" + token)
             .then(function(response) {
-              _this.supplyComprehensive = response.data.data;
-              _this.classNum(_this.supplyComprehensive);
-              _this.classNumber(_this.supplyComprehensive, _this.PlatDetail);
+              var resD = response.data;
+              if (resD.code == 0) {
+                _this.supplyComprehensive = response.data.data;
+                // _this.classNum(_this.supplyComprehensive);
+                // _this.classNumber(_this.supplyComprehensive, _this.PlatDetail);
+              }
             })
             .catch(function(error) {
-              sessionStorage.removeItem("token"); //清除失效的token
+              //sessionStorage.removeItem("token"); //清除失效的token
               _this.tourl(_this.platform);
             });
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
+          //sessionStorage.removeItem("token"); //清除失效的token
           _this.tourl(_this.platform);
         });
     },
@@ -288,34 +336,43 @@ export default {
     schoolscope(token) {
       var _this = this;
       // axios.get(_this.url + "api/Plat/options/?access_token=" + token)
-      axios.get(_this.url + "options?access_token=" + token)
+      axios
+        .get(_this.url + "options?access_token=" + token)
         .then(function(response) {
+          var resD = response.data;
+          if (resD.code == 0) {
             _this.schoolUnits = response.data.data.units;
             for (var i = 0; i < _this.schoolUnits.length; i++) {
+              _this.haha.push(_this.schoolUnits[i]);
               _this.UnitsName.push(_this.schoolUnits[i].name);
+              _this.unitsId.push(_this.schoolUnits[i].id);
             }
-
+          }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
+          //sessionStorage.removeItem("token"); //清除失效的token
           _this.tourl(_this.platform);
         });
     },
     tourl(platName) {
-       console.log("跳转到admin");
-       var _this = this;
+      console.log("跳转到admin");
+      var _this = this;
       //window.location.href =_this.back_url +platName +"/account/login?back=statistics";
     },
     //课程开展总览
     getCondition(token) {
       var _this = this;
       // axios.get(_this.url + "api/Plat/course/condition?access_token=" + token)
-      axios.get(_this.url + "course_condition?access_token=" + token)
+      axios
+        .get(_this.url + "course_condition?access_token=" + token)
         .then(function(response) {
-          _this.Condition = response.data.data;
+          var resD = response.data;
+          if (resD.code == 0 && resD.data.length > 0) {
+            _this.Condition = response.data.data;
+          }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
+          //sessionStorage.removeItem("token"); //清除失效的token
           _this.tourl(_this.platform);
         });
     },
@@ -323,70 +380,103 @@ export default {
     getComment(token) {
       var _this = this;
       // axios.get(_this.url + "api/Plat/course/comment?access_token=" + token)
-        axios.get(_this.url + "course_comment?access_token=" + token)
+      axios
+        .get(_this.url + "course_comment?access_token=" + token)
         .then(function(response) {
-          _this.Comment = response.data.data;
-          for (var i = 0; i < _this.Comment.length; i++) {
-            //保存评价数
-            if (_this.Comment[i].type == 15) {
-              _this.evaluateNum = _this.Comment[i];
+          var resD = response.data;
+          if (resD.code == 0 && resD.data.length > 0) {
+            _this.Comment = response.data.data;
+            for (var i = 0; i < _this.Comment.length; i++) {
+              //保存评价数
+              if (_this.Comment[i].type == 15) {
+                _this.evaluateNum = _this.Comment[i];
+              }
+              //保存参与率
+              if (_this.Comment[i].type == 16) {
+                _this.participationRate = _this.Comment[i];
+              }
+              //保存好评率
+              if (_this.Comment[i].type == 6) {
+                _this.good = _this.Comment[i];
+              }
+              //保存中评率
+              if (_this.Comment[i].type == 17) {
+                _this.middle = _this.Comment[i];
+              }
+              //保存差评率
+              if (_this.Comment[i].type == 6) {
+                _this.bad = _this.Comment[i];
+              }
             }
-            //保存参与率
-            if (_this.Comment[i].type == 16) {
-              _this.participationRate = _this.Comment[i];
-            }
-            //保存好评率
-            if (_this.Comment[i].type == 6) {
-              _this.good = _this.Comment[i];
-            }
-            //保存中评率
-            if (_this.Comment[i].type == 17) {
-              _this.middle = _this.Comment[i];
-            }
-            //保存差评率
-            if (_this.Comment[i].type == 6) {
-              _this.bad = _this.Comment[i];
-            }
+            // _this.satisfactionDegree=Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3;
+            var hao = Number(_this.good.data);
+            var zhong = Number(_this.middle.data);
+            var huai = Number(_this.bad.data);
+            _this.satisfactionDegree = Math.ceil((hao + zhong + huai) / 3);
+            _this.satisfaction(_this.satisfactionDegree);
           }
-          // _this.satisfactionDegree=Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3;
-          var hao = Number(_this.good.data);
-          var zhong = Number(_this.middle.data);
-          var huai = Number(_this.bad.data);
-          _this.satisfactionDegree = Math.ceil((hao + zhong + huai) / 3);
-          _this.satisfaction(_this.satisfactionDegree);
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
+          //sessionStorage.removeItem("token"); //清除失效的token
           _this.tourl(_this.platform);
         });
     },
-    //请求各类课程开课情况数据
-    getsupply(token) {
+    //请求各类课程开课情况
+    getsupply(token, Start, End, Unit) {
       var _this = this;
       // axios.get(_this.url + "api/Plat/course/supply?access_token=" + token)
-      axios.get(_this.url + "course_supply?access_token=" + token)
+      axios
+        .get(
+          _this.url +
+            "course_supply?access_token=" +
+            token +
+            "&Start=" +
+            Start +
+            "&End=" +
+            End +
+            "&Unit=" +
+            Unit
+        )
         .then(function(response) {
-          _this.supplyComprehensive = response.data.data;
-          _this.classNum(_this.supplyComprehensive);
-          _this.classNumber(_this.supplyComprehensive);
-        })
-        .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
-        });
-    },
-    //请求课程开展分时情况
-    getline(token) {
-      var _this = this;
-      axios.get(_this.url + "course_line?access_token=" + token)
-        .then(function(res) {
-          _this.line = res.data.data;
-          _this.date_condition(_this.line);
-          for (var i = 0; i < res.data.data.length; i++) {
-            _this.lineName.push(res.data.data[i].name);
+          var resD = response.data;
+          if (resD.code == 0 && resD.data.length > 0) {
+            _this.supplyComprehensive = response.data.data;
+            _this.classNum(_this.supplyComprehensive);
+            _this.classNumber(_this.supplyComprehensive);
           }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
+          //sessionStorage.removeItem("token"); //清除失效的token
+        });
+    },
+    //请求课程开展分时情况
+    getline(token, Start, End, Unit) {
+      var _this = this;
+      axios
+        .get(
+          _this.url +
+            "course_line?access_token=" +
+            token +
+            "&Start=" +
+            Start +
+            "&End=" +
+            End +
+            "&Unit=" +
+            Unit
+        )
+        .then(function(res) {
+          var resD = res.data;
+          if (resD.code == 0 && resD.data.length > 0) {
+            _this.line = resD.data;
+            _this.date_condition(_this.line);
+            _this.lineName=[];
+            for (var i = 0; i < res.data.data.length; i++) {
+              _this.lineName.push(res.data.data[i].name);
+            }
+          }
+        })
+        .catch(function(error) {
+          //sessionStorage.removeItem("token"); //清除失效的token
           _this.tourl(_this.platform);
         });
     },
@@ -395,13 +485,17 @@ export default {
     getCourseSupply(token) {
       var _this = this;
       // axios.get(_this.url + "api/Plat/course/rank?unit=0&access_token=" + token)
-      axios.get(_this.url + "course_rank?unit=0&access_token=" + token)
+      axios
+        .get(_this.url + "course_rank?unit=0&access_token=" + token)
         .then(function(response) {
-          _this.courseSupply = response.data.data;
+          var resD = response.data;
+          if (resD.code == 0 && resD.data.length > 0) {
+            _this.courseSupply = response.data.data;
+          }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
-          _this.tourl(_this.platform);
+          //sessionStorage.removeItem("token"); //清除失效的token
+          // _this.tourl(_this.platform);
         });
     },
     //仪表盘
@@ -624,8 +718,10 @@ export default {
     //饼状图
     classNumber(num) {
       var _this = this;
+      var arr=[];
+      _this.openClassName=[];
       for (var i = 0; i < num.length; i++) {
-        _this.openRatio.push({
+         arr.push({
           value: num[i].percent,
           name: num[i].percent + "%",
           title: num[i].title
@@ -657,7 +753,7 @@ export default {
             image: _this.PlatDetail,
             width: 100,
             height: 100,
-            position:[10,20],
+            position: [10, 20]
             // center: ["10%", "10%"]
           }
         },
@@ -667,15 +763,7 @@ export default {
             type: "pie",
             radius: ["30%", "70%"],
             center: ["50%", "45%"],
-            // data: [
-            //   { value: 90, name: "9.0%", hintText: "思想成长类" },
-            //   { value: 126, name: "12.6%", hintText: "实践实习类" },
-            //   { value: 170, name: "17.0%", hintText: "志愿服务类" },
-            //   { value: 183, name: "18.3%", hintText: "学术科技类" },
-            //   { value: 206, name: "20.6%", hintText: "文体活动类" },
-            //   { value: 225, name: "22.5%", hintText: "工作履历类" }
-            // ],
-            data: _this.openRatio,
+            data: arr,
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,
@@ -710,11 +798,14 @@ export default {
     //异性图
     classNum(num) {
       var _this = this;
+        var openNumArr=[];
+        var heteExtentArr=[]
       for (var i = 0; i < num.length; i++) {
         //各类课程开设数量
-        _this.openNum.push(num[i].count);
-        _this.heteExtent.push({ value: num[i].count, title: num[i].title });
-        _this.openClassName.push(num[i].title);
+
+        openNumArr.push(num[i].count);
+        heteExtentArr.push({ value: num[i].count, title: num[i].title });
+        // _this.openClassName.push(num[i].title);
       }
       let myChart = echarts.init(document.getElementById("classNum"));
       let option = {
@@ -737,7 +828,7 @@ export default {
           }
         },
         xAxis: {
-          data: _this.openNum,
+          data: openNumArr,
           axisTick: { show: false },
           axisLine: { show: false },
           axisLabel: {
@@ -771,17 +862,7 @@ export default {
                 opacity: 1
               }
             },
-            // data: [
-            //   { value: 303},
-            //   { value: 265},
-            //   { value: 213},
-            //   { value: 210},
-            //   { value: 203},
-            //   { value: 199},
-            //   { value: 199},
-            //   { value: 199}
-            // ]
-            data: _this.heteExtent
+            data: heteExtentArr
           }
         ]
       };
@@ -792,9 +873,9 @@ export default {
     date_condition(num) {
       var _this = this;
       var arrSeries = [];
-      console.log(num);
+      var startArr=[];
       for (var a = 0; a < num[0].datas.length; a++) {
-        _this.start.push(num[0].datas[a].start + "~" + num[0].datas[a].end);
+        startArr.push(num[0].datas[a].start + "~" + num[0].datas[a].end);
       }
       var allList = [];
       for (var i = 0; i < num.length; i++) {
@@ -924,7 +1005,7 @@ export default {
             //   "3/10~3/17",
             //   "3/10~3/17"
             // ]
-            data: _this.start
+            data: startArr
             // data:linedate
           }
         ],
@@ -1063,6 +1144,7 @@ option {
   text-align: center;
   line-height: 0.3rem;
   margin-left: 0.1rem;
+  cursor: pointer;
 }
 
 .box-content {
@@ -1350,17 +1432,15 @@ option {
   display: flex;
   width: 60%;
   font-size: 0.14rem;
- 
 }
 .box-item-title-right {
   width: 40%;
-    display: flex;
+  display: flex;
   justify-content: space-between;
 }
 .box-item-title-right span {
   opacity: 0.5;
   font-size: 0.14rem;
-
 }
 select {
   appearance: none;
@@ -1384,11 +1464,9 @@ select {
   background-size: 7%;
   /* margin-left: 0.3rem; */
   margin-right: 0.1rem;
-  
 }
-option{
+option {
   width: 20px;
-  
 }
 .evaluatePart-box {
   width: 2.5rem;
@@ -1432,36 +1510,29 @@ option{
   font-size: 0.26rem;
 }
 ::-webkit-scrollbar {
+  /*滚动条整体样式*/
 
-/*滚动条整体样式*/
+  width: 14px; /*高宽分别对应横竖滚动条的尺寸*/
 
-width: 14px; /*高宽分别对应横竖滚动条的尺寸*/
-
-height: 14px;
-
+  height: 14px;
 }
 ::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
 
-/*滚动条里面小方块*/
+  border-radius: 5px;
 
-border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 
--webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-
-background: rgba(0, 0, 0, 0.2);
-
+  background: rgba(0, 0, 0, 0.2);
 }
 
 ::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
 
-/*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 
--webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 0;
 
-border-radius: 0;
-
-background: rgba(0, 0, 0, 0.1);
-
+  background: rgba(0, 0, 0, 0.1);
 }
-
 </style>
