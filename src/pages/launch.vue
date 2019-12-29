@@ -318,8 +318,8 @@ export default {
               var resD = response.data;
               if (resD.code == 0) {
                 _this.supplyComprehensive = response.data.data;
-                // _this.classNum(_this.supplyComprehensive);
-                // _this.classNumber(_this.supplyComprehensive, _this.PlatDetail);
+                _this.classNum(_this.supplyComprehensive);
+                _this.classNumber(_this.supplyComprehensive, _this.PlatDetail);
               }
             })
             .catch(function(error) {
@@ -1346,16 +1346,13 @@ option {
 .box-item-pic {
   display: flex;
   justify-content: space-between;
-  /* border-bottom: 0.02rem #08263c solid; */
   margin-top: 0.3rem;
 }
 .classNumCircle {
-  /* width: 2.59rem; */
   width: 50%;
   height: 2.29rem;
 }
 .classNum {
-  /* width: 4.1rem; */
   width: 50%;
   height: 2.29rem;
 }
@@ -1376,7 +1373,7 @@ option {
 }
 .echarts-legend-box {
   display: flex;
-  /* justify-content:center; */
+  justify-content:space-between;
   margin: 0 auto;
   width: 100%;
   white-space: nowrap;
@@ -1386,7 +1383,7 @@ option {
   border-top: 0.02rem #08263c solid;
 }
 .echarts-legend-box2 {
-  justify-content: center;
+  justify-content:space-between;
 }
 .echarts-legend-box .echarts-legend-item:nth-child(1) .echarts-legend-item-bar {
   background-color: #52f397;
