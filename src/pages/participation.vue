@@ -43,7 +43,7 @@
               <span>学院范围</span>
               <select @change="change($event)">
                 <option>全部</option>
-                <option v-for="item in haha" :key="item.index" :value="item.id">{{item.name}}</option>
+                <option v-for="item in schoolRange" :key="item.index" :value="item.id">{{item.name}}</option>
               </select>
             </div>
           </div>
@@ -127,7 +127,7 @@
               <span>学院范围</span>
               <select @change="change2($event)">
                 <option>全部</option>
-                <option v-for="item in haha" :key="item.index" :value="item.id">{{item.name}}</option>
+                <option v-for="item in schoolRange" :key="item.index" :value="item.id">{{item.name}}</option>
               </select>
             </div>
           </div>
@@ -156,7 +156,7 @@ export default {
       // url: "https://class-ms-test.univteam.com/",
       url: "https://classroom.univteam.com/",
       back_url: "http://class-admin.univteam.com/",
-      value1: [new Date(2019, 10, 29), new Date(2019, 11, 29)], //日期
+      value1: [new Date(new Date - 1000 * 60 * 60 * 24 * 30), new Date], //日期
       youShow: true,
       zuoShow: false,
       supplyComprehensive: [],
@@ -217,7 +217,7 @@ export default {
       maxV: "",
       ida: 0,
       ida2: 0,
-      haha: [],
+      schoolRange: [],
       maxArr: [],
       maxArr2: [],
       bigColor: [
@@ -264,7 +264,7 @@ export default {
       _this.platform = this.$route.params.id;
       switch (_this.platform) {
         case "whu":
-          _this.url = "http://app.dekt.whu.edu.cn/whu/";
+          _this.url = "http://app.dekt.whu.edu.cn/whu/Statistics/";
           _this.back_url = "http://dekt.whu.edu.cn/whu/";
           break;
         default:
@@ -347,15 +347,15 @@ export default {
           if (resD.code == 0) {
             _this.schoolUnits = response.data.data.units;
             for (var i = 0; i < _this.schoolUnits.length; i++) {
-              _this.haha.push(_this.schoolUnits[i]);
+              _this.schoolRange.push(_this.schoolUnits[i]);
               _this.UnitsName.push(_this.schoolUnits[i].name);
               _this.unitsId.push(_this.schoolUnits[i].id);
             }
           }
         })
         .catch(function(error) {
-          //  sessionStorage.removeItem("token");//清除失效的token
-          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+            sessionStorage.removeItem("token");//清除失效的token
+           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //第二课堂整体参与度于信息系统活跃
@@ -439,8 +439,8 @@ export default {
           }
         })
         .catch(function(error) {
-          // sessionStorage.removeItem("token");//清除失效的token
-          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+           sessionStorage.removeItem("token");//清除失效的token
+           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //请求各类课程参与人次
@@ -458,8 +458,8 @@ export default {
           }
         })
         .catch(function(error) {
-          // sessionStorage.removeItem("token");//清除失效的token
-          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+           sessionStorage.removeItem("token");//清除失效的token
+           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //请求各学院学生参与人次统计
@@ -481,8 +481,8 @@ export default {
           }
         })
         .catch(function(error) {
-          // sessionStorage.removeItem("token");//清除失效的token
-          // window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+           sessionStorage.removeItem("token");//清除失效的token
+           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //课程参与积极性指标
@@ -509,8 +509,8 @@ export default {
           }
         })
         .catch(function(error) {
-          //  sessionStorage.removeItem("token");//清除失效的token
-          //  window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+            sessionStorage.removeItem("token");//清除失效的token
+            window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     //饼状图
@@ -528,47 +528,27 @@ export default {
       let myChart = echarts.init(document.getElementById("classPersonCake"));
       let option = {
         title: {
-          text: "各类课程参与学生数比例",
-          x: "center",
-          y: "bottom",
-          textStyle: {
-            color: "rgba(255,255,255,0.5)",
-            fontSize: "0.14rem"
-          }
-        },
+            text: "各类课程参与学生数比例",
+            x: "center",
+            y: "bottom",
+            textStyle: {
+              color: "rgba(255,255,255,0.5)",
+              fontSize: "0.14rem"
+            }
+          },
+
         tooltip: {
           trigger: "item",
           formatter: function(params) {
             return params.data.title + " : " + params.data.name;
           }
         },
-        graphic: {
-          type: "text",
-          left: "center",
-          top: "center",
-          style: {
-            text: "各类占比",
-            fill: "#fff",
-            textAlign: "middle",
-            textVerticalAlign: "middle",
-            fontSize: "0.14rem"
-          }
-        },
-
         series: [
           {
             name: "",
             type: "pie",
             radius: ["30%", "70%"],
             center: ["50%", "45%"],
-            // data: [
-            //   { value: 90, name: "9.0%", hintText: "思想成长类" },
-            //   { value: 126, name: "12.6%", hintText: "实践实习类" },
-            //   { value: 170, name: "17.0%", hintText: "志愿服务类" },
-            //   { value: 183, name: "18.3%", hintText: "学术科技类" },
-            //   { value: 206, name: "20.6%", hintText: "文体活动类" },
-            //   { value: 225, name: "22.5%", hintText: "工作履历类" }
-            // ],
             data: arr,
             itemStyle: {
               emphasis: {
@@ -591,7 +571,12 @@ export default {
             },
             label: {
               normal: {
-                position: "inner"
+                position: "center",
+                  formatter: () => {
+                  return '各类\n占比 '
+                },
+                color:'#fff',
+                fontSize:14
               }
             }
           }
@@ -606,19 +591,23 @@ export default {
       var _this = this;
       var openTextArr=[];
       var openDateArr=[];
+      //声明外圆位置的数组,数组为-50的时候,位置正合适
+      var circlePosition=[];
       for (var i = 0; i < num.length; i++) {
         openTextArr.push(num[i].name);
         openDateArr.push(num[i].count);
+        circlePosition.push(-2);
       }
+
+      //取出数组中的最大值,将最大值设置为柱状图中的最大长度
       _this.maxV =
-        Math.max.apply(null, openDateArr) != 0
-          ? Math.max.apply(null, openDateArr)
+        Math.max.apply(null, openDateArr) != 0? 
+        Math.max.apply(null, openDateArr)
           : 100;
+
       var maxARR=[];
-      var maxARR2=[];
       for (var j = 0; j < num.length; j++) {
          maxARR.push(_this.maxV);
-         maxARR2.push(_this.maxV - 0.5);
       }
       let myChart = echarts.init(document.getElementById("switchSlide"));
       let myColor = [
@@ -643,7 +632,7 @@ export default {
         ],
         option = {
           title: {
-            text: "各类课程参与学生数比例",
+            text: "各类课程参与学生人数",
             x: "center",
             y: "bottom",
             textStyle: {
@@ -705,10 +694,11 @@ export default {
 
           series: [
             {
-              name: "条",
+              name: "条",//进度条的长度
               type: "bar",
               yAxisIndex: 0,
               data: openDateArr,
+              // data:[1805,1406,1020,198,405,502,10,2,0,],
               label: {
                 normal: {
                   show: true,
@@ -732,12 +722,12 @@ export default {
             },
 
             {
-              name: "白框",
+              name: "白框",//白框总长度
               type: "bar",
               yAxisIndex: 1,
               barGap: "-100%",
-              // data: [20.11, 10, 20, 30, 100, 100, 100, 100, 100],
-              data: maxARR2,
+              data: maxARR,
+              // data:[1805,1805,1805,1805,1805,1805,1805,1805,1805],
               barWidth: 10,
               itemStyle: {
                 normal: {
@@ -748,22 +738,12 @@ export default {
               z: 1
             },
             {
-              name: "外框",
+              name: "外框",//最外层颜色边框
               type: "bar",
               yAxisIndex: 2,
               barGap: "-100%",
-              // data: [
-              //   100,
-              //   100,
-              //   100,
-              //   100,
-              //   100,
-              //   100,
-              //   100,
-              //   100,
-              //   100
-              // ],
               data: maxARR,
+              // data:[1805,1805,1805,1805,1805,1805,1805,1805,1805],
               barWidth: 12,
               itemStyle: {
                 normal: {
@@ -780,7 +760,8 @@ export default {
               name: "外圆",
               type: "scatter",
               hoverAnimation: false,
-              data: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+              data: circlePosition,
+              // data:[-2,0,0,0,0,0,0,0,0],
               yAxisIndex: 2,
               symbolSize: 20,
               itemStyle: {
@@ -821,10 +802,10 @@ export default {
         },
         grid: {
           borderWidth: 0,
-          top: "20",
-          bottom: "auto",
-          left: "auto",
-          right: "auto",
+          top: 20,
+          bottom: -10,
+          left: 20,
+          right: 25,
           height: "auto",
           width: "auto",
           containLabel: true,
@@ -1004,9 +985,12 @@ export default {
             data: [
               {
                 name: _this.classNeedData + _this.classNeedUnit,
-                value: _this.classNeedCalcData
-              }
+                value: _this.classNeedCalcData,
+
+              },
+              
             ],
+
             color: {
               type: "linear",
               x: 0,
@@ -1027,22 +1011,25 @@ export default {
                   color: ["rgb(215,47,167)"] // 100% 处的颜色
                 }
               ],
-              global: false // 缺省为 false
+              global: false, // 缺省为 false
+              
             },
             radius: "80%",
             center: ["50%", "50%"],
             label: {
               formatter: "{b}",
               fontSize: 28,
-              color: "rgb(131,249,103)"
+              color: "rgb(131,249,103)",
+              insideColor: '#fff',
             },
+
             backgroundStyle: {
-              borderWidth: 1,
-              borderColor: "rgba(0,197,255, 100%)"
-              // color: ["rgba(255,255,255, 0)"]
+              borderWidth: 3,
+              borderColor: "rgba(0,197,255, 100%)",
+              color:'#B9C2C8'
             },
             itemStyle: {
-              shadowBlur: 0
+                shadowBlur: 0,
             },
             emphasis: {
               itemStyle: {
@@ -1050,15 +1037,21 @@ export default {
               }
             },
             outline: {
-              borderDistance: 5,
+              show:true,
+              borderDistance: 8,
               itemStyle: {
-                borderWidth: 3,
-                borderColor: "rgb(39,84,125)",
-                shadowBlur: 10,
-                shadowColor: "rgb(0,181,248)"
-              }
+              opacity: 1, // 边框的透明度   默认为 1
+              borderWidth: 3, // 边框的宽度
+              shadowBlur: 1, // 边框的阴影范围 一旦设置了内外都有阴影
+              shadowColor: '#fff', // 边框的阴影颜色,
+              borderColor: '#478CEF' // 边框颜色
             }
-          }
+
+            },
+
+
+          },
+
         ]
       };
       window.onresize = myChart.resize();
@@ -1361,21 +1354,19 @@ select {
 .classPersonCake {
   /* width: 2.5rem; */
   width: 40%;
-  height: 2.5rem;
+  height: 3rem;
 }
 .switchSlide {
   /* width: 4.5rem; */
   width: 60%;
-  height: 2.5rem;
+  height: 3rem;
 }
 
 .funnel {
-  /* width: 2.5rem; */
   width: 50%;
   height: 2.5rem;
 }
 .circlePic {
-  /* width: 2.5rem; */
   width: 50%;
   height: 2.5rem;
 }
@@ -1389,6 +1380,7 @@ select {
   display: flex;
   text-align: center;
   margin-bottom: 0.12rem;
+  
 }
 .liveness-top > div {
   background-color: rgba(0, 252, 213, 15%);
@@ -1400,22 +1392,18 @@ select {
 }
 .liveness-top > div:nth-child(2) {
   width: 1.3rem;
-  /* width: 2rem; */
   height: 0.68rem;
 }
 .liveness-top > div:nth-child(3) {
   width: 1.3rem;
-  /* width: 2rem; */
   height: 0.68rem;
 }
 .liveness-top > div:nth-child(4) {
   width: 1.3rem;
-  /* width: 2rem; */
   height: 0.68rem;
 }
 .liveness-top > div:nth-child(5) {
   width: 1.3rem;
-  /* width: 2rem; */
   height: 0.68rem;
 }
 .liveness-top > div > p {
@@ -1503,7 +1491,7 @@ select {
 #collegePerson {
   /* width: 5rem; */
   width: 100%;
-  height: 2.5rem;
+  height: 3rem;
   margin-top: 0.3rem;
 }
 .funnel-annotation {
@@ -1520,13 +1508,13 @@ select {
 }
 .youjiantou {
   position: absolute;
-  top: 1.5rem;
+  top: 2rem;
   right: 0.05rem;
   font-size: 0.22rem;
 }
 .zuojiantou {
   position: absolute;
-  top: 1.5rem;
+  top: 2rem;
   left: 0.1rem;
   font-size: 0.22rem;
 }

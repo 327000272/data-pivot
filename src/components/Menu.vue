@@ -64,7 +64,7 @@ export default {
       sessionToken:'',
       platform:'',
       res:'',
-      debug:true
+      debug:false
     };
   },
   methods: {
@@ -97,7 +97,7 @@ export default {
       tourl(){
         var _this=this;
         console.log(_this.sessionToken);
-         //window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
+         window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
       },
       getInfos(){
         var _this = this;
@@ -113,7 +113,6 @@ export default {
         }
         //t 存在 使用t 获取token
          var tokenurl= _this.debug?_this.url +"tokenTest":_this.url +"token?url=" +_this.platform +"&token=" +t;
-         console.log(tokenurl);
 				axios.post(tokenurl)
         .then(function (response) {
           var res=response.data.data;
@@ -124,11 +123,6 @@ export default {
           //将token写入到浏览器缓存中
           sessionStorage.setItem("token", _this.sessionToken);	
          _this.getInfos();
-          }else{
-            console.log("token获取失败");
-            if(_this.res.err=="无效的校验结果"){
-              _this.tourl();
-            }
           }
 				})
 				.catch(function (error) {
@@ -150,7 +144,7 @@ export default {
         })
         .catch(function(error) {
           sessionStorage.removeItem("token");//清除失效的token
-          //window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
         });
     },
     openPage(pages, index) {

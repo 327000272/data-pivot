@@ -152,7 +152,8 @@ export default {
       // url: "https://class-ms-test.univteam.com/",
       url: "https://classroom.univteam.com/",
       back_url: "http://class-admin.univteam.com/",
-      value1: [new Date(2019, 10, 29), new Date(2019, 11, 29)], //日期
+      value1: [new Date(new Date - 1000 * 60 * 60 * 24 * 30), new Date], //日期
+      
       Condition: [],
       Comment: [],
       evaluateNum: "",
@@ -240,12 +241,11 @@ export default {
       _this.platform = this.$route.params.id;
       switch (_this.platform) {
         case "whu":
-          _this.url = "http://app.dekt.whu.edu.cn/whu/";
+          _this.url = "http://app.dekt.whu.edu.cn/whu/Statistics/";
           _this.back_url = "http://dekt.whu.edu.cn/whu/";
           break;
         default:
-          _this.url =
-            "https://classroom.univteam.com/" + _this.platform + "/Statistics/";
+          _this.url ="https://classroom.univteam.com/" + _this.platform + "/Statistics/";
           _this.back_url = "http://class-admin.univteam.com/";
           break;
       }
@@ -306,6 +306,9 @@ export default {
     },
     //获取饼状图中间的学校logo
     GetPlatDetail(token) {
+      console.log(new Date(2019, 10, 29));
+      console.log(new Date);
+      // console.log(new Date-'30')
       var _this = this;
       // axios.get(_this.url + "api/Plat/plat/detail?access_token=" + token)
       axios
@@ -729,6 +732,7 @@ export default {
         _this.openClassName.push(num[i].title);
       }
       let myChart = echarts.init(document.getElementById("classNumCircle"));
+
       let option = {
         title: {
           text: "各类课程开设数量",
@@ -746,23 +750,23 @@ export default {
           }
         },
         graphic: {
-          type: "image",
-          left: "center",
-          top: "center",
-          style: {
-            image: _this.PlatDetail,
-            width: 100,
-            height: 100,
-            position: [10, 20]
-            // center: ["10%", "10%"]
-          }
+          elements: [{
+              type: 'image',
+              style: {
+                  image: _this.PlatDetail,
+                  width: 50,
+                  height: 50,
+                  
+              },
+              left: 'center',
+              top: 'center'
+          }]
         },
         series: [
           {
-            name: "",
             type: "pie",
-            radius: ["30%", "70%"],
-            center: ["50%", "45%"],
+            radius: ['70%', '30%'],
+            center: ['50%', '50%'],
             data: arr,
             itemStyle: {
               emphasis: {
@@ -789,7 +793,7 @@ export default {
               }
             }
           }
-        ]
+        ],
       };
 
       window.onresize = myChart.resize;
@@ -802,7 +806,6 @@ export default {
         var heteExtentArr=[]
       for (var i = 0; i < num.length; i++) {
         //各类课程开设数量
-
         openNumArr.push(num[i].count);
         heteExtentArr.push({ value: num[i].count, title: num[i].title });
         // _this.openClassName.push(num[i].title);
@@ -1250,6 +1253,7 @@ option {
 }
 .satisfaction {
   width: 2.5rem;
+  /* width: 100%; */
   height: 2.2rem;
   float: right;
   /* margin-left: 0.8rem; */
@@ -1349,12 +1353,12 @@ option {
   margin-top: 0.3rem;
 }
 .classNumCircle {
-  width: 50%;
-  height: 2.29rem;
+  width: 45%;
+  height: 2.5rem;
 }
 .classNum {
-  width: 50%;
-  height: 2.29rem;
+  width: 55%;
+  height: 2.5rem;
 }
 #date_condition {
   width: 100% !important;
@@ -1374,6 +1378,7 @@ option {
 .echarts-legend-box {
   display: flex;
   justify-content:space-between;
+  /* justify-content:  */
   margin: 0 auto;
   width: 100%;
   white-space: nowrap;
@@ -1401,6 +1406,24 @@ option {
   background-color: #a243da;
 }
 .echarts-legend-box .echarts-legend-item:nth-child(6) .echarts-legend-item-bar {
+  background-color: #d72fa7;
+}
+.echarts-legend-box .echarts-legend-item:nth-child(7) .echarts-legend-item-bar {
+  background-color: #52f397;
+}
+.echarts-legend-box .echarts-legend-item:nth-child(8) .echarts-legend-item-bar {
+  background-color: #00e3e7;
+}
+.echarts-legend-box .echarts-legend-item:nth-child(9) .echarts-legend-item-bar {
+  background-color: #00c5ff;
+}
+.echarts-legend-box .echarts-legend-item:nth-child(10) .echarts-legend-item-bar {
+  background-color: #478cef;
+}
+.echarts-legend-box .echarts-legend-item:nth-child(11) .echarts-legend-item-bar {
+  background-color: #a243da;
+}
+.echarts-legend-box .echarts-legend-item:nth-child(12) .echarts-legend-item-bar {
   background-color: #d72fa7;
 }
 .echarts-legend-item {
