@@ -6,8 +6,8 @@
           <li class="school-sublogo">
             <img :src="PlatDetail.logo" class="icon-logo" />
             <span class="platName-box">
-              <p>{{PlatDetail.platName}}</p>
-              <p>{{PlatDetail.schoolName}}</p>
+              <p class="p1">{{PlatDetail.platName}}</p>
+              <p class="p2">{{PlatDetail.schoolName}}</p>
             </span>
             
           </li>
@@ -33,7 +33,7 @@
           <!-- <el-menu-item index="2" @click="openPage('Results')">
             <span slot="title">育人成效</span>
           </el-menu-item> -->
-          <el-menu-item index="3" @click="openPage('launch')">
+          <el-menu-item index="3" @click="openPage('launch')" class="classOpenA">
             <span slot="title">课程开展</span>
           </el-menu-item>
           <!-- <el-menu-item index="4" @click="openPage('practice')">
@@ -52,8 +52,6 @@ import axios from "axios";
 export default {
   data() {
     return {
-      // token:
-      //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJjbGFzc3Jvb20tc3RhdGlzdGljcyIsImlzcyI6Imh0dHBzOi8vY2xhc3MtbXMtdGVzdC51bml2dGVhbS5jb20iLCJpZCI6IjY0IiwibmFtZSI6ImFub255bW91cyIsInBpZCI6IjE2OTUiLCJwdXJsIjoiY3NwdDExMTkiLCJuYmYiOjE1NzczNjU5NjAsImV4cCI6MTU3NzM2OTU2MCwiaWF0IjoxNTc3MzY1OTYwfQ.lptm6eA3_NnNW7WCV75tFnEhcsS2JIx_e4woMlM8mkU",
       url: "https://classroom.univteam.com/",
       back_url:"http://class-admin.univteam.com/",
       logo: [],
@@ -64,7 +62,7 @@ export default {
       sessionToken:'',
       platform:'',
       res:'',
-      debug:false
+      debug:true
     };
   },
   methods: {
@@ -235,6 +233,10 @@ div {
 .el-submenu .el-menu {
   overflow: hidden;
 }
+.el-menu-vertical-demo{
+  margin-top: 20%;
+  position: relative;
+}
 .el-menu-vertical-demo span {
   margin-left: 10px;
 }
@@ -248,6 +250,7 @@ div {
   content: "";
   transform: scaleY(0.2);
 }
+
 .school-sublogo {
   display: flex;
   justify-content: space-around;
@@ -256,6 +259,7 @@ div {
   padding-left: 4px;
   font-size: 14px;
   color: #fff;
+  margin-bottom: 5px;
 }
 .school-content{
   position: relative;
@@ -289,10 +293,26 @@ div {
   opacity: 0.5;
   text-align: center;
   position: relative;
-    padding-top: 6px;
+    padding-top: 10px;
 }
 .platName-box{
-  font-size: 0.12rem;
   color: #fff;
+}
+.classOpenA::before{
+    position: absolute;
+    left: 25px;
+    top: 0;
+    right: 10px;
+    height: 1px;
+    background: #aaaaaa;
+    content: "";
+    -webkit-transform: scaleY(0.2);
+    transform: scaleY(0.2);
+}
+.p1{
+  font-size: 0.14rem;
+}
+.p2{
+  font-size: 0.12rem;
 }
 </style>

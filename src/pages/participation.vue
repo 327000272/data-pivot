@@ -543,12 +543,24 @@ export default {
             return params.data.title + " : " + params.data.name;
           }
         },
+        graphic:{
+            type:'text',
+            left:'center',
+            top:'center',
+            style:{
+                text:'各\r类\n\n占\r比',
+                textAlign:'center',
+                fill:'#fff',
+                width:50,
+                height:50
+            }
+        },
         series: [
           {
             name: "",
             type: "pie",
-            radius: ["30%", "70%"],
-            center: ["50%", "45%"],
+            radius: ["70%", "30%"],
+            center: ["50%", "50%"],
             data: arr,
             itemStyle: {
               emphasis: {
@@ -561,22 +573,28 @@ export default {
                   return _this.bigColor[params.dataIndex];
                 },
                 borderWidth: 1,
-                borderColor: "#08263c"
+                borderColor: "#08263c",
+                
               }
             },
             labelLine: {
               normal: {
-                show: false
+                show: true
               }
             },
+            // label: {
+            //   normal: {
+            //     position: "inner",
+            //       formatter: () => {
+            //       return '各类\n占比 '
+            //     },
+            //     color:'#fff',
+            //     fontSize:14
+            //   }
+            // }
             label: {
               normal: {
-                position: "center",
-                  formatter: () => {
-                  return '各类\n占比 '
-                },
-                color:'#fff',
-                fontSize:14
+                position: "inner",
               }
             }
           }
@@ -663,7 +681,8 @@ export default {
                   fontSize: "10"
                 }
               },
-              data: openTextArr
+              data: openTextArr,
+              // data:[1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9],
             },
             {
               axisTick: "none",
@@ -691,14 +710,37 @@ export default {
               data: []
             }
           ],
-
+          dataZoom: [{
+              type: 'slider',
+              show: true,
+              "filterMode": "empty",
+              "disabled": false,
+              yAxisIndex: 0,
+              // top: '25%',
+              right: '5%',
+              // bottom: '15%',
+              width: 10,
+              startValue:0,
+              endValue:10,
+              top:'20%',
+              bottom:'20%',
+              handleSize: '0', // 滑动条的 左右2个滑动小块的大小
+              handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+              textStyle: {
+                  color: "#fff"
+              },
+              fillerColor: '#3C62C0', // 拖动条的颜色
+              borderColor: "none",
+              backgroundColor: 'rgba(60, 98, 192, 0.302)',
+              showDetail: false, // 即拖拽时候是否显示详细数值信息 默认true
+          }, ],
           series: [
             {
               name: "条",//进度条的长度
               type: "bar",
               yAxisIndex: 0,
               data: openDateArr,
-              // data:[1805,1406,1020,198,405,502,10,2,0,],
+              // data:[1085,100,500,100,0,12,44,55,100,1085,100,500,100,0,12,44,55,100],
               label: {
                 normal: {
                   show: true,
@@ -726,8 +768,8 @@ export default {
               type: "bar",
               yAxisIndex: 1,
               barGap: "-100%",
-              data: maxARR,
-              // data:[1805,1805,1805,1805,1805,1805,1805,1805,1805],
+              // data: maxARR,
+              // data:[1805,1805,1805,1805,1805,1805,1805,1805,1805,1805,1805,1805,1805,1805,1805,1805,1805,1805],
               barWidth: 10,
               itemStyle: {
                 normal: {
@@ -737,44 +779,43 @@ export default {
               },
               z: 1
             },
-            {
-              name: "外框",//最外层颜色边框
-              type: "bar",
-              yAxisIndex: 2,
-              barGap: "-100%",
-              data: maxARR,
-              // data:[1805,1805,1805,1805,1805,1805,1805,1805,1805],
-              barWidth: 12,
-              itemStyle: {
-                normal: {
-                  color: function(params) {
-                    var num = myColor.length;
-                    return myColor[params.dataIndex % num];
-                  },
-                  barBorderRadius: 5
-                }
-              },
-              z: 0
-            },
-            {
-              name: "外圆",
-              type: "scatter",
-              hoverAnimation: false,
-              data: circlePosition,
-              // data:[-2,0,0,0,0,0,0,0,0],
-              yAxisIndex: 2,
-              symbolSize: 20,
-              itemStyle: {
-                normal: {
-                  color: function(params) {
-                    var num = myColor.length;
-                    return myColor[params.dataIndex % num];
-                  },
-                  opacity: 1
-                }
-              },
-              z: 2
-            }
+            // {
+            //   name: "外框",//最外层颜色边框
+            //   type: "bar",
+            //   yAxisIndex: 2,
+            //   barGap: "-100%",
+            //   // data: maxARR,
+            //   data:[1805,1805,1805,1805,1805,1805,1805,1805,1805],
+            //   barWidth: 12,
+            //   itemStyle: {
+            //     normal: {
+            //       color: function(params) {
+            //         var num = myColor.length;
+            //         return myColor[params.dataIndex % num];
+            //       },
+            //       barBorderRadius: 5
+            //     }
+            //   },
+            //   z: 0
+            // },
+            // {
+            //   name: "外圆",
+            //   type: "scatter",
+            //   hoverAnimation: false,
+            //   data: circlePosition,
+            //   yAxisIndex: 2,
+            //   symbolSize: 20,
+            //   itemStyle: {
+            //     normal: {
+            //       color: function(params) {
+            //         var num = myColor.length;
+            //         return myColor[params.dataIndex % num];
+            //       },
+            //       opacity: 1
+            //     }
+            //   },
+            //   z: 2
+            // }
           ]
         };
       window.onresize = myChart.resize;
@@ -1271,9 +1312,22 @@ option {
 }
 .box-content {
   margin-left: 0.4rem;
+    margin-right: 0.2rem;
+  margin-top: 0.4rem;
 }
 .box-content-top {
   display: flex;
+  position: relative;
+}
+.box-content-top::before {
+  position: absolute;
+  /* left: 10%; */
+  top: -20px;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.5);
+  content: "";
+  /* transform: scaleY(0.2); */
 }
 .box-content-bottom {
   display: flex;
@@ -1285,12 +1339,16 @@ option {
   margin-right: 0.2rem;
   margin-bottom: 0.2rem;
   justify-content: space-between;
+
 }
 #classSituation {
   position: relative;
 }
 #timeSituation {
   position: relative;
+}
+#classSituation,#timeSituation{
+  margin-right: 0rem;
 }
 .box-item-title {
   font-size: 0.18rem;

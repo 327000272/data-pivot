@@ -510,7 +510,7 @@ export default {
         },
         series: [
           {
-            name: "外围刻度",
+            name: "外围刻度",//其实这里只是为了加一层炫光,啥用没有
             type: "gauge",
             radius: "90%",
             center: ["45%", "55%"],
@@ -538,9 +538,10 @@ export default {
           {
             name: "内层数据刻度",
             type: "gauge",
-            radius: "89%",
+            radius: "90%",
             center: ["45%", "55%"],
             axisLine: {
+              show:true,
               lineStyle: {
                 // 属性lineStyle控制线条样式
                 color: [
@@ -593,20 +594,22 @@ export default {
             },
             axisTick: {
               lineStyle: {
-                color: "#153146"
+                color: "#153146",
+                width:0.5,
               }
             },
             axisLabel: {
               show: false,
               color: "#cbfff6",
-              fontSize: 11
+              fontSize: 11,
+              shadowBlur: 10,
             },
             detail: {
               show: false
             },
             itemStyle: {
               normal: {
-                color: "cyan"
+                color: "#fff"
               }
             },
             pointer: {
@@ -616,16 +619,16 @@ export default {
             data: [{ value: num }]
           },
           {
-            name: "最内层线",
-            type: "gauge",
-            radius: "35%",
-            center: ["45%", "55%"],
+            name: '最内层线',
+            type: 'gauge',
+            radius: '43%',
+            center: ['45%', '55%'],
             startAngle: 359.9999999999999,
             endAngle: 0,
             axisLine: {
+              show: false,
               lineStyle: {
                 opacity: 0,
-                color: "red"
               }
             },
             splitLine: {
@@ -640,9 +643,9 @@ export default {
             axisTick: {
               length: 2,
               lineStyle: {
-                color: "#fff",
+                color: 'rgba(255,255,255,0.3)',
                 width: 3,
-                type: "solid"
+                type: 'solid'
               }
             },
             detail: {
@@ -651,7 +654,7 @@ export default {
             pointer: {
               show: false
             }
-          },
+        },
           {
             name: "饼图",
             tooltip: {
@@ -699,7 +702,7 @@ export default {
                   name: {
                     fontFamily: "Microsoft YaHei",
                     fontSize: 16,
-                    color: "#fff",
+                    color: "rgba(255,255,255,0.5)",
                     lineHeight: 23
                   }
                 }
@@ -710,6 +713,7 @@ export default {
                 show: false
               }
             },
+            
             animation: false,
             data: [{ value: num, name: "满意度" }]
           }
@@ -810,6 +814,7 @@ export default {
         heteExtentArr.push({ value: num[i].count, title: num[i].title });
         // _this.openClassName.push(num[i].title);
       }
+
       let myChart = echarts.init(document.getElementById("classNum"));
       let option = {
         title: {
@@ -836,9 +841,10 @@ export default {
           axisLine: { show: false },
           axisLabel: {
             textStyle: {
-              color: "#fff"
+              color: "#fff",
+
             }
-          }
+          },
         },
         yAxis: {
           splitLine: { show: false },
@@ -846,6 +852,7 @@ export default {
           axisLine: { show: false },
           axisLabel: { show: false }
         },
+
         color: ["#e54035"],
         series: [
           {
@@ -859,7 +866,8 @@ export default {
                 opacity: 0.5,
                 color: function(params) {
                   return _this.bigColor[params.dataIndex];
-                }
+                },
+                
               },
               emphasis: {
                 opacity: 1
@@ -867,7 +875,8 @@ export default {
             },
             data: heteExtentArr
           }
-        ]
+        ],
+
       };
       window.onresize = myChart.resize;
       myChart.setOption(option);
@@ -1152,20 +1161,35 @@ option {
 
 .box-content {
   margin-left: 0.4rem;
+  margin-right: 0.2rem;
+  margin-top: 0.4rem;
+  
 }
 
 .box-content-top {
   display: flex;
+  position: relative;
+}
+.box-content-top::before {
+  position: absolute;
+  /* left: 10%; */
+  top: -20px;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.5);
+  content: "";
+  /* transform: scaleY(0.2); */
 }
 .box-item {
-  /* width: 7.76rem;
-  height: 3.28rem; */
   width: 9rem;
   height: 4rem;
   background: rgba(255, 255, 255, 5%);
   margin-right: 0.2rem;
   margin-bottom: 0.2rem;
   justify-content: space-between;
+}
+#classSituation,#timeSituation{
+  margin-right: 0rem;
 }
 .box-content-bottom {
   display: flex;
@@ -1253,10 +1277,9 @@ option {
 }
 .satisfaction {
   width: 2.5rem;
-  /* width: 100%; */
-  height: 2.2rem;
-  float: right;
-  /* margin-left: 0.8rem; */
+  height: 2.3rem;
+  float: left;
+  margin-left: 20%;
 }
 
 .fxbox1-li {
@@ -1353,11 +1376,11 @@ option {
   margin-top: 0.3rem;
 }
 .classNumCircle {
-  width: 45%;
+  width: 40%;
   height: 2.5rem;
 }
 .classNum {
-  width: 55%;
+  width: 60%;
   height: 2.5rem;
 }
 #date_condition {
@@ -1493,8 +1516,9 @@ option {
   height: 0.23rem;
   line-height: 0.23rem;
   background: rgba(255, 255, 255, 8%);
-  float: right;
-  margin-right: 0.15rem;
+  float: left;
+  /* margin-right: 0.3rem; */
+  margin-left: 15%;
 }
 .evaluatePart {
   font-size: 0.12rem;
@@ -1511,6 +1535,7 @@ option {
 .courseOverview {
   display: flex;
   margin-top: 0.3rem;
+  height: 75%;
 }
 .youjiantou {
   position: absolute;
