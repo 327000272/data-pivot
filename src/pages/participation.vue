@@ -1245,7 +1245,7 @@ export default {
   color: #ffffff;
 }
 .el-date-editor .el-range-input {
-  color: #ffffff;
+  color: #ffffff !important;
 }
 </style>
 <style scoped>

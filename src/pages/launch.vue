@@ -13,6 +13,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             class="data-picker"
+            
           ></el-date-picker>
         </div>
         <div class="fx-btn" @click="pointer()">运算</div>
@@ -1088,7 +1089,7 @@ export default {
   color: #ffffff;
 }
 .el-date-editor .el-range-input {
-  color: #ffffff;
+  color: #ffffff !important;
 }
 </style>
 <style scoped>
@@ -1142,7 +1143,7 @@ option {
   margin-right: 2px;
   min-width: 100px;
 }
-.data-picker {
+.block .data-picker {
   border-radius: 0;
   background: #213c50;
   border: none;
