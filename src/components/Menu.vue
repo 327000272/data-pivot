@@ -13,15 +13,6 @@
           </li>
           <li class="websiteTitle">素质育人大数据</li>
         </ul>
-        <!-- <div class="school-logo">
-          <div>
-              <img src="https://img1-static.univteam.com/ClassAdmin/cspt1119/Images/2019/04/04/20190404174505.jpeg?x-oss-process=image/crop,x_44,y_25,w_408,h_408" width="40" height="40">
-          </div>
-          <div class="logo-right">
-              <p>沈师修改</p>
-              <p>1119修改</p>
-          </div>
-        </div> -->
         <el-menu
           :default-active="index==''?'1':index"
           class="el-menu-vertical-demo"

@@ -64,7 +64,7 @@
               <span>学院范围</span>
               <select @change="change($event)">
                 <option>全部</option>
-                <option v-for="item in haha" :key="item.index" :value="item.id">{{item.name}}</option>
+                <option v-for="item in collegeSchool" :key="item.index" :value="item.id">{{item.name}}</option>
               </select>
               <!-- <span class="iconfont iconduobianxing"></span> -->
             </div>
@@ -120,7 +120,7 @@
               <span>学院范围</span>
               <select @change="change2($event)">
                 <option>全部</option>
-                <option v-for="item in haha" :key="item.index" :value="item.id">{{item.name}}</option>
+                <option v-for="item in collegeSchool" :key="item.index" :value="item.id">{{item.name}}</option>
               </select>
             </div>
           </div>
@@ -181,7 +181,7 @@ export default {
       platform: "",
       PlatDetail: "",
       unitsId: [],
-      haha: [],
+      collegeSchool: [],
       openclassOne: "",
       ida: 0,
       ida2: 0,
@@ -221,7 +221,6 @@ export default {
   methods: {
     change(event) {
       var _this = this;
-      // console.log(event.target.value)
       _this.ida = event.target.value;
       console.log(_this.ida);
     },
@@ -276,11 +275,11 @@ export default {
           ? this.DateTimes(this.value1[1])
           : "";
       _this.schoolscope(_this.sessionToken);
-      _this.getCondition(_this.sessionToken);
-      _this.getComment(_this.sessionToken);
+      _this.getCondition(_this.sessionToken, Start, End);
+      _this.getComment(_this.sessionToken, Start, End);
       _this.getsupply(_this.sessionToken, Start, End, _this.ida);
       _this.getline(_this.sessionToken, Start, End, _this.ida2);
-      _this.getCourseSupply(_this.sessionToken);
+      _this.getCourseSupply(_this.sessionToken, Start, End);
       _this.GetPlatDetail(_this.sessionToken);
     },
     //点击指示器,重新运算
@@ -307,17 +306,19 @@ export default {
     },
     //获取饼状图中间的学校logo
     GetPlatDetail(token) {
-      console.log(new Date(2019, 10, 29));
-      console.log(new Date());
-      // console.log(new Date-'30')
       var _this = this;
-      // axios.get(_this.url + "api/Plat/plat/detail?access_token=" + token)
       axios
         .get(_this.url + "plat_detail?access_token=" + token)
         .then(function(response) {
           _this.PlatDetail = response.data.data.logo;
           axios
-            .get(_this.url + "course_supply?access_token=" + token)
+            .get(_this.url + "course_supply?access_token=" + token+
+            "&Start=" +
+            Start +
+            "&End=" +
+            End +
+            "&Unit=" +
+            Unit)
             .then(function(response) {
               var resD = response.data;
               if (resD.code == 0) {
@@ -347,7 +348,7 @@ export default {
           if (resD.code == 0) {
             _this.schoolUnits = response.data.data.units;
             for (var i = 0; i < _this.schoolUnits.length; i++) {
-              _this.haha.push(_this.schoolUnits[i]);
+              _this.collegeSchool.push(_this.schoolUnits[i]);
               _this.UnitsName.push(_this.schoolUnits[i].name);
               _this.unitsId.push(_this.schoolUnits[i].id);
             }
@@ -364,11 +365,11 @@ export default {
       //window.location.href =_this.back_url +platName +"/account/login?back=statistics";
     },
     //课程开展总览
-    getCondition(token) {
+    getCondition(token, Start, End) {
       var _this = this;
       // axios.get(_this.url + "api/Plat/course/condition?access_token=" + token)
       axios
-        .get(_this.url + "course_condition?access_token=" + token)
+        .get(_this.url + "course_condition?access_token=" + token+"&Start=" +Start +"&End=" +End)
         .then(function(response) {
           var resD = response.data;
           if (resD.code == 0 && resD.data.length > 0) {
@@ -381,14 +382,15 @@ export default {
         });
     },
     //评价与参评率
-    getComment(token) {
+    getComment(token, Start, End) {
       var _this = this;
       // axios.get(_this.url + "api/Plat/course/comment?access_token=" + token)
       axios
-        .get(_this.url + "course_comment?access_token=" + token)
+        .get(_this.url + "course_comment?access_token=" + token+"&Start=" +Start +"&End=" +End)
         .then(function(response) {
           var resD = response.data;
           if (resD.code == 0 && resD.data.length > 0) {
+            console.log(response.data.data)
             _this.Comment = response.data.data;
             for (var i = 0; i < _this.Comment.length; i++) {
               //保存评价数
@@ -486,11 +488,11 @@ export default {
     },
 
     //各单位课程供给排行
-    getCourseSupply(token) {
+    getCourseSupply(token, Start, End) {
       var _this = this;
       // axios.get(_this.url + "api/Plat/course/rank?unit=0&access_token=" + token)
       axios
-        .get(_this.url + "course_rank?unit=0&access_token=" + token)
+        .get(_this.url + "course_rank?unit=0&access_token=" + token+"&Start=" +Start +"&End=" +End)
         .then(function(response) {
           var resD = response.data;
           if (resD.code == 0 && resD.data.length > 0) {

@@ -285,10 +285,11 @@ export default {
           this.DateTimes(this.value1[1]) != ""
             ? this.DateTimes(this.value1[1])
             : "";
+
         _this.schoolscope(_this.sessionToken);
         _this.getactivation(_this.sessionToken, Start, End, _this.ida);
-        _this.getCulumPersonCount(_this.sessionToken);
-        _this.GetUnitPersonCount(_this.sessionToken);
+        _this.getCulumPersonCount(_this.sessionToken, Start, End);
+        _this.GetUnitPersonCount(_this.sessionToken, Start, End);
         _this.getInitiative(_this.sessionToken, Start, End, _this.ida2);
       } else {
         //判断路径上有无参数,
@@ -316,8 +317,8 @@ export default {
 
       _this.schoolscope(_this.sessionToken);
       _this.getactivation(_this.sessionToken, Start, End, _this.ida);
-      _this.getCulumPersonCount(_this.sessionToken);
-      _this.GetUnitPersonCount(_this.sessionToken);
+      _this.getCulumPersonCount(_this.sessionToken, Start, End);
+      _this.GetUnitPersonCount(_this.sessionToken, Start, End);
       _this.getInitiative(_this.sessionToken, Start, End, _this.ida2);
     },
     // 处理时间戳
@@ -450,10 +451,10 @@ export default {
         });
     },
     //请求各类课程参与人次
-    getCulumPersonCount(token) {
+    getCulumPersonCount(token, Start, End) {
       var _this = this;
       axios
-        .get(_this.url + "culumCount?access_token=" + token)
+        .get(_this.url + "culumCount?access_token=" + token+"&Start=" +Start +"&End=" +End)
         .then(function(response) {
           var resD = response.data;
           if (resD.code == 0 && resD.data.length > 0) {
@@ -472,10 +473,10 @@ export default {
         });
     },
     //请求各学院学生参与人次统计
-    GetUnitPersonCount(token) {
+    GetUnitPersonCount(token, Start, End) {
       var _this = this;
       axios
-        .get(_this.url + "unitCount/?access_token=" + token)
+        .get(_this.url + "unitCount/?access_token=" + token+"&Start=" +Start +"&End=" +End)
         .then(function(response) {
           var resD = response.data;
           var arr = [];
