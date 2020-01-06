@@ -156,7 +156,7 @@ export default {
       // url: "https://class-ms-test.univteam.com/",
       url: "https://classroom.univteam.com/",
       back_url: "http://class-admin.univteam.com/",
-      value1: [new Date(new Date - 1000 * 60 * 60 * 24 * 30), new Date], //日期
+      value1: [new Date(new Date() - 1000 * 60 * 60 * 24 * 30), new Date()], //日期
       youShow: true,
       zuoShow: false,
       supplyComprehensive: [],
@@ -354,8 +354,11 @@ export default {
           }
         })
         .catch(function(error) {
-            sessionStorage.removeItem("token");//清除失效的token
-           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
         });
     },
     //第二课堂整体参与度于信息系统活跃
@@ -439,8 +442,11 @@ export default {
           }
         })
         .catch(function(error) {
-           sessionStorage.removeItem("token");//清除失效的token
-           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
         });
     },
     //请求各类课程参与人次
@@ -458,8 +464,11 @@ export default {
           }
         })
         .catch(function(error) {
-           sessionStorage.removeItem("token");//清除失效的token
-           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
         });
     },
     //请求各学院学生参与人次统计
@@ -469,20 +478,23 @@ export default {
         .get(_this.url + "unitCount/?access_token=" + token)
         .then(function(response) {
           var resD = response.data;
-          var arr=[];
-          var arr2=[];
+          var arr = [];
+          var arr2 = [];
           if (resD.code == 0 && resD.data.length > 0) {
             _this.UnitPersonCount = response.data;
-            for (var i = 0; i <  response.data.data.length; i++) {
-              arr.push( response.data.data[i].name);
-              arr2.push( response.data.data[i].count);
+            for (var i = 0; i < response.data.data.length; i++) {
+              arr.push(response.data.data[i].name);
+              arr2.push(response.data.data[i].count);
             }
-            _this.collegePerson(arr,arr2);
+            _this.collegePerson(arr, arr2);
           }
         })
         .catch(function(error) {
-           sessionStorage.removeItem("token");//清除失效的token
-           window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
         });
     },
     //课程参与积极性指标
@@ -509,17 +521,20 @@ export default {
           }
         })
         .catch(function(error) {
-            sessionStorage.removeItem("token");//清除失效的token
-            window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+          sessionStorage.removeItem("token"); //清除失效的token
+          window.location.href =
+            " http://class-admin.univteam.com/" +
+            _this.platform +
+            "/account/login?back=statistics";
         });
     },
     //饼状图
     classPersonCake(num) {
       var _this = this;
-       var arr=[];
+      var arr = [];
       for (var i = 0; i < num.length; i++) {
         Number(num[i].percent.split("%")[0]);
-       arr.push({
+        arr.push({
           value: Number(num[i].percent.split("%")[0]),
           name: num[i].percent,
           title: num[i].name
@@ -528,14 +543,14 @@ export default {
       let myChart = echarts.init(document.getElementById("classPersonCake"));
       let option = {
         title: {
-            text: "各类课程参与学生数比例",
-            x: "center",
-            y: "bottom",
-            textStyle: {
-              color: "rgba(255,255,255,0.5)",
-              fontSize: "0.14rem"
-            }
-          },
+          text: "各类课程参与学生数比例",
+          x: "center",
+          y: "bottom",
+          textStyle: {
+            color: "rgba(255,255,255,0.5)",
+            fontSize: "0.14rem"
+          }
+        },
 
         tooltip: {
           trigger: "item",
@@ -543,17 +558,17 @@ export default {
             return params.data.title + " : " + params.data.name;
           }
         },
-        graphic:{
-            type:'text',
-            left:'center',
-            top:'center',
-            style:{
-                text:'各\r类\n\n占\r比',
-                textAlign:'center',
-                fill:'#fff',
-                width:50,
-                height:50
-            }
+        graphic: {
+          type: "text",
+          left: "center",
+          top: "center",
+          style: {
+            text: "各\r类\n\n占\r比",
+            textAlign: "center",
+            fill: "#fff",
+            width: 50,
+            height: 50
+          }
         },
         series: [
           {
@@ -573,8 +588,7 @@ export default {
                   return _this.bigColor[params.dataIndex];
                 },
                 borderWidth: 1,
-                borderColor: "#08263c",
-                
+                borderColor: "#08263c"
               }
             },
             labelLine: {
@@ -594,7 +608,7 @@ export default {
             // }
             label: {
               normal: {
-                position: "inner",
+                position: "inner"
               }
             }
           }
@@ -607,10 +621,10 @@ export default {
     //横向柱状图
     switchSlide(num) {
       var _this = this;
-      var openTextArr=[];
-      var openDateArr=[];
+      var openTextArr = [];
+      var openDateArr = [];
       //声明外圆位置的数组,数组为-50的时候,位置正合适
-      var circlePosition=[];
+      var circlePosition = [];
       for (var i = 0; i < num.length; i++) {
         openTextArr.push(num[i].name);
         openDateArr.push(num[i].count);
@@ -619,13 +633,13 @@ export default {
 
       //取出数组中的最大值,将最大值设置为柱状图中的最大长度
       _this.maxV =
-        Math.max.apply(null, openDateArr) != 0? 
-        Math.max.apply(null, openDateArr)
+        Math.max.apply(null, openDateArr) != 0
+          ? Math.max.apply(null, openDateArr)
           : 100;
 
-      var maxARR=[];
+      var maxARR = [];
       for (var j = 0; j < num.length; j++) {
-         maxARR.push(_this.maxV);
+        maxARR.push(_this.maxV);
       }
       let myChart = echarts.init(document.getElementById("switchSlide"));
       let myColor = [
@@ -681,7 +695,7 @@ export default {
                   fontSize: "10"
                 }
               },
-              data: openTextArr,
+              data: openTextArr
               // data:[1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9],
             },
             {
@@ -710,33 +724,36 @@ export default {
               data: []
             }
           ],
-          dataZoom: [{
-              type: 'slider',
+          dataZoom: [
+            {
+              type: "slider",
               show: true,
-              "filterMode": "empty",
-              "disabled": false,
+              filterMode: "empty",
+              disabled: false,
               yAxisIndex: 0,
               // top: '25%',
-              right: '5%',
+              right: "5%",
               // bottom: '15%',
               width: 10,
-              startValue:0,
-              endValue:10,
-              top:'20%',
-              bottom:'20%',
-              handleSize: '0', // 滑动条的 左右2个滑动小块的大小
-              handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+              startValue: 0,
+              endValue: 10,
+              top: "20%",
+              bottom: "20%",
+              handleSize: "0", // 滑动条的 左右2个滑动小块的大小
+              handleIcon:
+                "path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z",
               textStyle: {
-                  color: "#fff"
+                color: "#fff"
               },
-              fillerColor: '#3C62C0', // 拖动条的颜色
+              fillerColor: "#3C62C0", // 拖动条的颜色
               borderColor: "none",
-              backgroundColor: 'rgba(60, 98, 192, 0.302)',
-              showDetail: false, // 即拖拽时候是否显示详细数值信息 默认true
-          }, ],
+              backgroundColor: "rgba(60, 98, 192, 0.302)",
+              showDetail: false // 即拖拽时候是否显示详细数值信息 默认true
+            }
+          ],
           series: [
             {
-              name: "条",//进度条的长度
+              name: "条", //进度条的长度
               type: "bar",
               yAxisIndex: 0,
               data: openDateArr,
@@ -764,7 +781,7 @@ export default {
             },
 
             {
-              name: "白框",//白框总长度
+              name: "白框", //白框总长度
               type: "bar",
               yAxisIndex: 1,
               barGap: "-100%",
@@ -778,7 +795,7 @@ export default {
                 }
               },
               z: 1
-            },
+            }
             // {
             //   name: "外框",//最外层颜色边框
             //   type: "bar",
@@ -822,12 +839,12 @@ export default {
       myChart.setOption(option);
     },
     //柱状图
-    collegePerson(perpleStatisticsTitle,perpleStatisticsNumber) {
+    collegePerson(perpleStatisticsTitle, perpleStatisticsNumber) {
       var _this = this;
-      var arr=[];
+      var arr = [];
       let myChart = echarts.init(document.getElementById("collegePerson"));
       var dataAxis = perpleStatisticsTitle;
-      var data =perpleStatisticsNumber;
+      var data = perpleStatisticsNumber;
       let option = {
         tooltip: {
           trigger: "axis",
@@ -987,7 +1004,6 @@ export default {
           _this.classNeedCalcData = num[i].data / 100;
         }
       }
-
       let myChart = echarts.init(document.getElementById("circlePic"));
       let option = {
         title: {
@@ -1013,7 +1029,7 @@ export default {
                 style: {
                   fill: "#fff",
                   text: _this.classNeedTitle,
-                  font: "20px Microsoft YaHei"
+                  font: "14px Microsoft YaHei"
                 }
               }
             ]
@@ -1026,10 +1042,8 @@ export default {
             data: [
               {
                 name: _this.classNeedData + _this.classNeedUnit,
-                value: _this.classNeedCalcData,
-
-              },
-              
+                value: _this.classNeedCalcData
+              }
             ],
 
             color: {
@@ -1052,25 +1066,24 @@ export default {
                   color: ["rgb(215,47,167)"] // 100% 处的颜色
                 }
               ],
-              global: false, // 缺省为 false
-              
+              global: false // 缺省为 false
             },
             radius: "80%",
             center: ["50%", "50%"],
             label: {
-              formatter: "{b}",
+              formatter: _this.classNeedData + _this.classNeedUnit,
               fontSize: 28,
               color: "rgb(131,249,103)",
-              insideColor: '#fff',
+              insideColor: "#fff"
             },
 
             backgroundStyle: {
               borderWidth: 3,
               borderColor: "rgba(0,197,255, 100%)",
-              color:'#B9C2C8'
+              color: "#B9C2C8"
             },
             itemStyle: {
-                shadowBlur: 0,
+              shadowBlur: 0
             },
             emphasis: {
               itemStyle: {
@@ -1078,21 +1091,17 @@ export default {
               }
             },
             outline: {
-              show:true,
+              show: true,
               borderDistance: 8,
               itemStyle: {
-              opacity: 1, // 边框的透明度   默认为 1
-              borderWidth: 3, // 边框的宽度
-              shadowBlur: 1, // 边框的阴影范围 一旦设置了内外都有阴影
-              shadowColor: '#fff', // 边框的阴影颜色,
-              borderColor: '#478CEF' // 边框颜色
+                opacity: 1, // 边框的透明度   默认为 1
+                borderWidth: 3, // 边框的宽度
+                shadowBlur: 1, // 边框的阴影范围 一旦设置了内外都有阴影
+                shadowColor: "#fff", // 边框的阴影颜色,
+                borderColor: "#478CEF" // 边框颜色
+              }
             }
-
-            },
-
-
-          },
-
+          }
         ]
       };
       window.onresize = myChart.resize();
@@ -1312,7 +1321,7 @@ option {
 }
 .box-content {
   margin-left: 0.4rem;
-    margin-right: 0.2rem;
+  margin-right: 0.2rem;
   margin-top: 0.4rem;
 }
 .box-content-top {
@@ -1339,7 +1348,6 @@ option {
   margin-right: 0.2rem;
   margin-bottom: 0.2rem;
   justify-content: space-between;
-
 }
 #classSituation {
   position: relative;
@@ -1347,7 +1355,8 @@ option {
 #timeSituation {
   position: relative;
 }
-#classSituation,#timeSituation{
+#classSituation,
+#timeSituation {
   margin-right: 0rem;
 }
 .box-item-title {
@@ -1438,7 +1447,6 @@ select {
   display: flex;
   text-align: center;
   margin-bottom: 0.12rem;
-  
 }
 .liveness-top > div {
   background-color: rgba(0, 252, 213, 15%);

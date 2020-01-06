@@ -152,8 +152,8 @@ export default {
       // url: "https://class-ms-test.univteam.com/",
       url: "https://classroom.univteam.com/",
       back_url: "http://class-admin.univteam.com/",
-      value1: [new Date(new Date - 1000 * 60 * 60 * 24 * 30), new Date], //日期
-      
+      value1: [new Date(new Date() - 1000 * 60 * 60 * 24 * 30), new Date()], //日期
+
       Condition: [],
       Comment: [],
       evaluateNum: "",
@@ -245,7 +245,8 @@ export default {
           _this.back_url = "http://dekt.whu.edu.cn/whu/";
           break;
         default:
-          _this.url ="https://classroom.univteam.com/" + _this.platform + "/Statistics/";
+          _this.url =
+            "https://classroom.univteam.com/" + _this.platform + "/Statistics/";
           _this.back_url = "http://class-admin.univteam.com/";
           break;
       }
@@ -307,7 +308,7 @@ export default {
     //获取饼状图中间的学校logo
     GetPlatDetail(token) {
       console.log(new Date(2019, 10, 29));
-      console.log(new Date);
+      console.log(new Date());
       // console.log(new Date-'30')
       var _this = this;
       // axios.get(_this.url + "api/Plat/plat/detail?access_token=" + token)
@@ -472,7 +473,7 @@ export default {
           if (resD.code == 0 && resD.data.length > 0) {
             _this.line = resD.data;
             _this.date_condition(_this.line);
-            _this.lineName=[];
+            _this.lineName = [];
             for (var i = 0; i < res.data.data.length; i++) {
               _this.lineName.push(res.data.data[i].name);
             }
@@ -510,7 +511,7 @@ export default {
         },
         series: [
           {
-            name: "外围刻度",//其实这里只是为了加一层炫光,啥用没有
+            name: "外围刻度", //其实这里只是为了加一层炫光,啥用没有
             type: "gauge",
             radius: "90%",
             center: ["45%", "55%"],
@@ -541,7 +542,7 @@ export default {
             radius: "90%",
             center: ["45%", "55%"],
             axisLine: {
-              show:true,
+              show: true,
               lineStyle: {
                 // 属性lineStyle控制线条样式
                 color: [
@@ -595,14 +596,14 @@ export default {
             axisTick: {
               lineStyle: {
                 color: "#153146",
-                width:0.5,
+                width: 0.5
               }
             },
             axisLabel: {
               show: false,
               color: "#cbfff6",
               fontSize: 11,
-              shadowBlur: 10,
+              shadowBlur: 10
             },
             detail: {
               show: false
@@ -619,16 +620,16 @@ export default {
             data: [{ value: num }]
           },
           {
-            name: '最内层线',
-            type: 'gauge',
-            radius: '43%',
-            center: ['45%', '55%'],
+            name: "最内层线",
+            type: "gauge",
+            radius: "43%",
+            center: ["45%", "55%"],
             startAngle: 359.9999999999999,
             endAngle: 0,
             axisLine: {
               show: false,
               lineStyle: {
-                opacity: 0,
+                opacity: 0
               }
             },
             splitLine: {
@@ -643,9 +644,9 @@ export default {
             axisTick: {
               length: 2,
               lineStyle: {
-                color: 'rgba(255,255,255,0.3)',
+                color: "rgba(255,255,255,0.3)",
                 width: 3,
-                type: 'solid'
+                type: "solid"
               }
             },
             detail: {
@@ -654,7 +655,7 @@ export default {
             pointer: {
               show: false
             }
-        },
+          },
           {
             name: "饼图",
             tooltip: {
@@ -713,7 +714,7 @@ export default {
                 show: false
               }
             },
-            
+
             animation: false,
             data: [{ value: num, name: "满意度" }]
           }
@@ -725,10 +726,10 @@ export default {
     //饼状图
     classNumber(num) {
       var _this = this;
-      var arr=[];
-      _this.openClassName=[];
+      var arr = [];
+      _this.openClassName = [];
       for (var i = 0; i < num.length; i++) {
-         arr.push({
+        arr.push({
           value: num[i].percent,
           name: num[i].percent + "%",
           title: num[i].title
@@ -754,23 +755,24 @@ export default {
           }
         },
         graphic: {
-          elements: [{
-              type: 'image',
+          elements: [
+            {
+              type: "image",
               style: {
-                  image: _this.PlatDetail,
-                  width: 50,
-                  height: 50,
-                  
+                image: _this.PlatDetail,
+                width: 50,
+                height: 50
               },
-              left: 'center',
-              top: 'center'
-          }]
+              left: "center",
+              top: "center"
+            }
+          ]
         },
         series: [
           {
             type: "pie",
-            radius: ['70%', '30%'],
-            center: ['50%', '50%'],
+            radius: ["70%", "30%"],
+            center: ["50%", "50%"],
             data: arr,
             itemStyle: {
               emphasis: {
@@ -797,7 +799,7 @@ export default {
               }
             }
           }
-        ],
+        ]
       };
 
       window.onresize = myChart.resize;
@@ -806,8 +808,8 @@ export default {
     //异性图
     classNum(num) {
       var _this = this;
-        var openNumArr=[];
-        var heteExtentArr=[]
+      var openNumArr = [];
+      var heteExtentArr = [];
       for (var i = 0; i < num.length; i++) {
         //各类课程开设数量
         openNumArr.push(num[i].count);
@@ -841,10 +843,9 @@ export default {
           axisLine: { show: false },
           axisLabel: {
             textStyle: {
-              color: "#fff",
-
+              color: "#fff"
             }
-          },
+          }
         },
         yAxis: {
           splitLine: { show: false },
@@ -866,8 +867,7 @@ export default {
                 opacity: 0.5,
                 color: function(params) {
                   return _this.bigColor[params.dataIndex];
-                },
-                
+                }
               },
               emphasis: {
                 opacity: 1
@@ -875,8 +875,7 @@ export default {
             },
             data: heteExtentArr
           }
-        ],
-
+        ]
       };
       window.onresize = myChart.resize;
       myChart.setOption(option);
@@ -885,7 +884,7 @@ export default {
     date_condition(num) {
       var _this = this;
       var arrSeries = [];
-      var startArr=[];
+      var startArr = [];
       for (var a = 0; a < num[0].datas.length; a++) {
         startArr.push(num[0].datas[a].start + "~" + num[0].datas[a].end);
       }
@@ -1163,7 +1162,6 @@ option {
   margin-left: 0.4rem;
   margin-right: 0.2rem;
   margin-top: 0.4rem;
-  
 }
 
 .box-content-top {
@@ -1188,7 +1186,8 @@ option {
   margin-bottom: 0.2rem;
   justify-content: space-between;
 }
-#classSituation,#timeSituation{
+#classSituation,
+#timeSituation {
   margin-right: 0rem;
 }
 .box-content-bottom {
@@ -1400,7 +1399,7 @@ option {
 }
 .echarts-legend-box {
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
   /* justify-content:  */
   margin: 0 auto;
   width: 100%;
@@ -1411,7 +1410,7 @@ option {
   border-top: 0.02rem #08263c solid;
 }
 .echarts-legend-box2 {
-  justify-content:space-between;
+  justify-content: space-between;
 }
 .echarts-legend-box .echarts-legend-item:nth-child(1) .echarts-legend-item-bar {
   background-color: #52f397;
@@ -1440,13 +1439,19 @@ option {
 .echarts-legend-box .echarts-legend-item:nth-child(9) .echarts-legend-item-bar {
   background-color: #00c5ff;
 }
-.echarts-legend-box .echarts-legend-item:nth-child(10) .echarts-legend-item-bar {
+.echarts-legend-box
+  .echarts-legend-item:nth-child(10)
+  .echarts-legend-item-bar {
   background-color: #478cef;
 }
-.echarts-legend-box .echarts-legend-item:nth-child(11) .echarts-legend-item-bar {
+.echarts-legend-box
+  .echarts-legend-item:nth-child(11)
+  .echarts-legend-item-bar {
   background-color: #a243da;
 }
-.echarts-legend-box .echarts-legend-item:nth-child(12) .echarts-legend-item-bar {
+.echarts-legend-box
+  .echarts-legend-item:nth-child(12)
+  .echarts-legend-item-bar {
   background-color: #d72fa7;
 }
 .echarts-legend-item {
