@@ -3,7 +3,6 @@
     <div class="fx-con">
       <div class="fx-title">第二课堂育人成效分析</div>
       <div class="fx-content">
-        <!-- 日期插件 -->
         <div class="block">
           <span class="demonstration">统计日期</span>
           <el-date-picker
@@ -15,7 +14,6 @@
             class="data-picker"
           ></el-date-picker>
         </div>
-        <!-- 日期插件 -->
         <div class="fx-scope">
           <span>学院范围</span>
           <el-select v-model="value2" placeholder="请选择">
@@ -38,30 +36,15 @@
             ></el-option>
           </el-select>
         </div>
-        <!-- <div class="fx-scope"><span>学生范围</span>
-                    <el-select v-model="value4" placeholder="请选择">
-                        <el-option
-                            v-for="item in optionsThree"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-        </div>-->
-        <div class="fx-btn" @click="clickNum">运算</div>
+        <div class="fx-btn">运算</div>
       </div>
     </div>
     <div class="fx-hr"></div>
-    <!-- <div class="fx-tab">
-            <span class="tab1">数据透视</span>
-            <span class="tab2" @click="clickAlict">数据列表</span>
-            <span class="tab3" @click="clickAlict">教师工作者</span>
-    </div>-->
     <div class="fx-echarts">
       <div class="fxbox5-txt">
-        在{{studentsAbilityCount}}个维度上，总共为学生提升能力
-        <span class="improvement">{{studentsAbilityTotal}}</span>点,人均提升
-        <span class="Promote">{{studentsAbilityAvg}}</span>点
+        在0个维度上，总共为学生提升能力
+        <span class="improvement">0</span>点,人均提升
+        <span class="Promote">0</span>点
       </div>
       <div></div>
       <div id="chart_example" style="height: 100%;width:100%"></div>
@@ -76,9 +59,9 @@
           <td>
             <div>课程供给</div>
             <div>
-              <span class="iconfont icon-ketang"></span>
+              <span class="iconfont iconketang"></span>
               <span class="kaike">开课</span>
-              <span class="iconfont icon-rengong-copy"></span>
+              <span class="iconfont iconrengong"></span>
               <span class="renci">人次</span>
             </div>
           </td>
@@ -91,12 +74,12 @@
                             </div>
           </td>-->
           <td v-for="(item, index) in summary" :key="index">
-            <div>
-              <span class="iconfont icon-ketang dianshi"></span>&nbsp;&nbsp;&nbsp;
+            <div class="top-box">
+              <span class="iconfont iconketang dianshi"></span>&nbsp;&nbsp;&nbsp;
               <span class="dianshi-number">{{item.course_count}}</span>
             </div>
-            <div>
-              <span class="iconfont icon-rengong-copy yonghu1"></span>&nbsp;
+            <div class="bottom-box">
+              <span class="iconfont iconrengong yonghu1"></span>&nbsp;
               <span class="yonghu-number">{{item.join_count}}</span>
             </div>
           </td>
@@ -137,13 +120,9 @@ export default {
       value1: "", //日期
       value2: "",
       value3: "",
-      optionsOne: [],
-      optionsTwo: [],
-      optionsThree: [],
+      optionsOne:'',
+      optionsTwo:'',
       // 学生能力增长情况
-      studentsAbilityCount: "",
-      studentsAbilityTotal: "",
-      studentsAbilityAvg: "",
       studentsAbilityTitles: [],
       studentsAbilityData1: [],
       studentsAbilityData2: [],
@@ -168,6 +147,7 @@ export default {
     this.$forceUpdate();
     this.getToken();
     this.$forceUpdate();
+    this.getEcharts();
   },
   methods: {
     fetchData() {
@@ -190,8 +170,7 @@ export default {
         var End = "";
         var Unit = 0;
         var Grade = 0;
-        _this.getoptionsOne(token);
-        _this.getStudentsAbility(token, Start, End, Unit, Grade);
+        // _this.getStudentsAbility(token, Start, End, Unit, Grade);
         _this.getAblitycourse(token, Start, End, Unit, Grade);
         return false;
       }
@@ -214,8 +193,7 @@ export default {
             var End = "";
             var Unit = 0;
             var Grade = 0;
-            _this.getoptionsOne(token);
-            _this.getStudentsAbility(token, Start, End, Unit, Grade);
+            // _this.getStudentsAbility(token, Start, End, Unit, Grade);
             _this.getAblitycourse(token, Start, End, Unit, Grade);
           })
           .catch(function(error) {
@@ -224,28 +202,8 @@ export default {
           });
       }
     },
-    getoptionsOne(token) {
-      //  option
-      var _this = this;
-      axios
-        .get(_this.url + "/api/Plat/options?access_token=" + token)
-        .then(function(response) {
-          if (response.data.code !== 0) {
-            sessionStorage.removeItem("token"); //清除失效的token
-            window.location.href =
-              " http://class-admin.univteam.com/" +
-              url22 +
-              "/account/login?back=statistics";
-          }
-          _this.optionsOne = response.data.data.edus;
-          _this.optionsTwo = response.data.data.units;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    },
+    // 获取echarts中的数据接口
     getStudentsAbility(token, Start, End, Unit, Grade) {
-      // echarts
       var _this = this;
       axios
         .get(
@@ -269,23 +227,16 @@ export default {
               url22 +
               "/account/login?back=statistics";
           }
-          _this.studentsAbilityCount = response.data.data.count;
-          _this.studentsAbilityTotal = response.data.data.total;
-          _this.studentsAbilityAvg = response.data.data.avg;
           _this.studentsAbilityTitles = response.data.data.titles;
           _this.studentsAbilityData1 = response.data.data.data1;
           _this.studentsAbilityData2 = response.data.data.data2;
-          _this.getEcharts(
-            _this.studentsAbilityTitles,
-            _this.studentsAbilityData1,
-            _this.studentsAbilityData2
-          );
+          // _this.getEcharts(_this.studentsAbilityTitles,_this.studentsAbilityData1,_this.studentsAbilityData2);
         })
         .catch(function(error) {
           console.log(error);
         });
     },
-    // 点击获取开课人次table
+    // 点击获取开课人次表格的接口
     getAblitycourse(token, Start, End, Unit, Grade) {
       var _this = this;
       axios
@@ -323,43 +274,7 @@ export default {
           console.log(error);
         });
     },
-    // 点击运算
-    clickNum() {
-      var Start =
-        this.DateTimes(this.value1[0]) != ""
-          ? this.DateTimes(this.value1[0])
-          : "";
-      var End =
-        this.DateTimes(this.value1[1]) != ""
-          ? this.DateTimes(this.value1[1])
-          : "";
-      var Unit = this.value2 != "" ? this.value2 : 0;
-      var Grade = this.value3 != "" ? this.value3 : 0;
-      var token = this.token;
-      this.getStudentsAbility(token, Start, End, Unit, Grade);
-      this.getAblitycourse(token, Start, End, Unit, Grade);
-    },
-    // 点击出弹窗
-    clickAlict() {
-      window.alert("敬请期待");
-    },
-    // 处理时间戳
-    DateTimes(id) {
-      var result;
-      var myDate = new Date(id);
-      var yaer = myDate.getYear(); //获取当前年份(2位)
-      var fullyaer = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
-      var month = myDate.getMonth() + 1; //获取当前月份(0-11,0代表1月)
-      var date = myDate.getDate(); //获取当前日(1-31)
-      if (month < 10) {
-        month = "0" + month;
-      }
-      if (date < 10) {
-        date = "0" + date;
-      }
-      result = fullyaer.toString() + "-" + month + "-" + date;
-      return result;
-    },
+
     // 把数组合并成一个对象
     getaddArr(arr1, arr2) {
       var array = [];
@@ -375,16 +290,51 @@ export default {
       }
       this.array = array;
     },
-    getEcharts(
-      studentsAbilityTitles,
-      studentsAbilityData1,
-      studentsAbilityData2
-    ) {
-      //初始化echarts
+    //初始化学生能力增长情况的echarts
+    getEcharts(studentsAbilityTitles,studentsAbilityData1,studentsAbilityData2) {
       var _this = this;
-      // studentsAbilityTitles=[120, 132, 101, 134, 90, 230, 210, 182, 191, 234, 290, 330];
-      // studentsAbilityData1=['3/4~3/10','3/11~3/17','3/4~3/10','3/10~3/17','3/10~3/17','3/10~3/17','3/10~3/17','3/10~3/17','3/10~3/17','3/10~3/17','3/10~3/17','3/10~3/17'];
-      //studentsAbilityData2=[100, 182, 191, 234, 290, 330, 310,201, 154, 190, 330, 410];
+      studentsAbilityTitles = [
+        '逻辑思维',
+        '创新思维',
+        '团队协作',
+        '领导能力',
+        '知识运用',
+        '归纳总结',
+        '政治意识',
+        '奉献精神',
+        '责任意识',
+        '知识运用',
+        '归纳总结',
+        '政治意识'
+      ];
+      studentsAbilityData1 = [
+        1,
+        3,
+        3,
+        4,
+        5,
+        3,
+        1,
+        2,
+        3,
+        1,
+        2,
+        3
+      ];
+      studentsAbilityData2 = [
+        1,
+        6,
+        2,
+        3,
+        2,
+        5,
+        6,
+        5,
+        2,
+        3,
+        1,
+        2
+      ];
       var fontColor = "#30eee9";
       let myChart = echarts.init(document.getElementById("chart_example"));
       let option = {
@@ -401,19 +351,8 @@ export default {
           selected: {}
         },
         dataZoom: [
-          {
-            type: "slider",
-            show: true,
-            //   xAxisIndex: [0],
-            //   left: '9%',
-            //   bottom: -5,
-            //   start: 10,
-            //   end: 90 //初始化滚动条
-            start: 0,
-            end: 80, //初始化滚动条
-            top: "81%"
-          }
-        ],
+                {type: "inside",show: false,xAxisIndex: 0,zoomOnMouseWheel:false,startValue: 0,endValue: 7,zoomLock: true}, 
+            ],
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -479,7 +418,7 @@ export default {
           {
             type: "value",
             axisLabel: {
-              formatter: "{value}",
+              formatter: "V{value}",
               textStyle: {
                 color: "#fff",
                 fontSize: "13"
@@ -548,6 +487,7 @@ export default {
   box-sizing: border-box;
   padding: 0 2%;
   padding-top: 20px;
+  font-size: 0.12rem;
 }
 .fx-con {
   display: flex;
@@ -621,15 +561,13 @@ export default {
   margin-top: 20px;
 }
 .fx-echarts {
-  width: 95%;
+  width: 100%;
   height: 50%;
-  margin: 0 auto;
   position: relative;
 }
 .fxbox5-txt {
   position: absolute;
   top: 4%;
-  left: 40px;
   color: #8a98a3;
 }
 .fxbox5-tit span:nth-child(1) {
@@ -663,7 +601,6 @@ table {
   height: 100%;
 }
 .fx-table td {
-  /* width: 6%; */
   text-align: center;
   height: 32.3%;
   background: #153146;
@@ -743,11 +680,8 @@ table {
   width: 230px;
   height: 50px;
   color: #fff;
-  /* margin: 150px auto; */
   border-radius: 15px;
   position: absolute;
-  /* top: 42%;
-        left: 40%; */
   margin: auto;
   top: 0;
   left: 0;
@@ -765,5 +699,11 @@ table {
 }
 .yonghu-number {
   float: left;
+}
+.top-box{
+  height: 20px;
+}
+.bottom-box{
+  height: 20px;
 }
 </style>

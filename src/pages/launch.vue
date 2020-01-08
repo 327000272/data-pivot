@@ -4,7 +4,7 @@
       <div class="fx-title">第二课堂课程开展分析</div>
       <div class="fx-content">
         <!-- 日期插件 -->
-        <div class="block">
+        <!-- <div class="block">
           <span class="demonstration">统计日期</span>
           <el-date-picker
             v-model="value1"
@@ -13,8 +13,12 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             class="data-picker"
-            
           ></el-date-picker>
+        </div>-->
+        <div class="block">
+          <span class="demonstration">统计日期</span>
+          <el-date-picker v-model="value1" type="date" class="data-picker" placeholder="开始日期"></el-date-picker>
+          <el-date-picker v-model="value2" type="date" class="data-picker" placeholder="结束日期"></el-date-picker>
         </div>
         <div class="fx-btn" @click="pointer()">运算</div>
       </div>
@@ -65,7 +69,11 @@
               <span>学院范围</span>
               <select @change="change($event)">
                 <option>全部</option>
-                <option v-for="item in collegeSchool" :key="item.index" :value="item.id">{{item.name}}</option>
+                <option
+                  v-for="item in collegeSchool"
+                  :key="item.index"
+                  :value="item.id"
+                >{{item.name}}</option>
               </select>
               <!-- <span class="iconfont iconduobianxing"></span> -->
             </div>
@@ -121,11 +129,15 @@
               <span>学院范围</span>
               <select @change="change2($event)">
                 <option>全部</option>
-                <option v-for="item in collegeSchool" :key="item.index" :value="item.id">{{item.name}}</option>
+                <option
+                  v-for="item in collegeSchool"
+                  :key="item.index"
+                  :value="item.id"
+                >{{item.name}}</option>
               </select>
             </div>
           </div>
-          <div id="date_condition" style="height: 100%;width:70%;"></div>
+          <div id="date_condition" style="height: 100%;width:70%;" v-if="isShowTable"></div>
           <!-- 左右箭头 -->
           <div class="youjiantou iconfont iconlujing1" v-if="youShow"></div>
           <div class="zuojiantou iconfont iconlujing" v-if="zuoShow"></div>
@@ -153,8 +165,13 @@ export default {
       // url: "https://class-ms-test.univteam.com/",
       url: "https://classroom.univteam.com/",
       back_url: "http://class-admin.univteam.com/",
-      value1: [new Date(new Date() - 1000 * 60 * 60 * 24 * 30), new Date()], //日期
-
+      //value1: new Date(new Date() - 1000 * 60 * 60 * 24 * 30), //日期
+      value1: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
+      value2: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth() - 1,
+        new Date(new Date().getFullYear(), new Date().getMonth(), 0).getDate()
+      ),
       Condition: [],
       Comment: [],
       evaluateNum: "",
@@ -205,7 +222,8 @@ export default {
         "#00C5FF",
         "#A243DA",
         "#D72FA7"
-      ]
+      ],
+      isShowTable: true
     };
   },
   created() {
@@ -223,13 +241,11 @@ export default {
     change(event) {
       var _this = this;
       _this.ida = event.target.value;
-      console.log(_this.ida);
     },
     change2() {
       var _this = this;
       // console.log(event.target.value)
       _this.ida2 = event.target.value;
-      console.log(_this.ida2);
     },
     fetchData() {
       console.log("路由发送变化doing...");
@@ -268,13 +284,9 @@ export default {
     getInfos() {
       var _this = this;
       var Start =
-        this.DateTimes(this.value1[0]) != ""
-          ? this.DateTimes(this.value1[0])
-          : "";
+        this.DateTimes(_this.value1) != "" ? this.DateTimes(_this.value1) : "";
       var End =
-        this.DateTimes(this.value1[1]) != ""
-          ? this.DateTimes(this.value1[1])
-          : "";
+        this.DateTimes(_this.value2) != "" ? this.DateTimes(_this.value2) : "";
       _this.schoolscope(_this.sessionToken);
       _this.getCondition(_this.sessionToken, Start, End);
       _this.getComment(_this.sessionToken, Start, End);
@@ -313,13 +325,17 @@ export default {
         .then(function(response) {
           _this.PlatDetail = response.data.data.logo;
           axios
-            .get(_this.url + "course_supply?access_token=" + token+
-            "&Start=" +
-            Start +
-            "&End=" +
-            End +
-            "&Unit=" +
-            Unit)
+            .get(
+              _this.url +
+                "course_supply?access_token=" +
+                token +
+                "&Start=" +
+                Start +
+                "&End=" +
+                End +
+                "&Unit=" +
+                Unit
+            )
             .then(function(response) {
               var resD = response.data;
               if (resD.code == 0) {
@@ -370,7 +386,15 @@ export default {
       var _this = this;
       // axios.get(_this.url + "api/Plat/course/condition?access_token=" + token)
       axios
-        .get(_this.url + "course_condition?access_token=" + token+"&Start=" +Start +"&End=" +End)
+        .get(
+          _this.url +
+            "course_condition?access_token=" +
+            token +
+            "&Start=" +
+            Start +
+            "&End=" +
+            End
+        )
         .then(function(response) {
           var resD = response.data;
           if (resD.code == 0 && resD.data.length > 0) {
@@ -387,11 +411,18 @@ export default {
       var _this = this;
       // axios.get(_this.url + "api/Plat/course/comment?access_token=" + token)
       axios
-        .get(_this.url + "course_comment?access_token=" + token+"&Start=" +Start +"&End=" +End)
+        .get(
+          _this.url +
+            "course_comment?access_token=" +
+            token +
+            "&Start=" +
+            Start +
+            "&End=" +
+            End
+        )
         .then(function(response) {
           var resD = response.data;
           if (resD.code == 0 && resD.data.length > 0) {
-            console.log(response.data.data)
             _this.Comment = response.data.data;
             for (var i = 0; i < _this.Comment.length; i++) {
               //保存评价数
@@ -411,15 +442,14 @@ export default {
                 _this.middle = _this.Comment[i];
               }
               //保存差评率
-              if (_this.Comment[i].type == 6) {
-                _this.bad = _this.Comment[i];
-              }
+              // if (_this.Comment[i].type == 18) {
+              //   _this.bad = _this.Comment[i];
+              // }
             }
-            // _this.satisfactionDegree=Number(_this.good.data)+Number(_this.middle.data)+Number(_this.bad.data)/3;
             var hao = Number(_this.good.data);
             var zhong = Number(_this.middle.data);
             var huai = Number(_this.bad.data);
-            _this.satisfactionDegree = Math.ceil((hao + zhong + huai) / 3);
+            _this.satisfactionDegree = hao + zhong;
             _this.satisfaction(_this.satisfactionDegree);
           }
         })
@@ -473,13 +503,18 @@ export default {
         )
         .then(function(res) {
           var resD = res.data;
+          _this.isShowTable = true;
           if (resD.code == 0 && resD.data.length > 0) {
-            _this.line = resD.data;
-            _this.date_condition(_this.line);
             _this.lineName = [];
             for (var i = 0; i < res.data.data.length; i++) {
               _this.lineName.push(res.data.data[i].name);
             }
+            //将数据放入echarts函数中
+            _this.line = resD.data;
+            _this.date_condition(_this.line);
+          } else {   
+            _this.lineName = [];
+            _this.isShowTable = false;
           }
         })
         .catch(function(error) {
@@ -493,7 +528,15 @@ export default {
       var _this = this;
       // axios.get(_this.url + "api/Plat/course/rank?unit=0&access_token=" + token)
       axios
-        .get(_this.url + "course_rank?unit=0&access_token=" + token+"&Start=" +Start +"&End=" +End)
+        .get(
+          _this.url +
+            "course_rank?unit=0&access_token=" +
+            token +
+            "&Start=" +
+            Start +
+            "&End=" +
+            End
+        )
         .then(function(response) {
           var resD = response.data;
           if (resD.code == 0 && resD.data.length > 0) {
@@ -822,6 +865,7 @@ export default {
 
       let myChart = echarts.init(document.getElementById("classNum"));
       let option = {
+        
         title: {
           text: "各类课程开设数量",
           x: "center",
@@ -840,6 +884,7 @@ export default {
             return params[0].data.title + " : " + params[0].data.value;
           }
         },
+        
         xAxis: {
           data: openNumArr,
           axisTick: { show: false },
@@ -933,7 +978,9 @@ export default {
           data: allList[aa]
         });
       }
+
       let myChart = echarts.init(document.getElementById("date_condition"));
+      console.log(myChart)
       let option = {
         grid: {
           left: "5%",
@@ -1076,20 +1123,7 @@ export default {
 .data-picker input {
   background-color: #213c50 !important;
   color: #c4cbd1;
-}
-.data-picker .el-range__icon {
-  display: none;
-}
-.data-picker .el-range-separator {
-  color: #c4cbd1;
-}
-.fx-scope input {
   border: none;
-  background: #213c50;
-  color: #ffffff;
-}
-.el-date-editor .el-range-input {
-  color: #ffffff !important;
 }
 </style>
 <style scoped>
@@ -1143,12 +1177,7 @@ option {
   margin-right: 2px;
   min-width: 100px;
 }
-.block .data-picker {
-  border-radius: 0;
-  background: #213c50;
-  border: none;
-  color: #fff;
-}
+
 .fx-btn {
   border: 1px #fff solid;
   color: #fff;

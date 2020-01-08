@@ -4,7 +4,7 @@
       <div class="fx-title">第二课堂参与情况分析</div>
       <div class="fx-content">
         <!-- 日期插件 -->
-        <div class="block">
+        <!-- <div class="block">
           <span class="demonstration">统计日期</span>
           <el-date-picker
             v-model="value1"
@@ -14,6 +14,21 @@
             end-placeholder="结束日期"
             class="data-picker"
           ></el-date-picker>
+        </div> -->
+        <div class="block">
+          <span class="demonstration">统计日期</span>
+          <el-date-picker
+            v-model="value1"
+            type="date"
+            class="data-picker"
+            placeholder="开始日期">
+          </el-date-picker>
+          <el-date-picker
+            v-model="value2"
+            type="date"
+            class="data-picker"
+            placeholder="结束日期">
+          </el-date-picker>
         </div>
         <div class="fx-btn" @click="pointer()">运算</div>
       </div>
@@ -112,7 +127,7 @@
               <p>各学院学生参与人次统计</p>
             </div>
           </div>
-          <div class="collegePerson" id="collegePerson"></div>
+          <div class="collegePerson" id="collegePerson" v-if="showBarCharts"></div>
           <!-- 左右箭头 -->
           <div class="youjiantou iconfont iconlujing1" v-if="youShow"></div>
           <div class="zuojiantou iconfont iconlujing" v-if="zuoShow"></div>
@@ -156,7 +171,8 @@ export default {
       // url: "https://class-ms-test.univteam.com/",
       url: "https://classroom.univteam.com/",
       back_url: "http://class-admin.univteam.com/",
-      value1: [new Date(new Date() - 1000 * 60 * 60 * 24 * 30), new Date()], //日期
+      value1:new Date(new Date().getFullYear(), new Date().getMonth()-1, 1),
+      value2:new Date(new Date().getFullYear(), new Date().getMonth()-1, new Date(new Date().getFullYear(), new Date().getMonth(), 0).getDate()),
       youShow: true,
       zuoShow: false,
       supplyComprehensive: [],
@@ -239,7 +255,9 @@ export default {
         "#00C5FF",
         "#A243DA",
         "#D72FA7"
-      ]
+      ],
+      showBarCharts:true,
+
     };
   },
   mounted() {
@@ -278,12 +296,12 @@ export default {
       if (_this.sessionToken !== null) {
         //不为null,本地已经存在token,调用方法
         var Start =
-          this.DateTimes(this.value1[0]) != ""
-            ? this.DateTimes(this.value1[0])
+          this.DateTimes(_this.value1) != ""
+            ? this.DateTimes(_this.value1)
             : "";
         var End =
-          this.DateTimes(this.value1[1]) != ""
-            ? this.DateTimes(this.value1[1])
+          this.DateTimes(_this.value2) != ""
+            ? this.DateTimes(_this.value2)
             : "";
 
         _this.schoolscope(_this.sessionToken);
@@ -293,26 +311,22 @@ export default {
         _this.getInitiative(_this.sessionToken, Start, End, _this.ida2);
       } else {
         //判断路径上有无参数,
-        //_this.postToken();
         setTimeout(function() {
           _this.whetherToken();
         }, 1000);
       }
     },
-    // tourl(){
-    //   var _this=this;
-    //  window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
-    // },
+
     //点击指示器,重新计算
     pointer() {
       var _this = this;
       var Start =
-        this.DateTimes(this.value1[0]) != ""
-          ? this.DateTimes(this.value1[0])
+        this.DateTimes(_this.value1) != ""
+          ? this.DateTimes(_this.value1)
           : "";
       var End =
-        this.DateTimes(this.value1[1]) != ""
-          ? this.DateTimes(this.value1[1])
+        this.DateTimes(_this.value2) != ""
+          ? this.DateTimes(_this.value2)
           : "";
 
       _this.schoolscope(_this.sessionToken);
@@ -478,6 +492,7 @@ export default {
       axios
         .get(_this.url + "unitCount/?access_token=" + token+"&Start=" +Start +"&End=" +End)
         .then(function(response) {
+          _this.showBarCharts=true;
           var resD = response.data;
           var arr = [];
           var arr2 = [];
@@ -488,6 +503,8 @@ export default {
               arr2.push(response.data.data[i].count);
             }
             _this.collegePerson(arr, arr2);
+          }else{
+
           }
         })
         .catch(function(error) {
@@ -1232,20 +1249,11 @@ export default {
 <style>
 .data-picker input {
   background-color: #213c50 !important;
-}
-.data-picker .el-range__icon {
-  display: none;
-}
-.data-picker .el-range-separator {
   color: #c4cbd1;
-}
-.fx-scope input {
   border: none;
-  background: #213c50;
-  color: #ffffff;
 }
-.el-date-editor .el-range-input {
-  color: #ffffff !important;
+.data-picker{
+  width: 50%;
 }
 </style>
 <style scoped>
