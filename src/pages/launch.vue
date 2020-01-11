@@ -78,10 +78,11 @@
               <!-- <span class="iconfont iconduobianxing"></span> -->
             </div>
           </div>
-          <div class="box-item-pic">
-            <div class="classNumCircle" id="classNumCircle"></div>
-            <div class="classNum" id="classNum"></div>
+          <div class="box-item-pic" v-if="isShowPie">
+            <div class="classNumCircle" id="classNumCircle" ></div>
+            <div class="classNum" id="classNum" ></div>
           </div>
+          <div class="noData" v-if="noData">无数据</div>
           <div class="echarts-legend">
             <div class="echarts-legend-box">
               <div class="echarts-legend-item" v-for="item in openClassName" :key="item.id">
@@ -165,7 +166,6 @@ export default {
       // url: "https://class-ms-test.univteam.com/",
       url: "https://classroom.univteam.com/",
       back_url: "http://class-admin.univteam.com/",
-      //value1: new Date(new Date() - 1000 * 60 * 60 * 24 * 30), //日期
       value1: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
       value2: new Date(
         new Date().getFullYear(),
@@ -223,7 +223,9 @@ export default {
         "#A243DA",
         "#D72FA7"
       ],
-      isShowTable: true
+      isShowTable: true,
+      noData:false,
+      isShowPie:true
     };
   },
   created() {
@@ -476,10 +478,20 @@ export default {
         )
         .then(function(response) {
           var resD = response.data;
+          _this.openClassName=[];
           if (resD.code == 0 && resD.data.length > 0) {
+             _this.noData=false;
+            //  _this.isShowPie=true;
+             for(var i=0;i<resD.data.length;i++){
+               _this.openClassName.push(resD.data[i].title);
+             }
             _this.supplyComprehensive = response.data.data;
             _this.classNum(_this.supplyComprehensive);
             _this.classNumber(_this.supplyComprehensive);
+          }else{
+            _this.openClassName=[];
+            _this.noData=true;
+            // _this.isShowPie=false;
           }
         })
         .catch(function(error) {
@@ -503,8 +515,8 @@ export default {
         )
         .then(function(res) {
           var resD = res.data;
-          _this.isShowTable = true;
           if (resD.code == 0 && resD.data.length > 0) {
+            _this.isShowTable = true;
             _this.lineName = [];
             for (var i = 0; i < res.data.data.length; i++) {
               _this.lineName.push(res.data.data[i].name);
@@ -773,14 +785,14 @@ export default {
     classNumber(num) {
       var _this = this;
       var arr = [];
-      _this.openClassName = [];
+      // _this.openClassName = [];
       for (var i = 0; i < num.length; i++) {
         arr.push({
           value: num[i].percent,
           name: num[i].percent + "%",
           title: num[i].title
         });
-        _this.openClassName.push(num[i].title);
+        // _this.openClassName.push(num[i].title);
       }
       let myChart = echarts.init(document.getElementById("classNumCircle"));
 
@@ -860,7 +872,6 @@ export default {
         //各类课程开设数量
         openNumArr.push(num[i].count);
         heteExtentArr.push({ value: num[i].count, title: num[i].title });
-        // _this.openClassName.push(num[i].title);
       }
 
       let myChart = echarts.init(document.getElementById("classNum"));
@@ -980,7 +991,6 @@ export default {
       }
 
       let myChart = echarts.init(document.getElementById("date_condition"));
-      console.log(myChart)
       let option = {
         grid: {
           left: "5%",
@@ -1405,6 +1415,7 @@ option {
   display: flex;
   justify-content: space-between;
   margin-top: 0.3rem;
+  position: relative;
 }
 .classNumCircle {
   width: 40%;
@@ -1593,28 +1604,36 @@ option {
 }
 ::-webkit-scrollbar {
   /*滚动条整体样式*/
-
   width: 14px; /*高宽分别对应横竖滚动条的尺寸*/
-
   height: 14px;
 }
 ::-webkit-scrollbar-thumb {
   /*滚动条里面小方块*/
-
   border-radius: 5px;
-
   -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-
   background: rgba(0, 0, 0, 0.2);
 }
 
 ::-webkit-scrollbar-track {
   /*滚动条里面轨道*/
-
   -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-
   border-radius: 0;
-
   background: rgba(0, 0, 0, 0.1);
+}
+.noData{
+  font-size: 0.25rem;
+  text-align: center;
+  line-height: 0.50rem;
+  background: #8a98a3;
+  width: 2.3rem;
+  height: 0.50rem;
+  color: #fff;
+  border-radius: 0.15rem;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 </style>

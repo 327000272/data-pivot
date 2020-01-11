@@ -170,7 +170,6 @@ export default {
         var End = "";
         var Unit = 0;
         var Grade = 0;
-        // _this.getStudentsAbility(token, Start, End, Unit, Grade);
         _this.getAblitycourse(token, Start, End, Unit, Grade);
         return false;
       }
@@ -193,7 +192,6 @@ export default {
             var End = "";
             var Unit = 0;
             var Grade = 0;
-            // _this.getStudentsAbility(token, Start, End, Unit, Grade);
             _this.getAblitycourse(token, Start, End, Unit, Grade);
           })
           .catch(function(error) {
@@ -230,7 +228,6 @@ export default {
           _this.studentsAbilityTitles = response.data.data.titles;
           _this.studentsAbilityData1 = response.data.data.data1;
           _this.studentsAbilityData2 = response.data.data.data2;
-          // _this.getEcharts(_this.studentsAbilityTitles,_this.studentsAbilityData1,_this.studentsAbilityData2);
         })
         .catch(function(error) {
           console.log(error);
@@ -629,40 +626,23 @@ table {
   cursor: pointer;
   font-size: 15px;
 }
-.fx-tab .tab1 {
-  border-radius: 30px 0 0 30px;
-  background: rgba(0, 0, 0, 0.2) !important;
-  position: absolute;
-  left: 0;
-  color: #fff;
-}
-.tab2 {
-  position: absolute;
-  left: 8%;
-}
-.tab3 {
-  border-radius: 0px 30px 30px 0px;
-  position: absolute;
-  left: 16%;
-}
+
 .kaike {
   color: #5b6f7e;
   font-size: 12px;
   margin-right: 30px;
 }
-.icon-ketang {
-  color: #5b6f7e;
-}
-.icon-renci {
-  color: #5b6f7e;
-}
-.icon-rengong-copy {
-  color: #5b6f7e;
-}
 .renci {
   color: #5b6f7e;
   font-size: 12px;
 }
+.iconketang {
+  color: #5b6f7e;
+}
+.iconrengong {
+  color: #5b6f7e;
+}
+
 .improvement {
   color: #fff;
   padding: 0px 12px;

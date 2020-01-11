@@ -67,53 +67,53 @@
               <div class="iconfont iconjihuo"></div>
               <div>
                 <p style="opacity:50%;">学生用户激活总数</p>
-                <div>{{studentCount}}名学生</div>
+                <div><strong>{{studentCount}}</strong>名学生</div>
               </div>
               <div>
                 <p style="opacity:50%;">教师用户激活总数</p>
-                <div>{{teacherCount}}名教职工</div>
+                <div><strong>{{teacherCount}}</strong>名教职工</div>
               </div>
               <div>
                 <p style="opacity:50%;">{{unitJoinTitle}}</p>
-                <div>{{unitJoinCountData}}{{unitJoinCountUnit}}</div>
+                <div><strong>{{unitJoinCountData}}</strong>{{unitJoinCountUnit}}</div>
               </div>
               <div>
                 <p style="opacity:50%;">{{teacherPersonTitle}}</p>
-                <div>{{teacherPersonDate}}{{teacherPersonUnit}}</div>
+                <div><strong>{{teacherPersonDate}}</strong>{{teacherPersonUnit}}</div>
               </div>
             </div>
             <div class="liveness-middle">
               <div class="iconfont iconrenshu"></div>
               <div>
                 <p style="opacity:50%;">{{stuPersonTimeTitle}}</p>
-                <div>{{stuPersonTimeData}}{{stuPersonTimeUnit}}</div>
+                <div><strong class="studentZPeople">{{stuPersonTimeData}}</strong>{{stuPersonTimeUnit}}</div>
               </div>
               <div>
                 <p style="opacity:50%;">{{stuPersonNumTitle}}</p>
-                <div>{{stuPersonNumData}}{{stuPersonNumUnit}}</div>
+                <div><strong>{{stuPersonNumData}}</strong>{{stuPersonNumUnit}}</div>
               </div>
               <div>
                 <p style="opacity:50%;">{{peopleJoinTitle}}</p>
-                <div>{{peopleJoinCountData}}{{peopleJoinCountUnit}}</div>
+                <div><strong>{{peopleJoinCountData}}</strong>{{peopleJoinCountUnit}}</div>
               </div>
             </div>
             <div class="liveness-bottom">
               <div class="iconfont iconhuo"></div>
               <div>
                 <p style="opacity:50%;">{{dayActiveCountTitle}}</p>
-                <div>{{dayActiveCountData}}{{dayActiveCountUnit}}</div>
+                <div><strong>{{dayActiveCountData}}</strong>{{dayActiveCountUnit}}</div>
               </div>
               <div>
                 <p style="opacity:50%;">{{monthActiveCountTitle}}</p>
-                <div>{{monthActiveCountData}}{{monthActiveCountUnit}}</div>
+                <div><strong>{{monthActiveCountData}}</strong>{{monthActiveCountUnit}}</div>
               </div>
               <div>
                 <p style="opacity:50%;">{{loginCountTitle}}</p>
-                <div>{{loginCountData}}{{loginCountUnit}}</div>
+                <div><strong>{{loginCountData}}</strong>{{loginCountUnit}}</div>
               </div>
               <div>
                 <p style="opacity:50%;">{{onLineTitle}}</p>
-                <div>{{onLineCountData}}{{onLineCountUnit}}</div>
+                <div><strong>{{onLineCountData}}</strong>{{onLineCountUnit}}</div>
               </div>
             </div>
           </div>
@@ -1257,6 +1257,12 @@ export default {
 }
 </style>
 <style scoped>
+strong{
+  font-size: 0.14rem;
+}
+.studentZPeople{
+  font-size: 0.20rem;
+}
 .iconfont {
   color: #fff;
   font-size: 0.3rem;
@@ -1447,38 +1453,41 @@ select {
   height: 2.5rem;
 }
 .liveness {
-  font-size: 0.1rem;
+  font-size: 0.12rem;
   margin: 0 auto;
-  width: 80%;
+  width: 100%;
   margin-top: 0.5rem;
 }
 .liveness-top {
   display: flex;
   text-align: center;
+  width: 90%;
+  margin: 0 auto;
   margin-bottom: 0.12rem;
+
 }
 .liveness-top > div {
   background-color: rgba(0, 252, 213, 15%);
   margin-right: 0.04rem;
 }
 .liveness-top > div:nth-child(1) {
-  width: 0.68rem;
+  width: 10%;
   height: 0.68rem;
 }
 .liveness-top > div:nth-child(2) {
-  width: 1.3rem;
+  width: 22%;
   height: 0.68rem;
 }
 .liveness-top > div:nth-child(3) {
-  width: 1.3rem;
+  width: 22%;
   height: 0.68rem;
 }
 .liveness-top > div:nth-child(4) {
-  width: 1.3rem;
+  width: 22%;
   height: 0.68rem;
 }
 .liveness-top > div:nth-child(5) {
-  width: 1.3rem;
+  width: 22%;
   height: 0.68rem;
 }
 .liveness-top > div > p {
@@ -1493,6 +1502,8 @@ select {
 .liveness-middle {
   display: flex;
   text-align: center;
+  width: 90%;
+  margin: 0 auto;
   margin-bottom: 0.12rem;
 }
 .liveness-middle > div {
@@ -1500,19 +1511,19 @@ select {
   margin-right: 0.04rem;
 }
 .liveness-middle > div:nth-child(1) {
-  width: 0.68rem;
+  width: 10%;
   height: 0.68rem;
 }
 .liveness-middle > div:nth-child(2) {
-  width: 2.63rem;
+  width: 44%;
   height: 0.68rem;
 }
 .liveness-middle > div:nth-child(3) {
-  width: 1.3rem;
+  width: 22%;
   height: 0.68rem;
 }
 .liveness-middle > div:nth-child(4) {
-  width: 1.3rem;
+  width: 22%;
   height: 0.68rem;
 }
 
@@ -1528,6 +1539,8 @@ select {
 .liveness-bottom {
   display: flex;
   text-align: center;
+   width: 90%;
+  margin: 0 auto;
   margin-bottom: 0.12rem;
 }
 .liveness-bottom > div {
@@ -1535,23 +1548,23 @@ select {
   margin-right: 0.04rem;
 }
 .liveness-bottom > div:nth-child(1) {
-  width: 0.68rem;
+  width: 10%;
   height: 0.68rem;
 }
 .liveness-bottom > div:nth-child(2) {
-  width: 1.3rem;
+  width: 22%;
   height: 0.68rem;
 }
 .liveness-bottom > div:nth-child(3) {
-  width: 1.3rem;
+  width: 22%;
   height: 0.68rem;
 }
 .liveness-bottom > div:nth-child(4) {
-  width: 1.3rem;
+  width: 22%;
   height: 0.68rem;
 }
 .liveness-bottom > div:nth-child(5) {
-  width: 1.3rem;
+  width: 22%;
   height: 0.68rem;
 }
 .liveness-bottom > div > p {
@@ -1564,7 +1577,6 @@ select {
   color: #fff;
 }
 #collegePerson {
-  /* width: 5rem; */
   width: 100%;
   height: 3rem;
   margin-top: 0.3rem;
