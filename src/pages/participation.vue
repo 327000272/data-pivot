@@ -127,6 +127,7 @@
               <p>各学院学生参与人次统计</p>
             </div>
           </div>
+          <div class="noData" v-if="noData">无数据</div>
           <div class="collegePerson" id="collegePerson" v-if="showBarCharts"></div>
           <!-- 左右箭头 -->
           <div class="youjiantou iconfont iconlujing1" v-if="youShow"></div>
@@ -257,7 +258,7 @@ export default {
         "#D72FA7"
       ],
       showBarCharts:true,
-
+      noData:false,
     };
   },
   mounted() {
@@ -266,15 +267,11 @@ export default {
   methods: {
     change(event) {
       var _this = this;
-      // console.log(event.target.value)
       _this.ida = event.target.value;
-      console.log(_this.ida);
     },
     change2() {
       var _this = this;
-      // console.log(event.target.value)
       _this.ida2 = event.target.value;
-      console.log(_this.ida2);
     },
     //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
     whetherToken() {
@@ -502,9 +499,11 @@ export default {
               arr.push(response.data.data[i].name);
               arr2.push(response.data.data[i].count);
             }
+            _this.noData=false;
             _this.collegePerson(arr, arr2);
           }else{
-
+               _this.noData=true;
+              _this.collegePerson([], []);
           }
         })
         .catch(function(error) {
@@ -860,6 +859,7 @@ export default {
     collegePerson(perpleStatisticsTitle, perpleStatisticsNumber) {
       var _this = this;
       var arr = [];
+      echarts.init(document.getElementById('collegePerson')).dispose()
       let myChart = echarts.init(document.getElementById("collegePerson"));
       var dataAxis = perpleStatisticsTitle;
       var data = perpleStatisticsNumber;
@@ -1453,7 +1453,7 @@ select {
   height: 2.5rem;
 }
 .liveness {
-  font-size: 0.12rem;
+  font-size: 0.01rem;
   margin: 0 auto;
   width: 100%;
   margin-top: 0.5rem;
@@ -1612,5 +1612,21 @@ select {
 }
 #personStatistics {
   position: relative;
+}
+.noData{
+  font-size: 0.25rem;
+  text-align: center;
+  line-height: 0.50rem;
+  background: #8a98a3;
+  width: 2.3rem;
+  height: 0.50rem;
+  color: #fff;
+  border-radius: 0.15rem;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 </style>

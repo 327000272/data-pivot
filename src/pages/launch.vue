@@ -78,11 +78,11 @@
               <!-- <span class="iconfont iconduobianxing"></span> -->
             </div>
           </div>
-          <div class="box-item-pic" v-if="isShowPie">
+          <div class="box-item-pic" >
             <div class="classNumCircle" id="classNumCircle" ></div>
             <div class="classNum" id="classNum" ></div>
           </div>
-          <div class="noData" v-if="noData">无数据</div>
+          <div class="noData2" v-if="noData2">无数据</div>
           <div class="echarts-legend">
             <div class="echarts-legend-box">
               <div class="echarts-legend-item" v-for="item in openClassName" :key="item.id">
@@ -138,7 +138,8 @@
               </select>
             </div>
           </div>
-          <div id="date_condition" style="height: 100%;width:70%;" v-if="isShowTable"></div>
+          <div id="date_condition" style="height: 100%;width:70%;" ></div>
+          <div class="noData" v-if="noData">无数据</div>
           <!-- 左右箭头 -->
           <div class="youjiantou iconfont iconlujing1" v-if="youShow"></div>
           <div class="zuojiantou iconfont iconlujing" v-if="zuoShow"></div>
@@ -223,9 +224,8 @@ export default {
         "#A243DA",
         "#D72FA7"
       ],
-      isShowTable: true,
       noData:false,
-      isShowPie:true
+      noData2:false,
     };
   },
   created() {
@@ -246,7 +246,6 @@ export default {
     },
     change2() {
       var _this = this;
-      // console.log(event.target.value)
       _this.ida2 = event.target.value;
     },
     fetchData() {
@@ -480,8 +479,7 @@ export default {
           var resD = response.data;
           _this.openClassName=[];
           if (resD.code == 0 && resD.data.length > 0) {
-             _this.noData=false;
-            //  _this.isShowPie=true;
+             _this.noData2=false;
              for(var i=0;i<resD.data.length;i++){
                _this.openClassName.push(resD.data[i].title);
              }
@@ -490,8 +488,10 @@ export default {
             _this.classNumber(_this.supplyComprehensive);
           }else{
             _this.openClassName=[];
-            _this.noData=true;
-            // _this.isShowPie=false;
+            _this.classNum([]);
+            _this.classNumber([]);
+            _this.noData2=true;
+
           }
         })
         .catch(function(error) {
@@ -516,7 +516,8 @@ export default {
         .then(function(res) {
           var resD = res.data;
           if (resD.code == 0 && resD.data.length > 0) {
-            _this.isShowTable = true;
+            _this.noData=false;
+            
             _this.lineName = [];
             for (var i = 0; i < res.data.data.length; i++) {
               _this.lineName.push(res.data.data[i].name);
@@ -526,7 +527,8 @@ export default {
             _this.date_condition(_this.line);
           } else {   
             _this.lineName = [];
-            _this.isShowTable = false;
+            _this.noData=true;
+            _this.date_condition([]);
           }
         })
         .catch(function(error) {
@@ -784,6 +786,9 @@ export default {
     //饼状图
     classNumber(num) {
       var _this = this;
+      if(num.length==0){
+         echarts.init(document.getElementById('classNumCircle')).dispose();
+      }
       var arr = [];
       // _this.openClassName = [];
       for (var i = 0; i < num.length; i++) {
@@ -866,6 +871,12 @@ export default {
     //异性图
     classNum(num) {
       var _this = this;
+      if(num.length==0){
+         echarts.init(document.getElementById('classNum')).dispose();
+      }
+      if(num.length==0){
+         echarts.init(document.getElementById('classNum')).dispose();
+      }
       var openNumArr = [];
       var heteExtentArr = [];
       for (var i = 0; i < num.length; i++) {
@@ -873,10 +884,9 @@ export default {
         openNumArr.push(num[i].count);
         heteExtentArr.push({ value: num[i].count, title: num[i].title });
       }
-
+      
       let myChart = echarts.init(document.getElementById("classNum"));
-      let option = {
-        
+      let option = { 
         title: {
           text: "各类课程开设数量",
           x: "center",
@@ -942,6 +952,9 @@ export default {
     //课程开展分时情况表格
     date_condition(num) {
       var _this = this;
+      if(num.length==0){
+         echarts.init(document.getElementById('date_condition')).dispose();
+      }
       var arrSeries = [];
       var startArr = [];
       for (var a = 0; a < num[0].datas.length; a++) {
@@ -1621,6 +1634,22 @@ option {
   background: rgba(0, 0, 0, 0.1);
 }
 .noData{
+  font-size: 0.25rem;
+  text-align: center;
+  line-height: 0.50rem;
+  background: #8a98a3;
+  width: 2.3rem;
+  height: 0.50rem;
+  color: #fff;
+  border-radius: 0.15rem;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+.noData2{
   font-size: 0.25rem;
   text-align: center;
   line-height: 0.50rem;
