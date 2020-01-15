@@ -53,7 +53,7 @@ export default {
       sessionToken:'',
       platform:'',
       res:'',
-      debug:true
+      debug:false
     };
   },
   methods: {

@@ -352,6 +352,7 @@ export default {
         })
         .catch(function(error) {
           //sessionStorage.removeItem("token"); //清除失效的token
+
           _this.tourl(_this.platform);
         });
     },

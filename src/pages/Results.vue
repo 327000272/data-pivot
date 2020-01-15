@@ -475,15 +475,20 @@ export default {
 .el-date-editor .el-range-input {
   color: #ffffff;
 }
+/* .el-date-editor--daterange.el-input__inner{
+  width: 3.5rem;
+  height: 0.4rem;
+  line-height: 0.4rem;
+} */
 </style>
 <style scoped>
 .fx-box {
-  min-width: 1200px;
-  min-height: 900px;
+  min-width: 12rem;
+  min-height: 9rem;
   height: 100%;
   box-sizing: border-box;
   padding: 0 2%;
-  padding-top: 20px;
+  padding-top: 0.20rem;
   font-size: 0.12rem;
 }
 .fx-con {
@@ -491,10 +496,10 @@ export default {
   align-items: center;
 }
 .fx-title {
-  font-size: 22px;
+  font-size: 0.22rem;
   color: white;
   width: 28%;
-  min-width: 223px;
+  min-width: 2.23rem;
 }
 .fx-content {
   display: flex;
@@ -506,13 +511,13 @@ export default {
   background: #213c50;
   line-height: 40px;
   text-align: center;
-  margin-right: 2px;
-  min-width: 100px;
+  margin-right: 0.02rem;
+  min-width: 1rem;
 }
 .block {
   height: 40px;
   display: flex;
-  margin-right: 25px;
+  margin-right: 0.25rem;
   width: 40%;
 }
 .data-picker {
@@ -528,34 +533,35 @@ export default {
   margin-right: 2%;
 }
 .fx-scope span {
-  min-width: 100px;
+  min-width: 1rem;
   color: #5b6f7e;
   background: #213c50;
   line-height: 40px;
+  height: 40px;
   text-align: center;
-  margin-right: 2px;
+  margin-right: 0.02rem;
 }
 .fx-scope input {
   border: none;
   color: white;
-  padding-left: 10px;
-  margin-right: 25px;
+  padding-left: 0.10rem;
+  margin-right: 0.25rem;
   background-color: #213c50;
 }
 .fx-btn {
   color: white;
   border: 1px white solid;
-  height: 40px;
-  min-width: 70px;
+  height: 0.40rem;
+  min-width: 0.70rem;
   box-sizing: border-box;
-  line-height: 36px;
+  line-height: 0.36rem;
   text-align: center;
 }
 .fx-hr {
   height: 1px;
   width: 100%;
   background: #415869;
-  margin-top: 20px;
+  margin-top: 0.20rem;
 }
 .fx-echarts {
   width: 100%;
@@ -567,17 +573,7 @@ export default {
   top: 4%;
   color: #8a98a3;
 }
-.fxbox5-tit span:nth-child(1) {
-  width: 5px;
-  height: 16px;
-  background: #ffffff;
-}
-.fxbox5-tit span:last-child {
-  font-size: 16px;
-  color: #fff;
-  line-height: 16px;
-  margin-left: 10px;
-}
+
 .fx-table {
   width: 95%;
   height: 30%;
@@ -590,7 +586,7 @@ export default {
 }
 .fx-table tr td:nth-child(1) {
   width: 10%;
-  font-size: 18px;
+  font-size: 0.18rem;
   color: #fff;
 }
 table {
@@ -603,38 +599,14 @@ table {
   background: #153146;
   color: #00c5ff;
 }
-.fx-tab {
-  width: 95%;
-  margin: 0px 48px;
-  height: 4%;
-  display: flex;
-  align-items: center;
-  position: relative;
-  margin: 1% 0;
-}
-.fx-tab span {
-  height: 100%;
-  width: 8%;
-  color: #8e8e93;
-  background: rgba(256, 256, 256, 0.2);
-  margin-right: 0.1%;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid rgba(256, 256, 256, 0.2);
-  cursor: pointer;
-  font-size: 15px;
-}
-
 .kaike {
   color: #5b6f7e;
-  font-size: 12px;
-  margin-right: 30px;
+  font-size: 0.12rem;
+  margin-right: 0.30rem;
 }
 .renci {
   color: #5b6f7e;
-  font-size: 12px;
+  font-size: 0.12rem;
 }
 .iconketang {
   color: #5b6f7e;
@@ -645,22 +617,22 @@ table {
 
 .improvement {
   color: #fff;
-  padding: 0px 12px;
-  font-size: 28px;
+  padding: 0 0.12rem;
+  font-size: 0.28rem;
 }
 .Promote {
   color: #fff;
-  padding: 0px 12px;
-  font-size: 28px;
+  padding: 0 0.12rem;
+  font-size: 0.28rem;
 }
 .co-availability {
   text-align: center;
-  line-height: 50px;
+  line-height: 0.50rem;
   background: #8a98a3;
-  width: 230px;
-  height: 50px;
+  width: 2.3rem;
+  height: 0.50rem;
   color: #fff;
-  border-radius: 15px;
+  border-radius: 0.15rem;
   position: absolute;
   margin: auto;
   top: 0;
@@ -681,9 +653,9 @@ table {
   float: left;
 }
 .top-box{
-  height: 20px;
+  height: 0.20rem;
 }
 .bottom-box{
-  height: 20px;
+  height: 0.20rem;
 }
 </style>

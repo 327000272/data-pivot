@@ -761,12 +761,12 @@ export default {
   margin-right: 0.2rem;
 }
 .fx-box {
-  min-width: 1200px;
-  min-height: 900px;
+  min-width: 12rem;
+  min-height: 9rem;
   height: 100%;
   box-sizing: border-box;
   padding: 0 2%;
-  padding-top: 20px;
+  padding-top: 0.20rem;
 }
 .fx-con {
   display: flex;
@@ -774,10 +774,10 @@ export default {
   justify-content: space-between;
 }
 .fx-title {
-  font-size: 22px;
+  font-size: 0.22rem;
   color: white;
   width: 28%;
-  min-width: 223px;
+  min-width: 2.23rem;
   justify-content: space-between;
 }
 .fx-content {
@@ -785,18 +785,11 @@ export default {
   align-items: center;
   justify-content: space-between;
 }
-.demonstration {
-  color: #5b6f7e;
-  background: #213c50;
-  line-height: 40px;
-  text-align: center;
-  margin-right: 2px;
-  min-width: 100px;
-}
+
 .block {
-  height: 40px;
+  height: 0.40rem;
   display: flex;
-  margin-right: 25px;
+  margin-right: 0.25rem;
   width: 40%;
 }
 .data-picker {
@@ -807,24 +800,24 @@ export default {
 }
 .fx-scope {
   display: flex;
-  height: 40px;
+  height: 0.40rem;
   width: 33%;
   margin-right: 2%;
   font-size: 0.12rem;
 }
 .fx-scope span {
-  min-width: 100px;
+  min-width: 1rem;
   color: #5b6f7e;
   background: #213c50;
-  line-height: 40px;
+  line-height: 0.40rem;
   text-align: center;
-  margin-right: 2px;
+  margin-right: 0.02rem;
 }
 .fx-scope input {
   border: none;
   color: white;
-  padding-left: 10px;
-  margin-right: 25px;
+  padding-left: 0.10rem;
+  margin-right: 0.25rem;
   background-color: #213c50;
 }
 .fx-btn {
@@ -842,218 +835,65 @@ export default {
   height: 1px;
   width: 100%;
   background: #415869;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 0.20rem;
+  margin-bottom: 0.20rem;
 }
-.fx-jianjie {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  color: #4d6373;
-}
-.fx-jjnum {
-  font-size: 20px;
-  color: #fff;
-  margin: 0 5px;
-  margin-top: 3px;
-}
-.fx-check-box {
-  display: block;
-  width: 15px;
-  height: 15px;
-  background: #84939e;
-  margin-right: 12px;
-}
-.fx-check {
-  display: flex;
-  align-items: center;
-}
-.fx-check-box2 {
-  background: #1aa8d4;
-  margin-left: 42px;
-}
-.fx-table2 {
-  width: 100%;
-}
-.fx-table2 td {
-  width: 1%;
-  padding: 16px 0;
-  background: #153146;
-  text-align: center;
-  color: #d72fa7;
-}
+
+
 .fx-grid-box {
   display: flex;
   width: 100%;
-  min-width: 1200px;
-  min-height: 300px;
-  height: calc(50% - 40px);
+  /* min-width: 1200px; */
+  /* min-height: 3rem; */
+  /* height: calc(50% - 40px); */
+  justify-content: space-between;
 }
-.fx-box1,
 .fx-box3 {
   width: 20%;
-  min-width: 358px;
-  min-height: 300px;
+  min-width: 3.88rem;
+  min-height: 3rem;
   background: #153146;
 }
-.fx-box1 {
-  margin-left: 1%;
-  overflow: auto;
-}
-.fx-box2 {
-  width: 56%;
-  min-width: 561px;
-  min-height: 300px;
-  margin: 0 1%;
-  background: #153146;
-}
+
 .fx-box4 {
   width: 20%;
-  min-width: 350px;
-  min-height: 400px;
+  /* min-width: 3.5rem; */
+  min-height: 4rem;
   background: #153146;
   overflow: auto;
-  padding-bottom: 5px;
+  padding-bottom: 0.05rem;
   margin-top: 2%;
 }
-.fx-box5 {
-  width: 77%;
-  min-width: 600px;
-  min-height: 400px;
-  position: relative;
-  margin-left: 1%;
-  background: #153146;
-}
-.fxbox5-content {
-  height: 20%;
-  overflow: hidden;
-}
-.fxbox5-txt {
-  position: absolute;
-  top: 24%;
-  left: 40px;
-  color: #8a98a3;
-}
-.fxbox5-txt span {
-  color: #00c5ff !important;
-  font-size: 18px;
-}
+
 .fxbox5-tit span:nth-child(1) {
-  width: 5px;
-  height: 16px;
+  width: 0.05rem;
+  height: 0.16rem;
   background: #ffffff;
 }
 .fxbox5-tit span:last-child {
-  font-size: 16px;
+  font-size: 0.16rem;
   color: #fff;
-  line-height: 16px;
-  margin-left: 10px;
+  line-height: 0.16rem;
+  margin-left: 0.10rem;
 }
 .fxbox5-tit {
   display: flex;
-  margin-left: 13px;
-  padding-top: 10px;
-  margin-bottom: 5px;
+  margin-left: 0.13rem;
+  padding-top: 0.10rem;
+  margin-bottom: 0.05rem;
 }
-.fxbox5-contant {
-  display: flex;
-  padding: 0 40px;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-.fxbox5-contant div {
-  width: 30%;
-  background: #274155;
-  color: #fff;
-  height: 40px;
-  line-height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.fxbox5-contant div span {
-  font-size: 28px;
-  margin-left: 3px;
-}
-.fxbox2-contant {
-  width: 80%;
-  margin: 0 auto;
-  height: 60%;
-  margin-top: 5%;
-}
-.fxbox2-circle {
-  border: 2px solid #00c5ff;
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  text-align: center;
-  padding-top: 27%;
-  box-sizing: border-box;
-}
-.fxbox2-circle :nth-child(1) {
-  font-size: 27px;
-  color: #00c5ff;
-}
-.fxbox2-circle :nth-child(2) {
-  font-size: 16px;
-  color: #fff;
-}
-.fxbox2-oblong {
-  width: 120px;
-  height: 30px;
-  border: 2px solid #00c5ff;
-  position: absolute;
-  top: 97px;
-  left: -1%;
-  background: #153146;
-  border-radius: 5%;
-  text-align: center;
-  color: #03ade1;
-  line-height: 30px;
-}
+
+
 .fx-grid-box1 {
   height: calc(87% - 40px);
 }
-.fxbox2contant-box {
-  height: 50%;
-  position: relative;
-  width: 14%;
-  float: left;
-  margin-right: 6%;
-  margin-bottom: 5%;
-}
-.fxbox1-li {
-  width: 100%;
-  margin: 0 auto;
-  height: 9%;
-  background: #274155;
-  display: flex;
-  padding: 0 5px;
-  align-items: center;
-  margin-bottom: 15px;
-  color: #fff;
-  font-size: 16px;
-  box-sizing: border-box;
-}
-.fxbox1li-span {
-  display: block;
-  height: 100%;
-  background: #00c5ff;
-  margin: 0 5px;
-}
-.fxbox1-li1 {
-  margin-top: 40px;
-  height: 80%;
-  padding: 0 10px;
-}
 .fxbox3-contant {
   width: 100%;
-  padding: 0 10px;
+  padding: 0 0.10rem;
   height: 70%;
   margin-top: 6%;
   box-sizing: border-box;
-  font-size: 14px;
+  font-size: 0.14rem;
 }
 .fxbox3-acontent div:nth-child(2) {
   color: #687a88;
@@ -1062,12 +902,12 @@ export default {
   width: 100%;
   height: 32%;
   background: #274155;
-  margin-bottom: 10px;
+  margin-bottom: 0.10rem;
   display: flex;
   align-items: center;
   color: #fff;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 0.10rem;
+  padding-bottom: 0.10rem;
 }
 .fxbox3-b {
   width: 50%;
@@ -1078,167 +918,50 @@ export default {
   align-items: center;
   color: #fff;
   margin-bottom: 3%;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 0.10rem;
+  padding-bottom: 0.10rem;
 }
 
-.fxbox3-icon {
-  width: 15%;
-  height: 50%;
-  margin-right: 4%;
-  margin-left: 4%;
-  background-position: center center;
-}
-.fxbox3-b .fxbox3-icon {
-  width: 31%;
-  margin-right: 6%;
-  margin-left: 8%;
-}
 .fxbox3-b span,
 .fxbox3-a span {
-  font-size: 16px;
+  font-size: 0.16rem;
   color: #fff;
-  margin-right: 10px;
-}
-.fxbox4-li {
-  display: flex;
-  width: 100%;
-  height: 13%;
-  background: #274155;
-  align-items: center;
-  margin-bottom: 5px;
-}
-.fxbox4-litit {
-  font-size: 16px;
-  color: #707070;
-  width: 30%;
-  text-align: right;
-  margin-right: 2%;
-}
-.fxbox4-contant {
-  height: 80%;
-  padding: 0 10px;
-  margin-top: 10px;
-}
-.fxbox4-div2 {
-  width: 50%;
-  height: 25%;
-  background: #00c5ff;
-}
-.fxbox4-div3 {
-  width: 17%;
-  height: 17%;
-  background: #8942bf;
-  margin-top: 0.5%;
-}
-.fxbox4-lidiv {
-  width: 100%;
-  height: 100%;
-}
-.fxbox4-div1 {
-  font-size: 14px;
-  color: #fff;
-  margin-bottom: 1%;
-  display: flex;
-  align-items: center;
+  margin-right: 0.10rem;
 }
 
-.icon-renshu {
-  font-size: 30px;
-  margin: 0 15px;
-  color: #5b6f7e;
-}
-.fxbox3-icon[data-type="28"]:before {
-  content: "\e60e";
-  font-family: "iconfont";
-  font-size: 30px;
-  color: #5b6f7e;
-}
-.fxbox3-icon[data-type="27"]:before {
-  content: "\e60c";
-  font-family: "iconfont";
-  font-size: 30px;
-  color: #5b6f7e;
-}
-.fxbox3-icon[data-type="31"]:before {
-  content: "\e60b";
-  font-family: "iconfont";
-  font-size: 30px;
-  color: #5b6f7e;
-}
-.fxbox3-icon[data-type="32"]:before {
-  content: "\e60d";
-  font-family: "iconfont";
-  font-size: 30px;
-  color: #5b6f7e;
-}
-.fxbox3-icon[data-type="29"]:before {
-  content: "\e608";
-  font-family: "iconfont";
-  font-size: 30px;
-  color: #5b6f7e;
-}
-.fxbox3-icon[data-type="30"]:before {
-  content: "\e608";
-  font-family: "iconfont";
-  font-size: 30px;
-  color: #5b6f7e;
-}
-.fxbox1-new-span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-.fx-box1::-webkit-scrollbar {
-  width: 0px;
-}
+
 .fx-box4::-webkit-scrollbar {
   width: 0px;
 }
-.co-availability {
-  text-align: center;
-  line-height: 50px;
-  background: #8a98a3;
-  width: 230px;
-  height: 50px;
-  color: #fff;
-  margin: 150px auto;
-  border-radius: 15px;
-}
 
 .page6-left {
-  float: left;
+  /* float: left; */
   width: 20%;
 }
 .page6-right {
-  float: right;
+  /* float: right; */
   width: 60%;
 }
 .page6-you {
-  float: right;
+  /* float: right; */
   width: 20%;
 }
 /* 地图 */
 .login-center {
   position: relative;
   width: 100%;
-  height: calc(100% - 56px);
-  /*background-image: url(/Images/tsinghua_bj.jpg);*/
+  /* height: calc(70% - 56px); */
+  height: calc(50% - 56px);
   background-position: center;
   background-repeat: no-repeat;
   background-size: auto 100%;
-  min-height: 600px;
-  /*overflow: hidden;*/
+  min-height: 6rem;
 }
 .login-content {
-  width: 1200px;
+  width: 12rem;
   margin: 0 auto;
   position: relative;
-  padding-top: 50px;
-  /*border: 2px solid;*/
+  padding-top: 0.50rem;
   transition-duration: 400ms;
 }
 .login-content {
@@ -1257,39 +980,33 @@ export default {
 }
 /* 故事推送 */
 .kai {
-  width: 300px;
-  /* background: rgba(0,0,0,.7); */
+  width: 100%;
 }
 .character-list {
-  /* position: absolute; */
-  right: 10px;
-  top: 10px;
+  right: 0.10rem;
+  top: 0.10rem;
   z-index: 10;
-  width: 300px;
-  /*overflow: hidden;*/
-  /* background: rgba(0,0,0,.3); */
-  padding: 5px;
-  padding-right: 3px;
-  /*height: 405px;*/
+  width: 100%;
+  padding: 0.05rem;
+  padding-right: 0.03rem;
   transition-duration: 600ms;
 }
 .character-list .character-content {
   position: relative;
   width: 100%;
   height: 8rem;
-  padding-bottom: 10px;
-  padding-right: 5px;
+  padding-bottom: 0.10rem;
+  padding-right: 0.05rem;
   overflow: hidden;
   overflow-y: auto;
 }
 
 .character-list .character-item {
-  margin-top: 5px;
+  margin-top: 0.05rem;
   background: #ffffff;
-  border-radius: 4px;
-  padding: 10px;
+  border-radius: 0.04rem;
+  padding: 0.10rem;
   position: relative;
-  /*padding-right: 40px;*/
   overflow: hidden;
   transition-duration: 600ms;
 }
@@ -1305,16 +1022,16 @@ export default {
 .character-media {
   display: flex;
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
+  width: 0.40rem;
+  height: 0.40rem;
+  margin-right: 0.10rem;
   overflow: hidden;
 }
 
 .character-media img {
   display: block;
-  width: 40px;
-  height: 40px;
+  width: 0.40rem;
+  height: 0.40rem;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -1322,43 +1039,38 @@ export default {
 .character-list .character-inner {
   width: 100%;
   color: #999999;
-  line-height: 20px;
-  font-size: 12px;
+  line-height: 0.20rem;
+  font-size: 0.12rem;
 }
 
 .character-list .character-inner span {
   display: flex;
   color: #000000;
-  font-size: 16px;
+  font-size: 0.16rem;
 }
 
-.character-list .character-inner sub {
-  color: #666666;
-  font-size: 12px;
-  margin-left: 10px;
-}
 
 .character-list .character-subtitle {
-  font-size: 12px;
+  font-size: 0.12rem;
   color: #999999;
-  margin-top: 5px;
+  margin-top: 0.05rem;
   overflow: hidden;
 }
 
 .character-list .character-subtitle span {
   display: block;
   position: relative;
-  line-height: 18px;
+  line-height: 0.18rem;
   /*padding-left: 20px;*/
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  font-size: 14px;
+  font-size: 0.14rem;
   color: #000000;
   letter-spacing: 1px;
-  margin: 3px 0;
+  margin: 0.03rem 0;
 }
 
 .character-list .character-subtitle span:before {
@@ -1368,30 +1080,11 @@ export default {
   transform: translateY(-50%);
   font-family: iconFont;
 }
-/*.character-list .character-subtitle span.time:before{*/
-/*content: '\e904';*/
-/*}*/
-/*.character-list .character-subtitle span.adress:before{*/
-/*content: '\e90c';*/
-/*}*/
-.character-list .character-button {
-  position: absolute;
-  width: 30px;
-  right: 5px;
-  top: 5px;
-  bottom: 5px;
-  background: #ae54e1;
-  border-radius: 4px;
-  font-size: 14px;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  padding: 0 7px;
-  cursor: pointer;
-}
+
+
 .character-inner .name {
   float: left;
-  max-width: 100px;
+  max-width: 1rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1399,22 +1092,21 @@ export default {
 }
 
 .character-inner span:nth-child(2) {
-  font-size: 12px;
-  padding-left: 5px;
+  font-size: 0.12rem;
+  padding-left: 0.05rem;
   color: #999999;
 }
 
 .character-item .img {
   display: flex;
-  margin-top: 5px;
+  margin-top: 0.05rem;
   justify-content: space-between;
   overflow: hidden;
 }
 
 .character-item .img img {
-  width: 80px;
-  height: 80px;
-  /*border: 1px solid;*/
+  width: 0.80rem;
+  height: 0.80rem;
 }
 .character-item.translate {
   transform: translateX(100%);
@@ -1435,24 +1127,6 @@ export default {
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 0.8);
 }
-/* 故事推送动画 */
-.suo {
-  width: 0;
-  background: none;
-}
-.tongij-wenji {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-.tongji-wenzi-left {
-  float: left;
-  font-size: 16px;
-}
-.fxbox3-acontent .tongij-wenji .tongji-wenzi-right {
-  float: left;
-  color: #fff;
-  margin-left: 5px;
-}
+
 </style>
 

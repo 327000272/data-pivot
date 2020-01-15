@@ -369,6 +369,9 @@ export default {
     // this.getInformationSystem();
   },
   methods: {
+    xiubo(){
+      moment(n(1).format())
+    },
     fetchData() {
       console.log("路由发送变化doing...");
     },
