@@ -276,7 +276,6 @@ export default {
         setTimeout(function() {
           _this.whetherToken();
         }, 1000);
-
         //_this.postToken();
       }
     },
@@ -351,6 +350,44 @@ export default {
         .catch(function(error) {
           //sessionStorage.removeItem("token"); //清除失效的token
           // _this.tourl(_this.platform);
+        });
+    },
+    //请求各类课程开课情况
+    getsupply(token, Start, End, Unit) {
+      var _this = this;
+      axios
+        .get(
+          _this.url +
+            "course_supply?access_token=" +
+            token +
+            "&Start=" +
+            Start +
+            "&End=" +
+            End +
+            "&Unit=" +
+            Unit
+        )
+        .then(function(response) {
+          var resD = response.data;
+          _this.openClassName=[];
+          if (resD.code == 0 && resD.data.length > 0) {
+             _this.noData2=false;
+             for(var i=0;i<resD.data.length;i++){
+               _this.openClassName.push(resD.data[i].title);
+             }
+            _this.supplyComprehensive = response.data.data;
+            _this.classNum(_this.supplyComprehensive);
+            _this.classNumber(_this.supplyComprehensive);
+          }else{
+            _this.openClassName=[];
+            _this.classNum([]);
+            _this.classNumber([]);
+            _this.noData2=true;
+
+          }
+        })
+        .catch(function(error) {
+          //sessionStorage.removeItem("token"); //清除失效的token
         });
     },
     //学院范围
@@ -453,44 +490,6 @@ export default {
         .catch(function(error) {
           //sessionStorage.removeItem("token"); //清除失效的token
           // _this.tourl(_this.platform);
-        });
-    },
-    //请求各类课程开课情况
-    getsupply(token, Start, End, Unit) {
-      var _this = this;
-      axios
-        .get(
-          _this.url +
-            "course_supply?access_token=" +
-            token +
-            "&Start=" +
-            Start +
-            "&End=" +
-            End +
-            "&Unit=" +
-            Unit
-        )
-        .then(function(response) {
-          var resD = response.data;
-          _this.openClassName=[];
-          if (resD.code == 0 && resD.data.length > 0) {
-             _this.noData2=false;
-             for(var i=0;i<resD.data.length;i++){
-               _this.openClassName.push(resD.data[i].title);
-             }
-            _this.supplyComprehensive = response.data.data;
-            _this.classNum(_this.supplyComprehensive);
-            _this.classNumber(_this.supplyComprehensive);
-          }else{
-            _this.openClassName=[];
-            _this.classNum([]);
-            _this.classNumber([]);
-            _this.noData2=true;
-
-          }
-        })
-        .catch(function(error) {
-          //sessionStorage.removeItem("token"); //清除失效的token
         });
     },
     //请求课程开展分时情况
