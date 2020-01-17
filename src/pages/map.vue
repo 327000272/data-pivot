@@ -31,11 +31,12 @@
               :value="item.newGroupName2"
             ></el-option>
           </el-select> -->
-          <select @change="change($event)" id="selectTwo">
+          <select @change="change2($event)" id="selectTwo">
+            <option value="0">全部</option>
             <option
               v-for="item in newGroup"
               :key="item.index"
-              :value="item.groupName"
+              :value="item.groupId"
               
             >{{item.groupName}}</option>
           </select> 
@@ -85,6 +86,32 @@
             </div>
           </div>
         </div>
+        <div class="fx-box9">
+          <div class="fxbox4-content">
+            <div class="fxbox5-tit">
+              <span></span>
+              <span>安全警告</span>
+            </div>
+          </div>
+          <div class="warn">
+              <div class="warn-item" v-if="showWarn" v-for="item in warnArr" :key="item.id" ref="warnItem">
+                  <div class="warn-title">
+                      <!-- <img src="./assets/warn.png" alt=""> -->
+                      <span>地理位置定位与计划不符!</span>
+                      <span @click="delWarn(item.groupId)">删除</span>
+                  </div>
+                  <div class="bar"></div>
+                  <div class="warn-left warn-one">{{item.groupName}}</div>
+                  <div class="warn-left warn-two">团队人数:&nbsp;{{item.groupMemberCount}}人</div>
+                  <div class="bar"></div>
+                  <div class="warn-left warn-one">最后定位:&nbsp;{{item.lastCheckAddress}}</div>
+                  <div class="warn-left warn-two">计划地点:&nbsp;{{item.targetAddress}}</div>
+                  <div class="bar"></div>
+                  <div class="warn-left warn-one">队长:&nbsp;{{item.captainName}}&nbsp;&nbsp;{{item.captainPhone}}</div>
+                  <div class="warn-right warn-three">{{item.captainIdentity}}</div>
+              </div>
+          </div>
+        </div>
       </div>
       <div class="page6-right">
         <div class="login-center">
@@ -122,42 +149,6 @@
                   <img :src="items" alt="" v-for="items in item.images" :key="items.id">
               </div>
             </div>
-<!--             <div class="character-item" >
-              <div class="character-item-header">
-                <div class="character-media">
-                  <img src="" alt=""/>
-                </div>
-                <div class="character-inner">
-                  <span class="name"></span>
-                  <span>2</span>
-                  <p>2</p>
-                </div>
-              </div>
-              <div class="character-subtitle">
-                <span>222</span>
-              </div>
-              <div class="img">
-                  <img src="" alt="" >
-              </div>
-            </div>
-            <div class="character-item" >
-              <div class="character-item-header">
-                <div class="character-media">
-                  <img src="" alt=""/>
-                </div>
-                <div class="character-inner">
-                  <span class="name"></span>
-                  <span>2</span>
-                  <p>2</p>
-                </div>
-              </div>
-              <div class="character-subtitle">
-                <span>222</span>
-              </div>
-              <div class="img">
-                  <img src="" alt="" >
-              </div>
-            </div> -->
           </div>
         </div>
       </div>
@@ -182,6 +173,7 @@ export default {
       newMapFilter:[],
       newSubProId:"",
       newGroupName:"",
+      newGroupId:"",
       newExperName:"",
       // newGroupName2:[],
       newGroup:[],
@@ -199,6 +191,11 @@ export default {
       newSubProName:"",
       changeExperName:'',
       changeSubProName:"",
+      groupId:0,
+      warringInfo:[],
+      warnArr:[],
+      warnArrId:[],
+      showWarn:true,
     };
   },
   created() {
@@ -234,14 +231,55 @@ export default {
             _this.newGroup.push(_this.newMapFilter[0][i].group[j]);
             
           }
-          
         }
       }
     },
-    //页面默认选中第一个项目实践和第一个团队
+    change2(event) {
+      var _this = this;
+      _this.groupId=event.target.value;
+    },
 
+    delWarn(delWarnId){
+       var _this = this;
+      _this.sessionToken = sessionStorage.getItem("token");
+      //把每个调用的接口都写在此方法中,需要在接口中加token
+      if (_this.sessionToken !== null) {
+          var msg=confirm("确定忽略这条警告吗!");
+          if(msg==true){
+          // console.log(_this.$refs.warnItem);
+          axios
+            .get(_this.url + "map_ignore/?access_token=" + _this.sessionToken+"&groupId="+delWarnId)
+            .then(function(response) {
+              var resD = response.data;
+                if (resD.code == 0 ) {
+                    _this.showWarn=false;
+
+              }
+              
+            })
+            .catch(function(error) {
+              // sessionStorage.removeItem("token"); //清除失效的token
+              // window.location.href =
+              //   " http://class-admin.univteam.com/" +
+              //   _this.platform +
+              //   "/account/login?back=statistics";
+            });
+          }else{
+            _this.showWarn=true;
+            return false
+          }
+        //不为null,本地已经存在token,调用方法
+
+      } else {
+        //判断路径上有无参数,
+        setTimeout(function() {
+          _this.whetherToken();
+        }, 1000);
+      }
+
+    },
     fetchData() {
-      console.log("路由发送变化doing...");
+      // console.log("路由发送变化doing...");
     },
     //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
     whetherToken() {
@@ -285,7 +323,6 @@ export default {
     //故事推送定时器函数
     tuiSong() {
       var lis = $("#experList .character-item").length;
-      console.log($("#experList .character-item"));
       for (var i = 0; i < lis; i++) {
         (function(i) {
           setTimeout(function() {
@@ -306,16 +343,14 @@ export default {
                for(var i=0;i<resD.data.length;i++){
                  _this.story.push(resD.data[i]);
                }
-
-          }
-          
+          }        
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          // sessionStorage.removeItem("token"); //清除失效的token
+          // window.location.href =
+          //   " http://class-admin.univteam.com/" +
+          //   _this.platform +
+          //   "/account/login?back=statistics";
         });
     },
      //获取地图筛选条件(默认都选中第一个)
@@ -334,6 +369,7 @@ export default {
               _this.newGroupName=resD.data[0].groupName;
               _this.newGroup=resD.data[0].group;   
               _this.ProId=resD.data[0].subProId;
+              _this.ProjectId=resD.data[0].subProId;
                _this.GetMapData(_this.sessionToken,_this.ProId);
               _this.getMapExper(_this.sessionToken,_this.ProId);
               _this.changeSubProName=resD.data[0].subProName;
@@ -342,12 +378,11 @@ export default {
           }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
-
+          // sessionStorage.removeItem("token"); //清除失效的token
+          // window.location.href =
+          //   " http://class-admin.univteam.com/" +
+          //   _this.platform +
+          //   "/account/login?back=statistics";
         });
     },
     //获取地图筛选条件(其他的)
@@ -367,18 +402,18 @@ export default {
           }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          // sessionStorage.removeItem("token"); //清除失效的token
+          // window.location.href =
+          //   " http://class-admin.univteam.com/" +
+          //   _this.platform +
+          //   "/account/login?back=statistics";
         });
     },
     //获取统计数据接口和地图的接口
     GetMapData(token,subProId){
       var _this = this;
       axios
-        .get(_this.url + "map_data/?access_token=" + token+"&subProId="+subProId)
+        .get(_this.url + "map_data/?access_token=" + token+"&subProId="+subProId+"&groupId="+_this.groupId)
         .then(function(response) {
           var resD = response.data;
             if (resD.code == 0 ) {
@@ -386,6 +421,17 @@ export default {
               _this.teaNum=resD.data.teaNum;
               _this.totalTrip=resD.data.totalTrip;
               _this.experNum=resD.data.experNum;
+              _this.warringInfo=resD.data.warringInfo;
+              if(resD.data.warringInfo!=null){
+                 _this.warnArr=[];
+                for(var i=0;i<resD.data.warringInfo.length;i++){
+                    _this.warnArr.push(resD.data.warringInfo[i]);
+                    _this.warnArrId.push(resD.data.warringInfo[i].groupId);
+                }
+              }else{
+                
+              }
+
               _this.mapData=resD.data.mapData;
               _this.drawLine(_this.mapData);
               
@@ -400,6 +446,7 @@ export default {
           
         });
     },
+
     //渲染地图的echarts
     drawLine(mapData) {
       var msdatajson=undefined;
@@ -854,7 +901,14 @@ export default {
   min-height: 3rem;
   background: #153146;
 }
-
+.fx-box9{
+  font-size: 0.12rem;
+  margin-top: 5%;
+  width: 20%;
+  min-width: 3.88rem;
+  min-height: 3rem;
+  background: #153146;
+}
 .fx-box4 {
   width: 20%;
   /* min-width: 3.5rem; */
@@ -887,6 +941,7 @@ export default {
 .fx-grid-box1 {
   height: calc(87% - 40px);
 }
+
 .fxbox3-contant {
   width: 100%;
   padding: 0 0.10rem;
@@ -940,7 +995,7 @@ export default {
 }
 .page6-right {
   /* float: right; */
-  width: 60%;
+  width: 50%;
 }
 .page6-you {
   /* float: right; */
@@ -997,8 +1052,9 @@ export default {
   height: 8rem;
   padding-bottom: 0.10rem;
   padding-right: 0.05rem;
-  overflow: hidden;
-  overflow-y: auto;
+  /* overflow: hidden; */
+  /* overflow-y: auto; */
+  overflow: auto;
 }
 
 .character-list .character-item {
@@ -1127,6 +1183,64 @@ export default {
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 0.8);
 }
+.warn{
+  width: 95%;
+  /* background: #FF0000; */
+  margin: 0 auto;
+  color: #fff;
+  overflow: auto;
+  height: 500px;
+}
+.warn-item{
+  background: rgba(255,0,0,0.5);
+  margin-bottom: 10px;
+}
+.warn-title{
+  font-size: 0.14rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 0.13rem 0;
+}
+.bar{
+  width: 90%;
+  height: 1px;
+  margin: 0 auto;
+  background-color: #fff;
+}
+.warn-left{
+  margin-left: 5%;
+ 
+}
+.warn-right{
+  margin-left: 20%;
+}
+.warn-one{
+  margin-top: 0.10rem;
+  margin-bottom: 0.03rem;
+}
+.warn-two{
+  margin-bottom: 0.085rem;
+}
+.warn-three{
+  padding-bottom: 0.13rem;
+}
+::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 14px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 14px;
+}
+::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+}
 
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
 </style>
 

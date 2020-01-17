@@ -14,15 +14,15 @@
           <li class="websiteTitle">素质育人大数据</li>
         </ul>
         <el-menu
-          :default-active="index==''?'1':index"
+          :default-active="index==''?'3':index"
           class="el-menu-vertical-demo"
           ref="dataNum"
         >
           <!-- <el-menu-item index="1" @click="openPage('Develop')">
             <span slot="title">首页</span>
           </el-menu-item> -->
-          <el-menu-item index="3" @click="openPage('launch')" class="classOpenA">
-            <span slot="title">课程开展</span>
+          <el-menu-item index="3" @click="openPage('launch')" class="active-one">
+            <span slot="title" >课程开展</span>
           </el-menu-item>
           <el-menu-item index="5" @click="openPage('participation')">
             <span slot="title">参与情况</span>
@@ -30,9 +30,9 @@
           <el-menu-item index="4" @click="openPage('map')">
             <span slot="title">社会实践</span>
           </el-menu-item>
-          <el-menu-item index="2" @click="openPage('Results')">
+          <!-- <el-menu-item index="2" @click="openPage('Results')">
             <span slot="title">育人成效</span>
-          </el-menu-item>
+          </el-menu-item> -->
         </el-menu>
       </el-col>
     </el-row>
@@ -53,7 +53,7 @@ export default {
       sessionToken:'',
       platform:'',
       res:'',
-      debug:false
+      debug:true
     };
   },
   methods: {
@@ -64,7 +64,7 @@ export default {
         switch(_this.platform){
           case 'whu':
             _this.url="http://app.dekt.whu.edu.cn/whu/Statistics/";
-            _this.back_url="http://dekt.whu.edu.cn/whu/";
+            _this.back_url="http://dekt.whu.edu.cn/";
             break;
             default:
              _this.url="https://classroom.univteam.com/"+_this.platform+"/Statistics/";
@@ -85,7 +85,6 @@ export default {
       },
       tourl(){
         var _this=this;
-        console.log(_this.sessionToken);
          window.location.href=_this.back_url+_this.platform+"/account/login?back=statistics";
       },
       getInfos(){
@@ -115,25 +114,25 @@ export default {
           }
 				})
 				.catch(function (error) {
-            _this.tourl();
-          console.log('请求失败')
+          _this.tourl();
         });
       },
     //获取学校logo,名称
     GetPlatDetail(token){
       var _this = this;
-      console.log(_this.url + "plat_detail?access_token=");
       axios.get(_this.url + "plat_detail?access_token=" + token)
         .then(function(response) {
           if(response.data.code==0){
             _this.PlatDetail=response.data.data;
           }else{
-            //_this.tourl();
+            console.log('果然进入else');
+             sessionStorage.removeItem("token");
+            _this.tourl();
+            
           }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token");//清除失效的token
-          window.location.href=" http://class-admin.univteam.com/"+_this.platform+"/account/login?back=statistics";
+
         });
     },
     openPage(pages, index) {
@@ -289,21 +288,12 @@ div {
 .platName-box{
   color: #fff;
 }
-.classOpenA::before{
-    position: absolute;
-    left: 25px;
-    top: 0;
-    right: 10px;
-    height: 1px;
-    background: #aaaaaa;
-    content: "";
-    -webkit-transform: scaleY(0.2);
-    transform: scaleY(0.2);
-}
+
 .p1{
   font-size: 0.14rem;
 }
 .p2{
   font-size: 0.12rem;
 }
+
 </style>

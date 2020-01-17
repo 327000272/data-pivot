@@ -52,7 +52,7 @@
           <div class="box-item-title">
             <div class="box-item-title-left">
               <div class="title-bar"></div>
-              <p>第二课堂整体参与度于信息系统活跃</p>
+              <p>第二课堂整体参与度与信息系统活跃</p>
             </div>
             <div class="box-item-title-right">
               <span>学院范围</span>
@@ -366,11 +366,11 @@ export default {
           }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          // sessionStorage.removeItem("token"); //清除失效的token
+          // window.location.href =
+          //   " http://class-admin.univteam.com/" +
+          //   _this.platform +
+          //   "/account/login?back=statistics";
         });
     },
     //第二课堂整体参与度于信息系统活跃
@@ -454,11 +454,11 @@ export default {
           }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          // sessionStorage.removeItem("token"); //清除失效的token
+          // window.location.href =
+          //   " http://class-admin.univteam.com/" +
+          //   _this.platform +
+          //   "/account/login?back=statistics";
         });
     },
     //请求各类课程参与人次
@@ -476,11 +476,11 @@ export default {
           }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          // sessionStorage.removeItem("token"); //清除失效的token
+          // window.location.href =
+          //   " http://class-admin.univteam.com/" +
+          //   _this.platform +
+          //   "/account/login?back=statistics";
         });
     },
     //请求各学院学生参与人次统计
@@ -507,11 +507,11 @@ export default {
           }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          // sessionStorage.removeItem("token"); //清除失效的token
+          // window.location.href =
+          //   " http://class-admin.univteam.com/" +
+          //   _this.platform +
+          //   "/account/login?back=statistics";
         });
     },
     //课程参与积极性指标
@@ -538,11 +538,11 @@ export default {
           }
         })
         .catch(function(error) {
-          sessionStorage.removeItem("token"); //清除失效的token
-          window.location.href =
-            " http://class-admin.univteam.com/" +
-            _this.platform +
-            "/account/login?back=statistics";
+          // sessionStorage.removeItem("token"); //清除失效的token
+          // window.location.href =
+          //   " http://class-admin.univteam.com/" +
+          //   _this.platform +
+          //   "/account/login?back=statistics";
         });
     },
     //饼状图
@@ -692,7 +692,7 @@ export default {
           grid: {
             left: "11%",
             top: "12%",
-            right: "10%",
+            right: "20%",
             bottom: "8%",
             containLabel: true
           },
@@ -749,9 +749,10 @@ export default {
               disabled: false,
               yAxisIndex: 0,
               // top: '25%',
-              right: "5%",
+              right: "3%",
               // bottom: '15%',
               width: 10,
+              // height:'60%',
               startValue: 0,
               endValue: 10,
               top: "20%",
@@ -1127,7 +1128,8 @@ export default {
     },
     //漏斗图
     funnel(num) {
-      var _this = this;
+
+      var _this = this; 
       for (var i = 0; i < num.length; i++) {
         //查看
         if (num[i].type == 35) {
@@ -1147,11 +1149,15 @@ export default {
         }
       }
       //拼数组
+      _this.funnelTitle=[];
+      _this.funneldataOther=[];
+      _this.funneltherUnit=[];
       for (var j = 1; j < num.length; j++) {
         _this.funnelTitle.push(num[j].title);
         _this.funneldataOther.push(num[j].dataOther);
         _this.funneltherUnit.push(num[j].therUnit);
       }
+ 
       let myChart = echarts.init(document.getElementById("funnel"));
       let option = {
         color: _this.bigColor,

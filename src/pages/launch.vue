@@ -109,12 +109,12 @@
                 <div class="fxbox4-div1">
                   &nbsp;&nbsp;
                   <span class="iconfont iconketang"></span>&nbsp;
-                  <span>{{item.supp_count}}</span>次&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span>{{item.supp_capacity}}</span>次&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <span class="iconfont iconrengong"></span>&nbsp;
-                  <span>{{item.supp_capacity}}</span>人次
+                  <span>{{item.supp_count}}</span>人次
                 </div>
-                <div class="fxbox4-div2" :style="{width:(item.percent_count+'%')}"></div>
-                <div class="fxbox4-div3" :style="{width:(item.percent_capacity+'%')}"></div>
+                <div class="fxbox4-div2" :style="{width:(item.percent_capacity+'%')}"></div>
+                <div class="fxbox4-div3" :style="{width:(item.percent_count+'%')}"></div>
               </div>
             </div>
           </div>
@@ -249,11 +249,10 @@ export default {
       _this.ida2 = event.target.value;
     },
     fetchData() {
-      console.log("路由发送变化doing...");
+      // console.log("路由发送变化doing...");
     },
     //首先判断浏览器缓存中有没有token,如果有token,把token带入函数并执行
     whetherToken() {
-      console.log("进入了whetherToken");
       var _this = this;
       _this.platform = this.$route.params.id;
       switch (_this.platform) {
@@ -270,7 +269,6 @@ export default {
       _this.sessionToken = sessionStorage.getItem("token");
       //把每个调用的接口都写在此方法中,需要在接口中加token
       if (_this.sessionToken !== null) {
-        console.log("sessionToken:" + _this.sessionToken);
         //不为null,本地已经存在token,调用方法
         _this.getInfos();
       } else {
@@ -347,13 +345,12 @@ export default {
             })
             .catch(function(error) {
               //sessionStorage.removeItem("token"); //清除失效的token
-              _this.tourl(_this.platform);
+              // _this.tourl(_this.platform);
             });
         })
         .catch(function(error) {
           //sessionStorage.removeItem("token"); //清除失效的token
-
-          _this.tourl(_this.platform);
+          // _this.tourl(_this.platform);
         });
     },
     //学院范围
@@ -375,11 +372,10 @@ export default {
         })
         .catch(function(error) {
           //sessionStorage.removeItem("token"); //清除失效的token
-          _this.tourl(_this.platform);
+          // _this.tourl(_this.platform);
         });
     },
     tourl(platName) {
-      console.log("跳转到admin");
       var _this = this;
       //window.location.href =_this.back_url +platName +"/account/login?back=statistics";
     },
@@ -405,13 +401,12 @@ export default {
         })
         .catch(function(error) {
           //sessionStorage.removeItem("token"); //清除失效的token
-          _this.tourl(_this.platform);
+          // _this.tourl(_this.platform);
         });
     },
     //评价与参评率
     getComment(token, Start, End) {
       var _this = this;
-      // axios.get(_this.url + "api/Plat/course/comment?access_token=" + token)
       axios
         .get(
           _this.url +
@@ -457,13 +452,12 @@ export default {
         })
         .catch(function(error) {
           //sessionStorage.removeItem("token"); //清除失效的token
-          _this.tourl(_this.platform);
+          // _this.tourl(_this.platform);
         });
     },
     //请求各类课程开课情况
     getsupply(token, Start, End, Unit) {
       var _this = this;
-      // axios.get(_this.url + "api/Plat/course/supply?access_token=" + token)
       axios
         .get(
           _this.url +
@@ -534,14 +528,13 @@ export default {
         })
         .catch(function(error) {
           //sessionStorage.removeItem("token"); //清除失效的token
-          _this.tourl(_this.platform);
+          // _this.tourl(_this.platform);
         });
     },
 
     //各单位课程供给排行
     getCourseSupply(token, Start, End) {
       var _this = this;
-      // axios.get(_this.url + "api/Plat/course/rank?unit=0&access_token=" + token)
       axios
         .get(
           _this.url +
