@@ -6,14 +6,6 @@
         <!-- 日期插件 -->
         <div class="fx-scope">
           <span>实践项目</span>
-          <!-- <el-select v-model="value1" clearable placeholder="请选择" @change="change($event)">
-            <el-option
-              v-for="item in subMapFilter"
-              :key="item.index"
-              :value="item.subProId">
-              {{item.subProName}}
-            </el-option>
-          </el-select> -->
           <select @change="change($event)" id="selectOne">
             <option
               v-for="item in subMapFilter"
@@ -24,13 +16,6 @@
         </div>
         <div class="fx-scope">
           <span>{{newGroupName}}</span>
-          <!-- <el-select v-model="value2" placeholder="请选择">
-            <el-option
-              v-for="item in newGroupName2"
-              :key="item.id"
-              :value="item.newGroupName2"
-            ></el-option>
-          </el-select> -->
           <select @change="change2($event)" id="selectTwo">
             <option value="0">全部</option>
             <option
@@ -96,9 +81,9 @@
           <div class="warn">
               <div class="warn-item" v-if="showWarn" v-for="item in warnArr" :key="item.id" ref="warnItem">
                   <div class="warn-title">
-                      <!-- <img src="./assets/warn.png" alt=""> -->
+                      <img src="../assets/warn.png">
                       <span>地理位置定位与计划不符!</span>
-                      <span @click="delWarn(item.groupId)">删除</span>
+                      <span @click="delWarn(item.groupId)" class="iconfont iconshanchu"></span>
                   </div>
                   <div class="bar"></div>
                   <div class="warn-left warn-one">{{item.groupName}}</div>
@@ -119,10 +104,10 @@
             <div class="slide-echart echart6" id="echart6"></div>
           </div>
         </div>
-        <div id="chart_example" style="height: 80%;width:100%;min-width:500px;"></div>
+        <!-- <div id="chart_example" style="height: 80%;width:100%;min-width:500px;"></div> -->
       </div>
       <div class="page6-you">
-                <div class="fx-box4 character-list kai">
+        <div class="fx-box4 character-list kai">
           <div class="fxbox4-content">
             <div class="fxbox5-tit">
               <span></span>
@@ -175,7 +160,6 @@ export default {
       newGroupName:"",
       newGroupId:"",
       newExperName:"",
-      // newGroupName2:[],
       newGroup:[],
       joinProjectName:[],
       stuNum:"",
@@ -207,7 +191,6 @@ export default {
   },
   mounted() {
     this.$forceUpdate();
-    // this.drawLine();
     this.tuiSong();
     this.whetherToken();
   },
@@ -242,7 +225,6 @@ export default {
     delWarn(delWarnId){
        var _this = this;
       _this.sessionToken = sessionStorage.getItem("token");
-      //把每个调用的接口都写在此方法中,需要在接口中加token
       if (_this.sessionToken !== null) {
           var msg=confirm("确定忽略这条警告吗!");
           if(msg==true){
@@ -890,33 +872,26 @@ export default {
 .fx-grid-box {
   display: flex;
   width: 100%;
-  /* min-width: 1200px; */
-  /* min-height: 3rem; */
-  /* height: calc(50% - 40px); */
   justify-content: space-between;
 }
 .fx-box3 {
-  width: 20%;
-  min-width: 3.88rem;
   min-height: 3rem;
   background: #153146;
 }
 .fx-box9{
   font-size: 0.12rem;
   margin-top: 5%;
-  width: 20%;
-  min-width: 3.88rem;
   min-height: 3rem;
   background: #153146;
 }
 .fx-box4 {
   width: 20%;
-  /* min-width: 3.5rem; */
   min-height: 4rem;
   background: #153146;
   overflow: auto;
   padding-bottom: 0.05rem;
   margin-top: 2%;
+  overflow-x: hidden;
 }
 
 .fxbox5-tit span:nth-child(1) {
@@ -934,14 +909,11 @@ export default {
   display: flex;
   margin-left: 0.13rem;
   padding-top: 0.10rem;
-  margin-bottom: 0.05rem;
+  margin-bottom: 0.2rem;
 }
-
-
 .fx-grid-box1 {
   height: calc(87% - 40px);
 }
-
 .fxbox3-contant {
   width: 100%;
   padding: 0 0.10rem;
@@ -990,15 +962,12 @@ export default {
 }
 
 .page6-left {
-  /* float: left; */
   width: 20%;
 }
 .page6-right {
-  /* float: right; */
-  width: 50%;
+  width: 60%;
 }
 .page6-you {
-  /* float: right; */
   width: 20%;
 }
 /* 地图 */
@@ -1013,7 +982,6 @@ export default {
   min-height: 6rem;
 }
 .login-content {
-  width: 12rem;
   margin: 0 auto;
   position: relative;
   padding-top: 0.50rem;
@@ -1025,7 +993,6 @@ export default {
 }
 .slide-echart {
   position: absolute;
-  left: -1rem;
   width: 100%;
 }
 
@@ -1033,28 +1000,16 @@ export default {
   top: 0;
   bottom: 0;
 }
-/* 故事推送 */
 .kai {
   width: 100%;
 }
-.character-list {
-  right: 0.10rem;
-  top: 0.10rem;
-  z-index: 10;
-  width: 100%;
-  padding: 0.05rem;
-  padding-right: 0.03rem;
-  transition-duration: 600ms;
-}
+
 .character-list .character-content {
   position: relative;
   width: 100%;
   height: 8rem;
   padding-bottom: 0.10rem;
   padding-right: 0.05rem;
-  /* overflow: hidden; */
-  /* overflow-y: auto; */
-  overflow: auto;
 }
 
 .character-list .character-item {
@@ -1196,10 +1151,11 @@ export default {
   margin-bottom: 10px;
 }
 .warn-title{
-  font-size: 0.14rem;
+  font-size: 0.16rem;
   font-weight: bold;
   text-align: center;
   padding: 0.13rem 0;
+  position: relative;
 }
 .bar{
   width: 90%;
@@ -1241,6 +1197,11 @@ export default {
   -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 0;
   background: rgba(0, 0, 0, 0.1);
+}
+.iconshanchu{
+ position: absolute;
+ right: 0.1rem;
+ top: 0.1rem;
 }
 </style>
 
