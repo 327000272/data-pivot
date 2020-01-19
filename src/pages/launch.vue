@@ -288,10 +288,9 @@ export default {
       _this.schoolscope(_this.sessionToken);
       _this.getCondition(_this.sessionToken, Start, End);
       _this.getComment(_this.sessionToken, Start, End);
-      _this.getsupply(_this.sessionToken, Start, End, _this.ida);
       _this.getline(_this.sessionToken, Start, End, _this.ida2);
       _this.getCourseSupply(_this.sessionToken, Start, End);
-      _this.GetPlatDetail(_this.sessionToken);
+      _this.GetPlatDetail(_this.sessionToken, Start, End, _this.ida);
     },
     //点击指示器,重新运算
     pointer() {
@@ -316,7 +315,7 @@ export default {
       return result;
     },
     //获取饼状图中间的学校logo
-    GetPlatDetail(token) {
+    GetPlatDetail(token, Start, End, Unit) {
       var _this = this;
       axios
         .get(_this.url + "plat_detail?access_token=" + token)
@@ -335,12 +334,25 @@ export default {
                 Unit
             )
             .then(function(response) {
-              var resD = response.data;
-              if (resD.code == 0) {
-                _this.supplyComprehensive = response.data.data;
-                _this.classNum(_this.supplyComprehensive);
-                _this.classNumber(_this.supplyComprehensive, _this.PlatDetail);
-              }
+                var resD = response.data;
+                _this.openClassName=[];
+                if (resD.code == 0 && resD.data.length > 0) {
+                  _this.noData2=false;
+                  for(var i=0;i<resD.data.length;i++){
+                    _this.openClassName.push(resD.data[i].title);
+                  }
+                  _this.supplyComprehensive = response.data.data;
+                  _this.classNum(_this.supplyComprehensive);
+                  _this.classNumber(_this.supplyComprehensive, _this.PlatDetail);
+                }else{
+                  _this.openClassName=[];
+                  _this.classNum([]);
+                  _this.classNumber([]);
+                  _this.noData2=true;
+
+                }
+                // _this.classNumber(_this.supplyComprehensive, _this.PlatDetail);
+              
             })
             .catch(function(error) {
               //sessionStorage.removeItem("token"); //清除失效的token
@@ -350,44 +362,6 @@ export default {
         .catch(function(error) {
           //sessionStorage.removeItem("token"); //清除失效的token
           // _this.tourl(_this.platform);
-        });
-    },
-    //请求各类课程开课情况
-    getsupply(token, Start, End, Unit) {
-      var _this = this;
-      axios
-        .get(
-          _this.url +
-            "course_supply?access_token=" +
-            token +
-            "&Start=" +
-            Start +
-            "&End=" +
-            End +
-            "&Unit=" +
-            Unit
-        )
-        .then(function(response) {
-          var resD = response.data;
-          _this.openClassName=[];
-          if (resD.code == 0 && resD.data.length > 0) {
-             _this.noData2=false;
-             for(var i=0;i<resD.data.length;i++){
-               _this.openClassName.push(resD.data[i].title);
-             }
-            _this.supplyComprehensive = response.data.data;
-            _this.classNum(_this.supplyComprehensive);
-            _this.classNumber(_this.supplyComprehensive);
-          }else{
-            _this.openClassName=[];
-            _this.classNum([]);
-            _this.classNumber([]);
-            _this.noData2=true;
-
-          }
-        })
-        .catch(function(error) {
-          //sessionStorage.removeItem("token"); //清除失效的token
         });
     },
     //学院范围
@@ -519,10 +493,11 @@ export default {
             //将数据放入echarts函数中
             _this.line = resD.data;
             _this.date_condition(_this.line);
+            console.log(_this.line);
           } else {   
-            _this.lineName = [];
+            // _this.lineName = [];
             _this.noData=true;
-            _this.date_condition([]);
+            // _this.date_condition([]);
           }
         })
         .catch(function(error) {
@@ -1137,12 +1112,13 @@ export default {
 </script>
 <style>
 .data-picker input {
-  background-color: #213c50 !important;
+  background-color: #213c50 ;
   color: #c4cbd1;
   border: none;
 }
 </style>
 <style scoped>
+
 .iconfont {
   font-size: 0.1rem;
 }
@@ -1162,7 +1138,6 @@ export default {
   margin-top: 0.42rem;
   margin-bottom: 0.24rem;
 }
-
 .fx-title {
   font-size: 0.24rem;
   color: #fff;

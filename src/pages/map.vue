@@ -150,16 +150,12 @@ export default {
     return {
       url: "https://classroom.univteam.com/",
       back_url: "http://class-admin.univteam.com/",
-      value1:"",
-      value2:"",
       subMapFilter:[],
       groupName:[],
       ProjectId:"",
       newMapFilter:[],
       newSubProId:"",
       newGroupName:"",
-      newGroupId:"",
-      newExperName:"",
       newGroup:[],
       joinProjectName:[],
       stuNum:"",
@@ -168,7 +164,6 @@ export default {
       experNum:"",
       mapData:"",
       story:[],
-      storyPic:[],
       subProName:"",
       ProId:"",
       newExperName:'',
@@ -748,23 +743,6 @@ export default {
 };
 </script>
 <style>
-.data-picker input {
-  background-color: #213c50 !important;
-}
-.data-picker .el-range__icon {
-  display: none;
-}
-.data-picker .el-range-separator {
-  color: #c4cbd1;
-}
-.fx-scope input {
-  border: none;
-  background: #213c50;
-  color: #ffffff;
-}
-.el-date-editor .el-range-input {
-  color: #ffffff !important;
-}
 
 </style>
 <style scoped>
@@ -820,12 +798,6 @@ export default {
   display: flex;
   margin-right: 0.25rem;
   width: 40%;
-}
-.data-picker {
-  border-radius: 0;
-  background: #213c50;
-  border: none;
-  color: #fff;
 }
 .fx-scope {
   display: flex;
@@ -948,19 +920,15 @@ export default {
   padding-top: 0.10rem;
   padding-bottom: 0.10rem;
 }
-
 .fxbox3-b span,
 .fxbox3-a span {
   font-size: 0.16rem;
   color: #fff;
   margin-right: 0.10rem;
 }
-
-
 .fx-box4::-webkit-scrollbar {
   width: 0px;
 }
-
 .page6-left {
   width: 20%;
 }
@@ -974,7 +942,6 @@ export default {
 .login-center {
   position: relative;
   width: 100%;
-  /* height: calc(70% - 56px); */
   height: calc(50% - 56px);
   background-position: center;
   background-repeat: no-repeat;
@@ -986,8 +953,6 @@ export default {
   position: relative;
   padding-top: 0.50rem;
   transition-duration: 400ms;
-}
-.login-content {
   height: 100%;
   z-index: 10;
 }
@@ -995,7 +960,6 @@ export default {
   position: absolute;
   width: 100%;
 }
-
 .slide-echart.echart6 {
   top: 0;
   bottom: 0;
@@ -1003,7 +967,6 @@ export default {
 .kai {
   width: 100%;
 }
-
 .character-list .character-content {
   position: relative;
   width: 100%;
@@ -1072,7 +1035,6 @@ export default {
   display: block;
   position: relative;
   line-height: 0.18rem;
-  /*padding-left: 20px;*/
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;

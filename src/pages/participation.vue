@@ -1258,9 +1258,6 @@ export default {
   color: #c4cbd1;
   border: none;
 }
-.data-picker{
-  width: 50%;
-}
 </style>
 <style scoped>
 strong{
